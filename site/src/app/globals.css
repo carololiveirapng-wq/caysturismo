@@ -1,0 +1,165 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* ==========================================================================
+   Cays Turismo — design tokens
+   Editorial, low-saturation palette, recalibrada contra a paleta real da
+   Black Tomato (extraída do CSS de produção deles em 2026-09-28 — não é
+   estimativa visual). Magenta é um acento único, usado com moderação —
+   nunca cor de fundo. As demais cores "de categoria" que a Black Tomato usa
+   (teal, laranja, azul, verde) ficaram de fora de propósito: no site deles
+   parecem marcar tipo de destino, não identidade de marca, e adotar todas
+   contrariaria a regra de acento único da Cays.
+   ========================================================================== */
+:root {
+  --cays-magenta: #e7247a;
+  --cays-magenta-dark: #b91d62;
+
+  --ink: #2f2f2f;
+  --graphite: #222222;
+  --stone: #52575c;
+
+  --sand: #f4f3f1;
+  --ivory: #faf9f5;
+  --line: #e3e5e6;
+
+  --background: var(--ivory);
+  --foreground: var(--ink);
+  --card: var(--ivory);
+  --card-foreground: var(--ink);
+  --popover: #ffffff;
+  --popover-foreground: var(--ink);
+  --primary: var(--ink);
+  --primary-foreground: var(--ivory);
+  --secondary: var(--sand);
+  --secondary-foreground: var(--ink);
+  --muted: var(--sand);
+  --muted-foreground: var(--stone);
+  --accent: var(--cays-magenta);
+  --accent-foreground: #ffffff;
+  --destructive: #b3261e;
+  --border: var(--line);
+  --input: var(--line);
+  --ring: var(--cays-magenta);
+  --radius: 0.25rem;
+
+  --ease-editorial: cubic-bezier(0.22, 1, 0.36, 1);
+  --duration-reveal: 900ms;
+}
+
+.dark {
+  --background: var(--ink);
+  --foreground: var(--ivory);
+  --card: var(--graphite);
+  --card-foreground: var(--ivory);
+  --popover: var(--graphite);
+  --popover-foreground: var(--ivory);
+  --primary: var(--ivory);
+  --primary-foreground: var(--ink);
+  --secondary: var(--graphite);
+  --secondary-foreground: var(--ivory);
+  --muted: var(--graphite);
+  --muted-foreground: #a3a3a3;
+  --accent: var(--cays-magenta);
+  --accent-foreground: #ffffff;
+  --border: rgb(255 255 255 / 12%);
+  --input: rgb(255 255 255 / 15%);
+  --ring: var(--cays-magenta);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-ink: var(--ink);
+  --color-graphite: var(--graphite);
+  --color-stone: var(--stone);
+  --color-sand: var(--sand);
+  --color-ivory: var(--ivory);
+  --color-line: var(--line);
+  --color-magenta: var(--cays-magenta);
+  --color-magenta-dark: var(--cays-magenta-dark);
+
+  --font-sans: var(--font-manrope);
+  --font-serif: var(--font-cormorant);
+
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+
+  --container-content: 1400px;
+  --container-narrow: 760px;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    @apply font-sans scroll-smooth;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  ::selection {
+    background: var(--cays-magenta);
+    color: #fff;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  .no-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@keyframes scrollLine {
+  0% {
+    transform: translateY(-100%);
+  }
+  60%,
+  100% {
+    transform: translateY(200%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
