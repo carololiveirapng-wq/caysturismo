@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Menu } from "lucide-react";
 import { Container } from "@/components/ui/container";
 import { MobileNavigation } from "@/components/layout/mobile-navigation";
@@ -35,10 +36,17 @@ const navLinks = [
   { label: "A Cays", href: "/sobre" },
 ];
 
+// Páginas sem hero escuro no topo — o header transparente (logo/texto
+// ivory sobre bg-transparent) fica ilegível contra o fundo ivory/sand
+// dessas páginas antes do scroll passar de 64px, então força o estado
+// sólido desde o início nelas.
+const NO_HERO_PATHS = ["/contato", "/contato/obrigado"];
+
 export function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
+  const pathname = usePathname();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 64);
@@ -47,7 +55,7 @@ export function Header() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const solid = scrolled || menuOpen;
+  const solid = scrolled || menuOpen || NO_HERO_PATHS.includes(pathname ?? "");
 
   return (
     <>
