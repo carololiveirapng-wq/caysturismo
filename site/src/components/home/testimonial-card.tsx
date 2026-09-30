@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { StarRating } from "@/components/ui/star-rating";
 import { GoogleIcon } from "@/components/ui/google-icon";
 import { LinkArrow } from "@/components/ui/link-arrow";
+import { cn } from "@/lib/utils";
 import type { GoogleReview } from "@/types";
 
 interface TestimonialCardProps {
@@ -12,11 +13,16 @@ interface TestimonialCardProps {
 }
 
 /**
- * Preview de até ~6 linhas via line-clamp. O botão "Ler depoimento completo"
- * só aparece quando o texto REALMENTE estoura o clamp — detectado
+ * Todos os cards precisam ter exatamente a mesma altura, nunca desnivelados
+ * — por isso o bloco de citação tem min-h fixo (equivalente às 6 linhas do
+ * line-clamp-6 abaixo) em vez de altura natural do texto: reviews curtos
+ * sobram espaço em branco reservado, reviews longos estouram o clamp e
+ * ganham o botão "Ler depoimento completo". O botão fica sempre no DOM
+ * (visibility, não display) pra reservar a mesma altura de rodapé nos dois
+ * casos — só aparece quando o texto REALMENTE estoura o clamp, detectado
  * comparando scrollHeight x clientHeight do próprio blockquote depois de
- * renderizado (a técnica padrão pra isso; não dá pra saber só pelo
- * tamanho da string, já que a largura do card muda por breakpoint).
+ * renderizado (não dá pra saber só pelo tamanho da string, já que a largura
+ * do card muda por breakpoint).
  */
 export function TestimonialCard({ review, onReadMore }: TestimonialCardProps) {
   const quoteRef = useRef<HTMLQuoteElement>(null);
@@ -37,24 +43,25 @@ export function TestimonialCard({ review, onReadMore }: TestimonialCardProps) {
   }, [review.text]);
 
   return (
-    <figure className="flex min-w-0 flex-col border border-ink/10 bg-ivory p-7 md:p-8">
+    <figure className="flex h-full min-w-0 flex-col border border-ink/10 bg-ivory p-7 md:p-8">
       <div className="min-w-0">
         <StarRating rating={review.rating} />
         <blockquote
           ref={quoteRef}
-          className="mt-4 line-clamp-6 w-full min-w-0 font-serif text-lg leading-snug break-words whitespace-pre-line text-ink md:text-[1.15rem] md:leading-[1.45]"
+          className="mt-4 line-clamp-6 min-h-[9.5rem] w-full min-w-0 font-serif text-lg leading-snug break-words whitespace-pre-line text-ink md:min-h-[10.25rem] md:text-[1.15rem] md:leading-[1.45]"
         >
           &ldquo;{review.text}&rdquo;
         </blockquote>
-        {isTruncated && (
+        <div className={cn("mt-2.5 h-4", !isTruncated && "invisible")}>
           <button
             type="button"
+            tabIndex={isTruncated ? 0 : -1}
             onClick={(e) => onReadMore(review, e.currentTarget)}
-            className="mt-2.5 text-xs font-medium tracking-wide text-stone underline underline-offset-4 transition-colors duration-300 hover:text-ink"
+            className="text-xs font-medium tracking-wide text-stone underline underline-offset-4 transition-colors duration-300 hover:text-ink"
           >
             Ler depoimento completo
           </button>
-        )}
+        </div>
       </div>
 
       <div className="mt-7">
