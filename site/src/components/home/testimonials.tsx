@@ -74,12 +74,12 @@ export function Testimonials() {
               {reviews.map((review) => (
                 <CarouselItem
                   key={review.id}
-                  className="basis-[85%] pl-5 sm:basis-[55%] lg:basis-[35%]"
+                  className="min-w-0 basis-[85%] pl-5 sm:basis-[55%] lg:basis-[35%]"
                 >
-                  <figure className="flex h-full flex-col justify-between border border-ink/10 bg-ivory p-7 md:p-8">
-                    <div>
+                  <figure className="flex h-full min-w-0 flex-col justify-between border border-ink/10 bg-ivory p-7 md:p-8">
+                    <div className="min-w-0">
                       <StarRating rating={review.rating} />
-                      <blockquote className="mt-4 font-serif text-lg leading-snug text-ink md:text-xl">
+                      <blockquote className="mt-4 w-full min-w-0 font-serif text-lg leading-snug break-words whitespace-pre-line text-ink md:text-[1.15rem] md:leading-[1.45]">
                         &ldquo;{review.text}&rdquo;
                       </blockquote>
                     </div>
@@ -111,7 +111,7 @@ export function Testimonials() {
                 </CarouselItem>
               ))}
             </CarouselContent>
-            <CarouselCircleNav tone="light" />
+            <CarouselCircleNav tone="light" edge="outset" />
           </div>
         </Container>
       </Carousel>
