@@ -17,7 +17,7 @@ export const experiences: Experience[] = [
   },
   {
     id: "viagens-em-familia",
-    slug: "viagens-em-familia",
+    slug: "familia",
     active: true,
     order: 2,
     title: "Viagens em Família",
@@ -28,8 +28,8 @@ export const experiences: Experience[] = [
     },
   },
   {
-    id: "destination-weddings",
-    slug: "destination-weddings",
+    id: "destination-wedding",
+    slug: "destination-wedding",
     active: true,
     order: 3,
     title: "Destination Weddings",
@@ -41,7 +41,7 @@ export const experiences: Experience[] = [
   },
   {
     id: "cruzeiros-expedicoes",
-    slug: "cruzeiros-expedicoes",
+    slug: "cruzeiros",
     active: true,
     order: 4,
     title: "Cruzeiros & Expedições",
@@ -53,7 +53,7 @@ export const experiences: Experience[] = [
   },
   {
     id: "jornadas-especiais",
-    slug: "jornadas-especiais",
+    slug: "privativas",
     active: true,
     order: 5,
     title: "Jornadas Especiais",

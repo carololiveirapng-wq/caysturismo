@@ -3,7 +3,17 @@ import { EditorialHeading } from "@/components/ui/editorial-heading";
 import { Reveal } from "@/components/ui/reveal";
 import type { ExperiencePartnerType } from "@/types";
 
-export function PartnerTypes({ id, items }: { id: string; items: ExperiencePartnerType[] }) {
+export function PartnerTypes({
+  id,
+  items,
+  heading = "Companhias selecionadas",
+  text = "Trabalhamos com diferentes categorias de companhia, conforme o formato de cruzeiro que combina com você.",
+}: {
+  id: string;
+  items: ExperiencePartnerType[];
+  heading?: string;
+  text?: string;
+}) {
   if (items.length === 0) return null;
 
   return (
@@ -11,11 +21,9 @@ export function PartnerTypes({ id, items }: { id: string; items: ExperiencePartn
       <Container narrow>
         <Reveal>
           <EditorialHeading as="h2" size="md">
-            Companhias selecionadas
+            {heading}
           </EditorialHeading>
-          <p className="mt-2.5 max-w-lg text-sm text-stone">
-            Trabalhamos com diferentes categorias de companhia, conforme o formato de cruzeiro que combina com você.
-          </p>
+          <p className="mt-2.5 max-w-lg text-sm text-stone">{text}</p>
         </Reveal>
 
         <div className="mt-8 divide-y divide-ink/10 border-t border-ink/10">

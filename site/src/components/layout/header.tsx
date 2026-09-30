@@ -20,7 +20,7 @@ const navLinks = [
       { label: "Viagens em Família", href: experienceHref("familia") },
       { label: "Cruzeiros & Expedições", href: experienceHref("cruzeiros") },
       { label: "Grandes Eventos", href: experienceHref("grandes-eventos") },
-      { label: "Viagens Personalizadas", href: experienceHref("personalizadas") },
+      { label: "Viagens Privativas", href: experienceHref("privativas") },
     ],
   },
   {

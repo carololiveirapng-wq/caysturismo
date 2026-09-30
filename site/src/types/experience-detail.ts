@@ -66,10 +66,18 @@ export interface ExperienceDetail extends BaseContent {
   monthlyPicks?: ExperienceMonthlyPick[];
   featuredDestinations?: ExperienceDestinationRef[];
   subtypes?: ExperienceSubtype[];
+  /** Título da seção de subtipos. Sem isto, usa "Qual estilo combina com vocês?" (padrão herdado de Lua de Mel/Cruzeiros). */
+  subtypesHeading?: string;
   partnerTypes?: ExperiencePartnerType[];
+  /** Título/apoio da seção de parceiros. Sem isto, usa o texto padrão voltado a cruzeiros. */
+  partnerTypesHeading?: string;
+  partnerTypesText?: string;
   journeys?: ExperienceJourneyRef[];
   articles?: ExperienceArticleRef[];
   faq?: { question: string; answer: string }[];
+
+  /** CTA final de página inteira. Sem isto, usa "Pronto para planejar sua {name}?" — nem sempre concorda em gênero/número, por isso é sobrescrevível. */
+  finalCta?: { title?: string; supporting?: string; note?: string };
 
   seo?: { title?: string; description?: string };
 }

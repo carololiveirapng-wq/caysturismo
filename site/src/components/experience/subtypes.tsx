@@ -4,7 +4,15 @@ import { ImageReveal } from "@/components/ui/image-reveal";
 import { Reveal } from "@/components/ui/reveal";
 import type { ExperienceSubtype } from "@/types";
 
-export function Subtypes({ id, items }: { id: string; items: ExperienceSubtype[] }) {
+export function Subtypes({
+  id,
+  items,
+  heading = "Qual estilo combina com vocês?",
+}: {
+  id: string;
+  items: ExperienceSubtype[];
+  heading?: string;
+}) {
   if (items.length === 0) return null;
 
   return (
@@ -12,7 +20,7 @@ export function Subtypes({ id, items }: { id: string; items: ExperienceSubtype[]
       <Container>
         <Reveal>
           <EditorialHeading as="h2" size="md">
-            Qual estilo combina com vocês?
+            {heading}
           </EditorialHeading>
         </Reveal>
 

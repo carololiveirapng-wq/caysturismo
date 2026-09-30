@@ -80,11 +80,16 @@ export default async function ExperiencePage({ params }: PageProps<"/experiencia
       )}
 
       {experience.subtypes && experience.subtypes.length > 0 && (
-        <Subtypes id="estilos" items={experience.subtypes} />
+        <Subtypes id="estilos" items={experience.subtypes} heading={experience.subtypesHeading} />
       )}
 
       {experience.partnerTypes && experience.partnerTypes.length > 0 && (
-        <PartnerTypes id="parceiros" items={experience.partnerTypes} />
+        <PartnerTypes
+          id="parceiros"
+          items={experience.partnerTypes}
+          heading={experience.partnerTypesHeading}
+          text={experience.partnerTypesText}
+        />
       )}
 
       {experience.monthlyPicks && experience.monthlyPicks.length > 0 && (
@@ -112,11 +117,14 @@ export default async function ExperiencePage({ params }: PageProps<"/experiencia
       {experience.faq && experience.faq.length > 0 && <DestinationFaq id="faq" items={experience.faq} />}
 
       <DestinationFinalCTA
-        title={`Pronto para planejar sua ${experience.name}?`}
-        supporting="Conte para a Cays o que você imagina viver. Nós cuidamos do caminho."
+        title={experience.finalCta?.title ?? `Pronto para planejar sua ${experience.name}?`}
+        supporting={
+          experience.finalCta?.supporting ??
+          "Conte para a Cays o que você imagina viver. Nós cuidamos do caminho."
+        }
         ctaLabel="Planejar minha viagem"
         ctaHref={contactHref}
-        note="Fale com um especialista da Cays"
+        note={experience.finalCta?.note ?? "Fale com um especialista da Cays"}
       />
 
       <PersistentMobileCTA label={`Planejar ${experience.name}`} href={contactHref} />
