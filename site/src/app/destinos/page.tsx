@@ -12,7 +12,9 @@ const description =
   "Explore os destinos da curadoria Cays Turismo por continente ou em ordem alfabética, e descubra para onde ir em cada época do ano.";
 
 export const metadata: Metadata = {
-  title,
+  // `title` já vem completo (com "Cays Turismo" no fim) — absolute evita
+  // que o template do layout raiz ("%s | Cays Turismo") duplique o nome.
+  title: { absolute: title },
   description,
   alternates: { canonical: "/destinos" },
   openGraph: { title, description, url: `${siteConfig.url}/destinos` },

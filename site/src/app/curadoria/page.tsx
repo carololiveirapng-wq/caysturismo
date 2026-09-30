@@ -15,7 +15,9 @@ const title = "Curadoria | Cays Turismo";
 const description = "Destinos, histórias e ideias para viajar melhor — a curadoria editorial da Cays Turismo.";
 
 export const metadata: Metadata = {
-  title,
+  // `title` já vem completo (com "Cays Turismo" no fim) — absolute evita
+  // que o template do layout raiz ("%s | Cays Turismo") duplique o nome.
+  title: { absolute: title },
   description,
   alternates: { canonical: "/curadoria" },
   openGraph: { title, description, url: `${siteConfig.url}/curadoria` },

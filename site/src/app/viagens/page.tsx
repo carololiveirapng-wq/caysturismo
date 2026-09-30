@@ -34,7 +34,9 @@ export async function generateMetadata({
   const hasFilters = Object.keys(params).length > 0;
 
   return {
-    title,
+    // `title` já vem completo (com "Cays Turismo" no fim) — absolute evita
+    // que o template do layout raiz ("%s | Cays Turismo") duplique o nome.
+    title: { absolute: title },
     description,
     alternates: { canonical: "/viagens" },
     openGraph: { title, description, url: `${siteConfig.url}/viagens` },

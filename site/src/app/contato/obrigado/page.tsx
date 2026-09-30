@@ -2,9 +2,19 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Container } from "@/components/ui/container";
 import { Reveal } from "@/components/ui/reveal";
+import { siteConfig } from "@/lib/site-config";
+
+const title = "Recebemos seu pedido | Cays Turismo";
+const description = "Seu pedido foi recebido pela Cays Turismo — em breve alguém da equipe entra em contato.";
 
 export const metadata: Metadata = {
-  title: "Recebemos seu pedido | Cays Turismo",
+  // `title` já vem completo (com "Cays Turismo" no fim) — absolute evita
+  // que o template do layout raiz ("%s | Cays Turismo") duplique o nome.
+  title: { absolute: title },
+  description,
+  alternates: { canonical: "/contato/obrigado" },
+  openGraph: { title, description, url: `${siteConfig.url}/contato/obrigado` },
+  // Página de confirmação pós-formulário — sem valor de indexação própria.
   robots: { index: false, follow: false },
 };
 

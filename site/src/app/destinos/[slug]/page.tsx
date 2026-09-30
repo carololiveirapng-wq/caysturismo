@@ -37,7 +37,9 @@ export async function generateMetadata({
   const canonical = `/destinos/${destination.slug}`;
 
   return {
-    title,
+    // `title` já vem completo (com "Cays Turismo" no fim) — absolute evita
+    // que o template do layout raiz ("%s | Cays Turismo") duplique o nome.
+    title: { absolute: title },
     description,
     alternates: { canonical },
     openGraph: {
@@ -104,7 +106,11 @@ export default async function DestinationPage({ params }: PageProps<"/destinos/[
       {destination.whyCays && <WhyCays id="por-que-cays" data={destination.whyCays} />}
 
       {destination.journeys && destination.journeys.length > 0 && (
-        <SuggestedJourneys id="viagens" journeys={destination.journeys} />
+        <SuggestedJourneys
+          id="viagens"
+          journeys={destination.journeys}
+          heading={destination.journeysHeading}
+        />
       )}
 
       <InlineCtaStrip
@@ -115,7 +121,11 @@ export default async function DestinationPage({ params }: PageProps<"/destinos/[
       />
 
       {destination.experiences && destination.experiences.length > 0 && (
-        <WhatToLive id="o-que-viver" items={destination.experiences} />
+        <WhatToLive
+          id="o-que-viver"
+          items={destination.experiences}
+          heading={destination.experiencesHeading}
+        />
       )}
 
       {destination.stays && destination.stays.length > 0 && (
@@ -123,12 +133,14 @@ export default async function DestinationPage({ params }: PageProps<"/destinos/[
       )}
 
       {destination.months && destination.months.length > 0 && (
-        <MonthGuide id="quando-ir" months={destination.months} />
+        <MonthGuide id="quando-ir" months={destination.months} heading={destination.monthsHeading} />
       )}
 
       <InlineCtaStrip
-        title="Quer viajar durante as cerejeiras?"
-        supporting="Montamos o período ideal para a sua viagem."
+        title={destination.seasonCta?.title ?? "Sabe quando quer viajar?"}
+        supporting={
+          destination.seasonCta?.supporting ?? "Ajudamos a escolher o período ideal para a sua viagem."
+        }
         ctaLabel="Planejar viagem"
         ctaHref={contactHref}
       />
@@ -152,11 +164,14 @@ export default async function DestinationPage({ params }: PageProps<"/destinos/[
       )}
 
       <DestinationFinalCTA
-        title="O Japão que você imagina começa em uma conversa."
-        supporting="Conte para a Cays o que você deseja viver. Nós cuidamos do caminho."
+        title={destination.finalCta?.title ?? `Sua viagem para ${destination.name} começa em uma conversa.`}
+        supporting={
+          destination.finalCta?.supporting ??
+          "Conte para a Cays o que você deseja viver. Nós cuidamos do caminho."
+        }
         ctaLabel="Planejar minha viagem"
         ctaHref={contactHref}
-        note="Fale com um especialista da Cays"
+        note={destination.finalCta?.note ?? "Fale com um especialista da Cays"}
       />
 
       <PersistentMobileCTA label={`Planejar ${destination.name}`} href={contactHref} />

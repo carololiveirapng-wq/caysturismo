@@ -21,7 +21,15 @@ const STATUS_LEGEND: { status: DestinationMonthGuide["status"]; label: string }[
   { status: "avoid", label: "Menos indicado" },
 ];
 
-export function MonthGuide({ id, months }: { id: string; months: DestinationMonthGuide[] }) {
+export function MonthGuide({
+  id,
+  months,
+  heading = "Quando ir",
+}: {
+  id: string;
+  months: DestinationMonthGuide[];
+  heading?: string;
+}) {
   const defaultActive = months.find((m) => m.status === "ideal") ?? months[0];
   const [activeMonth, setActiveMonth] = useState(defaultActive?.month);
 
@@ -34,7 +42,7 @@ export function MonthGuide({ id, months }: { id: string; months: DestinationMont
         <div className="flex flex-wrap items-end justify-between gap-6">
           <Reveal>
             <EditorialHeading as="h2" size="md">
-              Quando ir ao Japão
+              {heading}
             </EditorialHeading>
           </Reveal>
           <div className="flex items-center gap-5 text-xs text-stone">

@@ -14,7 +14,15 @@ const TILE_SPAN = [
   "md:col-span-3 aspect-[4/3]",
 ];
 
-export function WhatToLive({ id, items }: { id: string; items: DestinationExperienceHighlight[] }) {
+export function WhatToLive({
+  id,
+  items,
+  heading = "O que viver",
+}: {
+  id: string;
+  items: DestinationExperienceHighlight[];
+  heading?: string;
+}) {
   if (items.length === 0) return null;
 
   return (
@@ -22,7 +30,7 @@ export function WhatToLive({ id, items }: { id: string; items: DestinationExperi
       <Container>
         <Reveal>
           <EditorialHeading as="h2" size="md">
-            O que viver no Japão
+            {heading}
           </EditorialHeading>
         </Reveal>
 

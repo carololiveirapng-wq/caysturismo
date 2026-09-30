@@ -11,7 +11,9 @@ const title = "Planeje sua viagem | Cays Turismo";
 const description = "Conte para a Cays como você imagina sua próxima viagem — a gente cuida do resto.";
 
 export const metadata: Metadata = {
-  title,
+  // `title` já vem completo (com "Cays Turismo" no fim) — absolute evita
+  // que o template do layout raiz ("%s | Cays Turismo") duplique o nome.
+  title: { absolute: title },
   description,
   alternates: { canonical: "/contato" },
   openGraph: { title, description, url: `${siteConfig.url}/contato` },

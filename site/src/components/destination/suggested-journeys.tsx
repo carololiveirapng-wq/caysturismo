@@ -41,7 +41,15 @@ function JourneyCard({ journey }: { journey: DestinationJourney }) {
   );
 }
 
-export function SuggestedJourneys({ id, journeys }: { id: string; journeys: DestinationJourney[] }) {
+export function SuggestedJourneys({
+  id,
+  journeys,
+  heading = "Jornadas sugeridas",
+}: {
+  id: string;
+  journeys: DestinationJourney[];
+  heading?: string;
+}) {
   if (journeys.length === 0) return null;
 
   return (
@@ -50,7 +58,7 @@ export function SuggestedJourneys({ id, journeys }: { id: string; journeys: Dest
         <div className="flex flex-wrap items-end justify-between gap-6">
           <Reveal className="max-w-xl">
             <EditorialHeading as="h2" size="md">
-              Jornadas pelo Japão
+              {heading}
             </EditorialHeading>
             <p className="mt-2.5 text-sm text-stone">
               Pontos de partida que podem ser ajustados ao seu ritmo.

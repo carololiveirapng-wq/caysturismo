@@ -34,6 +34,7 @@ export const japan: DestinationDetail = {
     subtitle:
       "Templos silenciosos, grandes cidades, gastronomia, montanhas e uma cultura que transforma a maneira de olhar o cotidiano.",
     seasonLabel: "Temporada 2026/2027",
+    ctaLabel: "Planejar viagem ao Japão",
   },
 
   introduction: {
@@ -73,6 +74,19 @@ export const japan: DestinationDetail = {
         text: "De ryokans tradicionais a hotéis contemporâneos, cada escolha passa pelo nosso olhar antes de chegar até você.",
       },
     ],
+  },
+
+  journeysHeading: "Jornadas pelo Japão",
+  experiencesHeading: "O que viver no Japão",
+  monthsHeading: "Quando ir ao Japão",
+  seasonCta: {
+    title: "Quer viajar durante as cerejeiras?",
+    supporting: "Montamos o período ideal para a sua viagem.",
+  },
+  finalCta: {
+    title: "O Japão que você imagina começa em uma conversa.",
+    supporting: "Conte para a Cays o que você deseja viver. Nós cuidamos do caminho.",
+    note: "Fale com um especialista da Cays",
   },
 
   journeys: [

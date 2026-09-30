@@ -11,7 +11,9 @@ const description =
   "Lua de mel, destination wedding, cruzeiros, safári e mais — descubra as experiências de viagem com a curadoria da Cays Turismo.";
 
 export const metadata: Metadata = {
-  title,
+  // `title` já vem completo (com "Cays Turismo" no fim) — absolute evita
+  // que o template do layout raiz ("%s | Cays Turismo") duplique o nome.
+  title: { absolute: title },
   description,
   alternates: { canonical: "/experiencias" },
   openGraph: { title, description, url: `${siteConfig.url}/experiencias` },

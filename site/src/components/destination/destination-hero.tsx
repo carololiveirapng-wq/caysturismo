@@ -6,7 +6,7 @@ import { Reveal } from "@/components/ui/reveal";
 import type { DestinationDetail } from "@/types";
 
 export function DestinationHero({ destination }: { destination: DestinationDetail }) {
-  const { hero, breadcrumb, name, slug } = destination;
+  const { hero, breadcrumb, slug } = destination;
 
   return (
     <section className="relative flex min-h-[92svh] items-end overflow-hidden bg-ink">
@@ -66,7 +66,7 @@ export function DestinationHero({ destination }: { destination: DestinationDetai
                   ↗
                 </span>
               </span>
-              Planejar viagem ao {name}
+              {hero.ctaLabel ?? "Planejar viagem"}
             </Link>
           </div>
         </Reveal>

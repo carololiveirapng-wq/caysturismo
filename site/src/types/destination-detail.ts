@@ -103,6 +103,13 @@ export interface DestinationDetail extends BaseContent {
     subtitle?: string;
     /** Ex.: "Temporada 2026/2027" — apoio editorial, não literal no H1. */
     seasonLabel?: string;
+    /**
+     * Rótulo do CTA no hero. Sem isto, o componente usa "Planejar viagem" —
+     * um texto neutro de propósito, já que "Planejar viagem ao/à/às {name}"
+     * exige a preposição certa em português (ao Japão, à Itália, às
+     * Maldivas...) e essa concordância varia por destino.
+     */
+    ctaLabel?: string;
   };
 
   introduction?: {
@@ -117,12 +124,30 @@ export interface DestinationDetail extends BaseContent {
     items: DestinationArgument[];
   };
   journeys?: DestinationJourney[];
+  /** Título da seção de Jornadas. Sem isto, usa "Jornadas sugeridas". */
+  journeysHeading?: string;
   experiences?: DestinationExperienceHighlight[];
+  /** Título da seção "O que viver". Sem isto, usa "O que viver". */
+  experiencesHeading?: string;
   stays?: DestinationStay[];
   months?: DestinationMonthGuide[];
+  /** Título da seção "Quando ir". Sem isto, usa "Quando ir". */
+  monthsHeading?: string;
   articles?: DestinationArticle[];
   faq?: DestinationFaqItem[];
   relatedDestinations?: DestinationRelatedPlace[];
+
+  /** Faixa de CTA inline exibida após a seção "Quando ir". Editorial curto, sem seção própria. */
+  seasonCta?: {
+    title: string;
+    supporting?: string;
+  };
+  /** CTA final de página inteira, antes do rodapé. */
+  finalCta?: {
+    title: string;
+    supporting?: string;
+    note?: string;
+  };
 
   seo?: {
     title?: string;
