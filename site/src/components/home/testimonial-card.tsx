@@ -37,7 +37,7 @@ export function TestimonialCard({ review, onReadMore }: TestimonialCardProps) {
   }, [review.text]);
 
   return (
-    <figure className="flex h-full min-w-0 flex-col justify-between border border-ink/10 bg-ivory p-7 md:p-8">
+    <figure className="flex min-w-0 flex-col border border-ink/10 bg-ivory p-7 md:p-8">
       <div className="min-w-0">
         <StarRating rating={review.rating} />
         <blockquote

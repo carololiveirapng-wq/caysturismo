@@ -96,7 +96,7 @@ export function Testimonials() {
               {reviews.map((review) => (
                 <CarouselItem
                   key={review.id}
-                  className="min-w-0 basis-[85%] pl-5 sm:basis-[55%] lg:basis-[35%]"
+                  className="min-w-0 basis-[85%] self-start pl-5 sm:basis-[55%] lg:basis-[35%]"
                 >
                   <TestimonialCard review={review} onReadMore={openReview} />
                 </CarouselItem>
