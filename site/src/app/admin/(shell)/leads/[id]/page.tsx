@@ -40,8 +40,18 @@ export default async function AdminLeadDetailPage({ params }: PageProps<"/admin/
 
   if (!lead) notFound();
 
-  const destinationNames = lead.destinations.map((slug) => getDestinationDetailBySlug(slug)?.name ?? slug);
-  const experienceName = lead.experience ? (getExperienceDetailBySlug(lead.experience)?.name ?? lead.experience) : undefined;
+  const destinationNames = lead.destinations
+    .filter((slug) => slug !== "nao-sei")
+    .map((slug) => getDestinationDetailBySlug(slug)?.name ?? slug);
+  const destinationsLabel = lead.destinations.includes("nao-sei")
+    ? [...destinationNames, "Ainda não sabe"].join(", ")
+    : destinationNames.join(", ");
+  const experienceName =
+    lead.experience && lead.experience !== "nao-sei"
+      ? (getExperienceDetailBySlug(lead.experience)?.name ?? lead.experience)
+      : lead.experience === "nao-sei"
+        ? "Ainda não sabe"
+        : undefined;
   const productName = lead.travelProduct ? (getTravelProductBySlug(lead.travelProduct)?.title ?? lead.travelProduct) : undefined;
 
   return (
@@ -105,7 +115,7 @@ export default async function AdminLeadDetailPage({ params }: PageProps<"/admin/
           <section className="border border-ink/10 bg-ivory p-6">
             <h2 className="font-serif text-lg text-ink">Viagem</h2>
             <div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3">
-              <Field label="Destinos" value={destinationNames.join(", ") || undefined} />
+              <Field label="Destinos" value={destinationsLabel || undefined} />
               <Field label="Experiência" value={experienceName} />
               <Field label="Produto" value={productName} />
               <Field label="Mês" value={lead.month} />

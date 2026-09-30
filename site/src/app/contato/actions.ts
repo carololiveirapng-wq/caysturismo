@@ -19,7 +19,8 @@ export interface SubmitLeadInput {
   adultos: number;
   criancas: number;
   idadesCriancas?: string;
-  faixaInvestimento: string;
+  faixaInvestimentoTipo: string;
+  faixaInvestimentoDetalhe?: string;
   observacoes?: string;
   nome: string;
   whatsapp: string;
@@ -66,6 +67,14 @@ export async function submitLead(input: SubmitLeadInput): Promise<SubmitLeadResu
   const attribution = await readAttribution();
   const data = parsed.data;
 
+  // Sem coluna nova no banco pra isso — a escolha (tem faixa / quer
+  // entender) e o texto livre da faixa (quando houver) viram um único
+  // valor legível em `budgetTier`, o mesmo campo que já existia.
+  const budgetTier =
+    data.faixaInvestimentoTipo === "tenho-faixa"
+      ? (data.faixaInvestimentoDetalhe?.trim() || "Tenho uma faixa definida")
+      : "Quero entender as possibilidades";
+
   const newLead: NewLead = {
     name: data.nome,
     email: data.email,
@@ -81,7 +90,7 @@ export async function submitLead(input: SubmitLeadInput): Promise<SubmitLeadResu
     adults: data.adultos,
     children: data.criancas,
     childrenAges: data.idadesCriancas || undefined,
-    budgetTier: data.faixaInvestimento,
+    budgetTier,
     notes: data.observacoes || undefined,
     contactPreference: data.preferenciaContato,
     acquisitionSource: data.comoConheceu || undefined,

@@ -3,18 +3,24 @@ import { getExperienceDetailBySlug } from "@/data/experiences";
 import { getDestinationDetailBySlug } from "@/data/destinations";
 import type { Lead } from "@/lib/leads/types";
 
-/** Interesse principal do lead: produto de viagem > experiência > destino — nessa ordem de especificidade. */
+/**
+ * Interesse principal do lead: produto de viagem > experiência > destino —
+ * nessa ordem de especificidade. "nao-sei" é um valor válido do formulário
+ * (campo "tipo de viagem"/"destino" com a opção "Ainda não sei"), não uma
+ * experiência ou destino real — tratado como ausente aqui, não exibido cru.
+ */
 export function getLeadInterest(lead: Pick<Lead, "travelProduct" | "experience" | "destinations">): string {
   if (lead.travelProduct) {
     return getTravelProductBySlug(lead.travelProduct)?.title ?? lead.travelProduct;
   }
-  if (lead.experience) {
+  if (lead.experience && lead.experience !== "nao-sei") {
     return getExperienceDetailBySlug(lead.experience)?.name ?? lead.experience;
   }
-  if (lead.destinations[0]) {
-    return getDestinationDetailBySlug(lead.destinations[0])?.name ?? lead.destinations[0];
+  const destination = lead.destinations.find((slug) => slug !== "nao-sei");
+  if (destination) {
+    return getDestinationDetailBySlug(destination)?.name ?? destination;
   }
-  return "Não informado";
+  return "Ainda não definido";
 }
 
 /**
