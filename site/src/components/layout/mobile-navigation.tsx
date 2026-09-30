@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
-import { X, AtSign } from "lucide-react";
+import { X, AtSign, ChevronDown } from "lucide-react";
 import { siteConfig, whatsappHref } from "@/lib/site-config";
 
 interface NavLink {
@@ -21,11 +21,17 @@ interface MobileNavigationProps {
 
 export function MobileNavigation({ open, onClose, links }: MobileNavigationProps) {
   const panelRef = useRef<HTMLDivElement>(null);
+  const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
+
+  function handleClose() {
+    setOpenSubmenu(null);
+    onClose();
+  }
 
   useEffect(() => {
     if (!open) return;
     const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
+      if (e.key === "Escape") handleClose();
     };
     document.addEventListener("keydown", onKeyDown);
     document.body.style.overflow = "hidden";
@@ -34,6 +40,7 @@ export function MobileNavigation({ open, onClose, links }: MobileNavigationProps
       document.removeEventListener("keydown", onKeyDown);
       document.body.style.overflow = "";
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- handleClose é estável o bastante aqui (só chama onClose + reset local); incluí-la recriaria o listener a cada render de forma desnecessária.
   }, [open, onClose]);
 
   return (
@@ -49,9 +56,12 @@ export function MobileNavigation({ open, onClose, links }: MobileNavigationProps
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-          className="fixed inset-0 z-50 flex flex-col bg-graphite text-ivory outline-none lg:hidden"
+          className="fixed inset-0 z-50 flex flex-col overflow-y-auto bg-graphite text-ivory outline-none lg:hidden"
         >
-          <div className="flex h-20 items-center justify-between px-6">
+          <div
+            className="flex h-20 items-center justify-between px-6"
+            style={{ paddingTop: "env(safe-area-inset-top)" }}
+          >
             <Image
               src="/cays-turismo-logo-header-menu.png"
               alt="Cays Turismo"
@@ -62,7 +72,7 @@ export function MobileNavigation({ open, onClose, links }: MobileNavigationProps
             <button
               type="button"
               aria-label="Fechar menu"
-              onClick={onClose}
+              onClick={handleClose}
               className="flex size-10 items-center justify-center"
             >
               <X className="size-5" />
@@ -71,27 +81,65 @@ export function MobileNavigation({ open, onClose, links }: MobileNavigationProps
 
           <nav
             aria-label="Navegação mobile"
-            className="flex flex-1 flex-col justify-center gap-1 px-6"
+            className="flex flex-1 flex-col justify-center gap-1 px-6 py-6"
           >
-            {links.map((link, i) => (
-              <motion.div
-                key={link.href}
-                initial={{ opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.08 * i, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-              >
-                <Link
-                  href={link.href}
-                  onClick={onClose}
-                  className="block py-3 font-serif text-4xl tracking-tight"
+            {links.map((link, i) => {
+              const hasSubmenu = !!link.submenu?.length;
+              const isSubmenuOpen = openSubmenu === link.href;
+
+              return (
+                <motion.div
+                  key={link.href}
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.08 * i, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
                 >
-                  {link.label}
-                </Link>
-              </motion.div>
-            ))}
+                  <div className="flex items-center justify-between">
+                    <Link
+                      href={link.href}
+                      onClick={handleClose}
+                      className="block py-3 font-serif text-4xl tracking-tight"
+                    >
+                      {link.label}
+                    </Link>
+                    {hasSubmenu && (
+                      <button
+                        type="button"
+                        aria-label={`${isSubmenuOpen ? "Fechar" : "Abrir"} submenu de ${link.label}`}
+                        aria-expanded={isSubmenuOpen}
+                        onClick={() => setOpenSubmenu(isSubmenuOpen ? null : link.href)}
+                        className="flex size-11 shrink-0 items-center justify-center text-ivory/70"
+                      >
+                        <ChevronDown
+                          className={`size-5 transition-transform duration-300 ${isSubmenuOpen ? "rotate-180" : ""}`}
+                        />
+                      </button>
+                    )}
+                  </div>
+
+                  {hasSubmenu && isSubmenuOpen && (
+                    <div className="mb-3 flex flex-col gap-1 border-l border-ivory/15 pl-4">
+                      {link.submenu?.map((item) => (
+                        <Link
+                          key={item.href}
+                          href={item.href}
+                          onClick={handleClose}
+                          className="py-2 text-base text-ivory/75 hover:text-ivory"
+                        >
+                          {item.label}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </motion.div>
+              );
+            })}
           </nav>
 
-          <div className="flex items-center justify-between border-t border-ivory/15 px-6 py-6 text-sm">
+          <div
+            className="flex items-center justify-between border-t border-ivory/15 px-6 py-6 text-sm"
+            style={{ paddingBottom: "calc(1.5rem + env(safe-area-inset-bottom))" }}
+          >
             <div className="flex items-center gap-5">
               <a
                 href={siteConfig.instagram}
@@ -112,7 +160,7 @@ export function MobileNavigation({ open, onClose, links }: MobileNavigationProps
                 </a>
               )}
             </div>
-            <Link href="/contato" onClick={onClose} className="text-ivory/80 hover:text-ivory">
+            <Link href="/contato" onClick={handleClose} className="text-ivory/80 hover:text-ivory">
               Contato
             </Link>
           </div>

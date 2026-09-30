@@ -84,6 +84,10 @@ export function Header() {
                 className="relative"
                 onMouseEnter={() => "submenu" in link && setOpenSubmenu(link.href)}
                 onMouseLeave={() => setOpenSubmenu(null)}
+                onFocus={() => "submenu" in link && setOpenSubmenu(link.href)}
+                onBlur={(e) => {
+                  if (!e.currentTarget.contains(e.relatedTarget as Node)) setOpenSubmenu(null);
+                }}
               >
                 <Link
                   href={link.href}
@@ -97,20 +101,27 @@ export function Header() {
                 </Link>
 
                 {"submenu" in link && openSubmenu === link.href && (
-                  <div
-                    role="menu"
-                    className="absolute top-full left-1/2 mt-4 w-64 -translate-x-1/2 border border-line bg-ivory py-3 shadow-[0_20px_40px_-20px_rgba(0,0,0,0.25)]"
-                  >
-                    {link.submenu?.map((item) => (
-                      <Link
-                        key={item.href}
-                        href={item.href}
-                        role="menuitem"
-                        className="block px-5 py-2 text-sm text-ink/80 transition-colors hover:bg-sand hover:text-ink"
-                      >
-                        {item.label}
-                      </Link>
-                    ))}
+                  // Wrapper sem margem, só padding-top: mantém o espaçamento visual
+                  // do card mas garante que a área "hoverável" seja contínua do
+                  // link até o menu — com margin-top no lugar de padding, o cursor
+                  // atravessava uma faixa morta e o onMouseLeave do pai disparava
+                  // antes de alcançar o submenu.
+                  <div className="absolute top-full left-1/2 w-64 -translate-x-1/2 pt-4">
+                    <div
+                      role="menu"
+                      className="border border-line bg-ivory py-3 shadow-[0_20px_40px_-20px_rgba(0,0,0,0.25)]"
+                    >
+                      {link.submenu?.map((item) => (
+                        <Link
+                          key={item.href}
+                          href={item.href}
+                          role="menuitem"
+                          className="block px-5 py-2 text-sm text-ink/80 transition-colors hover:bg-sand hover:text-ink"
+                        >
+                          {item.label}
+                        </Link>
+                      ))}
+                    </div>
                   </div>
                 )}
               </div>
