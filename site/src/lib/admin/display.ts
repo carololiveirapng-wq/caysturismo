@@ -1,0 +1,50 @@
+import { getTravelProductBySlug } from "@/data/travel-products";
+import { getExperienceDetailBySlug } from "@/data/experiences";
+import { getDestinationDetailBySlug } from "@/data/destinations";
+import type { Lead } from "@/lib/leads/types";
+
+/** Interesse principal do lead: produto de viagem > experiência > destino — nessa ordem de especificidade. */
+export function getLeadInterest(lead: Pick<Lead, "travelProduct" | "experience" | "destinations">): string {
+  if (lead.travelProduct) {
+    return getTravelProductBySlug(lead.travelProduct)?.title ?? lead.travelProduct;
+  }
+  if (lead.experience) {
+    return getExperienceDetailBySlug(lead.experience)?.name ?? lead.experience;
+  }
+  if (lead.destinations[0]) {
+    return getDestinationDetailBySlug(lead.destinations[0])?.name ?? lead.destinations[0];
+  }
+  return "Não informado";
+}
+
+/**
+ * Rótulo amigável de origem — deriva de utm_source/acquisition_source pra
+ * exibição, mas nunca sobrescreve o dado bruto salvo no banco.
+ */
+const ORIGIN_LABELS: [needle: string, label: string][] = [
+  ["meta", "Meta Ads"],
+  ["facebook", "Meta Ads"],
+  ["fb", "Meta Ads"],
+  ["instagram", "Instagram"],
+  ["ig", "Instagram"],
+  ["google", "Google Ads"],
+  ["referral", "Referência"],
+];
+
+export function getLeadOrigin(lead: Pick<Lead, "utmSource" | "acquisitionSource">): string {
+  const source = lead.utmSource?.toLowerCase().trim();
+  if (source) {
+    const match = ORIGIN_LABELS.find(([needle]) => source.includes(needle));
+    return match ? match[1] : lead.utmSource!;
+  }
+  if (lead.acquisitionSource) return lead.acquisitionSource;
+  return "Direto";
+}
+
+/** Link "wa.me" com número higienizado (só dígitos) e mensagem inicial pré-preenchida — nunca envia nada sozinho, só abre o WhatsApp com o texto pronto. */
+export function buildWhatsAppLink(whatsapp: string, name: string): string {
+  const digits = whatsapp.replace(/\D/g, "");
+  const firstName = name.trim().split(/\s+/)[0] ?? name;
+  const message = `Olá, ${firstName}! Aqui é da Cays Turismo, vi seu pedido de planejamento de viagem.`;
+  return `https://wa.me/${digits}?text=${encodeURIComponent(message)}`;
+}
