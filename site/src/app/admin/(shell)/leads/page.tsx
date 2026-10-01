@@ -5,8 +5,7 @@ import { AdminEmptyState } from "@/components/admin/admin-empty-state";
 import { getLeads, daysAgo } from "@/lib/admin/leads-queries";
 import { getLeadInterest, getLeadOrigin } from "@/lib/admin/display";
 import { LEAD_STATUSES, LEAD_STATUS_LABELS, type LeadStatus } from "@/lib/leads/types";
-import { destinationDetails } from "@/data/destinations";
-import { experienceDetails } from "@/data/experiences";
+import { getDestinations, getExperiences } from "@/lib/cms";
 
 export const metadata = { title: "Leads | Admin Cays" };
 
@@ -56,8 +55,13 @@ export default async function AdminLeadsPage({ searchParams }: PageProps<"/admin
     loadError = error instanceof Error ? error.message : "Não foi possível carregar os leads.";
   }
 
-  const activeDestinations = destinationDetails.filter((d) => d.active);
-  const activeExperiences = experienceDetails.filter((e) => e.active);
+  const [allDestinations, allExperiences] = await Promise.all([getDestinations(), getExperiences()]);
+  const activeDestinations = allDestinations.filter((d) => d.active);
+  const activeExperiences = allExperiences.filter((e) => e.active);
+
+  const interestByLeadId = result
+    ? new Map(await Promise.all(result.items.map(async (lead) => [lead.id, await getLeadInterest(lead)] as const)))
+    : new Map<string, string>();
 
   function buildPageHref(targetPage: number) {
     const next = new URLSearchParams();
@@ -228,7 +232,7 @@ export default async function AdminLeadsPage({ searchParams }: PageProps<"/admin
                 {result!.items.map((lead) => (
                   <tr key={lead.id} className="border-b border-ink/5 last:border-0">
                     <td className="px-4 py-3 font-medium text-ink">{lead.name}</td>
-                    <td className="px-4 py-3 text-stone">{getLeadInterest(lead)}</td>
+                    <td className="px-4 py-3 text-stone">{interestByLeadId.get(lead.id)}</td>
                     <td className="px-4 py-3 text-stone">{lead.whatsapp}</td>
                     <td className="px-4 py-3 text-stone">{getLeadOrigin(lead)}</td>
                     <td className="px-4 py-3">
@@ -258,7 +262,7 @@ export default async function AdminLeadsPage({ searchParams }: PageProps<"/admin
                   <span className="font-medium text-ink">{lead.name}</span>
                   <AdminStatusBadge status={lead.status} />
                 </div>
-                <p className="text-sm text-stone">{getLeadInterest(lead)}</p>
+                <p className="text-sm text-stone">{interestByLeadId.get(lead.id)}</p>
                 <p className="text-sm text-stone">{lead.whatsapp}</p>
                 <div className="flex items-center justify-between text-xs text-stone/80">
                   <span>{getLeadOrigin(lead)}</span>

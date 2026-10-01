@@ -14,9 +14,14 @@ export default async function AdminDashboardPage() {
   let recentLeads;
   let loadError: string | null = null;
 
+  let interestByLeadId = new Map<string, string>();
+
   try {
     stats = await getLeadStats();
     recentLeads = (await getLeads({ perPage: 8, sort: "newest" })).items;
+    interestByLeadId = new Map(
+      await Promise.all(recentLeads.map(async (lead) => [lead.id, await getLeadInterest(lead)] as const)),
+    );
   } catch (error) {
     loadError =
       error instanceof Error ? error.message : "Não foi possível carregar os dados do banco.";
@@ -131,7 +136,7 @@ export default async function AdminDashboardPage() {
                               {lead.name}
                             </Link>
                           </td>
-                          <td className="px-4 py-3 text-stone">{getLeadInterest(lead)}</td>
+                          <td className="px-4 py-3 text-stone">{interestByLeadId.get(lead.id)}</td>
                           <td className="px-4 py-3 text-stone">{getLeadOrigin(lead)}</td>
                           <td className="px-4 py-3">
                             <AdminStatusBadge status={lead.status} />
@@ -157,7 +162,7 @@ export default async function AdminDashboardPage() {
                         <span className="font-medium text-ink">{lead.name}</span>
                         <AdminStatusBadge status={lead.status} />
                       </div>
-                      <p className="text-sm text-stone">{getLeadInterest(lead)}</p>
+                      <p className="text-sm text-stone">{interestByLeadId.get(lead.id)}</p>
                       <div className="flex items-center justify-between text-xs text-stone/80">
                         <span>{getLeadOrigin(lead)}</span>
                         <span>{new Date(lead.createdAt).toLocaleDateString("pt-BR")}</span>

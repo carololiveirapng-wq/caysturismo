@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import { ChevronDown, Check } from "lucide-react";
-import { azDestinations } from "@/data/destinations-hub";
 import { cn } from "@/lib/utils";
 
 const NAO_SEI = "nao-sei";
@@ -10,9 +9,11 @@ const NAO_SEI = "nao-sei";
 export function DestinationMultiSelect({
   value,
   onChange,
+  destinations,
 }: {
   value: string[];
   onChange: (value: string[]) => void;
+  destinations: { slug: string; name: string }[];
 }) {
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
@@ -43,7 +44,7 @@ export function DestinationMultiSelect({
   }
 
   const selectedNames = value
-    .map((slug) => (slug === NAO_SEI ? "Ainda não sei" : azDestinations.find((d) => d.slug === slug)?.name))
+    .map((slug) => (slug === NAO_SEI ? "Ainda não sei" : destinations.find((d) => d.slug === slug)?.name))
     .filter((name): name is string => Boolean(name));
 
   return (
@@ -80,7 +81,7 @@ export function DestinationMultiSelect({
             Ainda não sei
             {value.includes(NAO_SEI) && <Check className="size-4 text-magenta" aria-hidden />}
           </button>
-          {azDestinations.map((d) => (
+          {destinations.map((d) => (
             <button
               key={d.slug}
               type="button"

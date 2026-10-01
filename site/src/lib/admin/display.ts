@@ -1,6 +1,4 @@
-import { getTravelProductBySlug } from "@/data/travel-products";
-import { getExperienceDetailBySlug } from "@/data/experiences";
-import { getDestinationDetailBySlug } from "@/data/destinations";
+import { getTravelProductBySlug, getExperienceBySlug, getDestinationBySlug } from "@/lib/cms";
 import type { Lead } from "@/lib/leads/types";
 
 /**
@@ -8,17 +6,20 @@ import type { Lead } from "@/lib/leads/types";
  * nessa ordem de especificidade. "nao-sei" é um valor válido do formulário
  * (campo "tipo de viagem"/"destino" com a opção "Ainda não sei"), não uma
  * experiência ou destino real — tratado como ausente aqui, não exibido cru.
+ * Async porque passa pelo CMS (Sanity primeiro, mock como fallback) em vez
+ * de ler o mock direto — um lead antigo referenciando um slug que só
+ * existe no mock continua resolvendo normalmente.
  */
-export function getLeadInterest(lead: Pick<Lead, "travelProduct" | "experience" | "destinations">): string {
+export async function getLeadInterest(lead: Pick<Lead, "travelProduct" | "experience" | "destinations">): Promise<string> {
   if (lead.travelProduct) {
-    return getTravelProductBySlug(lead.travelProduct)?.title ?? lead.travelProduct;
+    return (await getTravelProductBySlug(lead.travelProduct))?.title ?? lead.travelProduct;
   }
   if (lead.experience && lead.experience !== "nao-sei") {
-    return getExperienceDetailBySlug(lead.experience)?.name ?? lead.experience;
+    return (await getExperienceBySlug(lead.experience))?.name ?? lead.experience;
   }
   const destination = lead.destinations.find((slug) => slug !== "nao-sei");
   if (destination) {
-    return getDestinationDetailBySlug(destination)?.name ?? destination;
+    return (await getDestinationBySlug(destination))?.name ?? destination;
   }
   return "Ainda não definido";
 }

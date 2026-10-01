@@ -38,9 +38,10 @@ interface ContactFlowProps {
   travelProduct?: string;
   sourcePath?: string;
   settings: SiteSettings;
+  destinations: { slug: string; name: string }[];
 }
 
-export function ContactFlow({ planningLabel, initialTripValues, travelProduct, sourcePath, settings }: ContactFlowProps) {
+export function ContactFlow({ planningLabel, initialTripValues, travelProduct, sourcePath, settings, destinations }: ContactFlowProps) {
   const router = useRouter();
   const [trip, setTrip] = useState<TripStepValues>({ ...defaultTripValues, ...initialTripValues });
   const [about, setAbout] = useState<AboutYouFormState>(defaultAboutYouValues);
@@ -128,7 +129,7 @@ export function ContactFlow({ planningLabel, initialTripValues, travelProduct, s
             <div className="mt-7 space-y-8">
               <FormField label="Para onde você gostaria de ir?" error={errors.destinos}>
                 <div data-field-error={errors.destinos ? "" : undefined}>
-                  <DestinationMultiSelect value={trip.destinos} onChange={(v) => setTrip1("destinos", v)} />
+                  <DestinationMultiSelect value={trip.destinos} onChange={(v) => setTrip1("destinos", v)} destinations={destinations} />
                 </div>
               </FormField>
 

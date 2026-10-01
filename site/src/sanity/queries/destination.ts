@@ -17,6 +17,7 @@ const destinationProjection = `{
   order,
   name,
   type,
+  continent,
   "parent": parent->slug.current,
   breadcrumb,
   hero{
@@ -51,12 +52,12 @@ const destinationProjection = `{
     text,
     "image": image${imageFragment}
   },
-  "stays": stays[]{
+  "stays": coalesce(stays[]->{
     name,
-    region,
-    text,
+    "region": location,
+    "text": shortDescription,
     "image": image${imageFragment}
-  },
+  }, []),
   months,
   "articles": articles[]->{
     "slug": slug.current,

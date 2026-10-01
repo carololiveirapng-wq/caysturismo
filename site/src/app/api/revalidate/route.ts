@@ -1,5 +1,6 @@
 import { revalidatePath } from "next/cache";
 import { NextResponse, type NextRequest } from "next/server";
+import { sanityClient } from "@/sanity/client";
 
 /**
  * Webhook do Sanity → revalidation do Next.js. Configurar em
@@ -8,13 +9,18 @@ import { NextResponse, type NextRequest } from "next/server";
  *   URL: https://<domínio>/api/revalidate?secret=<SANITY_REVALIDATE_SECRET>
  *   Dataset: production
  *   Trigger on: Create, Update, Delete
- *   Filter: _type in ["destination", "experience", "travelProduct", "curadoriaArticle", "settings"]
- *   Projection: { "type": _type, "slug": slug.current }
+ *   Filter: _type in ["destination", "experience", "travelProduct", "curadoriaArticle", "settings", "hotel"]
+ *   Projection: { "type": _type, "id": _id, "slug": slug.current }
  *
  * O secret vai na query string (não só num header) porque o painel de
  * webhooks do Sanity deixa configurar a URL completa de forma simples sem
  * precisar de headers customizados — ainda assim nunca aceita o request
  * sem ele, então o endpoint não fica aberto.
+ *
+ * `hotel` não tem página própria — é referenciado de dentro de
+ * destination/travelProduct (`stays[]`). Publicar um hotel busca quem o
+ * referencia (`*[references($id)]`) e revalida essas páginas dependentes,
+ * em vez de precisar listar manualmente onde cada hotel aparece.
  */
 
 const TYPE_TO_LIST_PATH: Record<string, string> = {
@@ -42,14 +48,14 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Secret inválido" }, { status: 401 });
   }
 
-  let body: { type?: string; slug?: string };
+  let body: { type?: string; slug?: string; id?: string };
   try {
     body = await request.json();
   } catch {
     return NextResponse.json({ error: "Corpo da requisição inválido (esperado JSON)" }, { status: 400 });
   }
 
-  const { type, slug } = body;
+  const { type, slug, id } = body;
   if (!type) {
     return NextResponse.json({ error: "Campo 'type' ausente no payload" }, { status: 400 });
   }
@@ -61,6 +67,22 @@ export async function POST(request: NextRequest) {
     // via o layout raiz — revalidar o layout propaga pra árvore inteira.
     revalidatePath("/", "layout");
     revalidated.push("/ (layout)");
+  } else if (type === "hotel") {
+    if (!id || !sanityClient) {
+      return NextResponse.json({ error: "Campo 'id' ausente no payload (necessário pra resolver dependentes de hotel)" }, { status: 400 });
+    }
+    const dependents = await sanityClient.fetch<{ _type: string; slug: string | null }[]>(
+      `*[references($id)]{ _type, "slug": slug.current }`,
+      { id },
+    );
+    for (const dep of dependents) {
+      const prefix = TYPE_TO_DETAIL_PREFIX[dep._type];
+      if (prefix && dep.slug) {
+        const path = `${prefix}/${dep.slug}`;
+        revalidatePath(path);
+        revalidated.push(path);
+      }
+    }
   } else {
     const listPath = TYPE_TO_LIST_PATH[type];
     const detailPrefix = TYPE_TO_DETAIL_PREFIX[type];

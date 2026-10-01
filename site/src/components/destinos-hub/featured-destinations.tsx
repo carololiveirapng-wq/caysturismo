@@ -2,14 +2,15 @@ import { Container } from "@/components/ui/container";
 import { EditorialHeading } from "@/components/ui/editorial-heading";
 import { Reveal } from "@/components/ui/reveal";
 import { DestinationCard } from "@/components/home/destinations/destination-card";
-import { destinations } from "@/data/home";
-import { getActiveOrderedItems } from "@/lib/content";
+import type { DemoImage } from "@/types";
 
-/** Reaproveita os mesmos dados da aba "Destaque" da Home — nada duplicado manualmente. */
-export function FeaturedDestinations() {
-  const items = getActiveOrderedItems(destinations)
-    .filter((d) => d.collection === "featured")
-    .slice(0, 4);
+interface FeaturedDestinationItem {
+  slug: string;
+  name: string;
+  image: DemoImage;
+}
+
+export function FeaturedDestinations({ items }: { items: FeaturedDestinationItem[] }) {
   if (items.length === 0) return null;
 
   return (
@@ -22,7 +23,7 @@ export function FeaturedDestinations() {
         </Reveal>
         <div className="mt-9 grid grid-cols-2 gap-6 sm:grid-cols-4">
           {items.map((destination) => (
-            <DestinationCard key={destination.id} destination={destination} />
+            <DestinationCard key={destination.slug} destination={destination} />
           ))}
         </div>
       </Container>

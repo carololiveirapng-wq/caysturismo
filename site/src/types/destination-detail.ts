@@ -93,6 +93,8 @@ export interface DestinationDetail extends BaseContent {
   type: GeographyType;
   /** Slug do destino "pai" na hierarquia (ex.: Kyoto → "japao"). */
   parent?: string;
+  /** Slug do continente (ver `src/data/destinations-hub.ts`) — usado pro filtro do hub /destinos. */
+  continent?: string;
   /** Trilha de navegação Home › Destinos › ... › Nome. Sem isto, cai no breadcrumb genérico Home › Destinos › Nome. */
   breadcrumb?: { label: string; href?: string }[];
 

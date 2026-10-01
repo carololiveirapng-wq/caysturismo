@@ -2,15 +2,21 @@ import { Container } from "@/components/ui/container";
 import { EditorialHeading } from "@/components/ui/editorial-heading";
 import { ImageReveal } from "@/components/ui/image-reveal";
 import { Reveal } from "@/components/ui/reveal";
-import { getWhereToGoNow } from "@/data/destinations-hub";
+import type { DemoImage } from "@/types";
 
 const MONTH_NAMES = [
   "janeiro", "fevereiro", "março", "abril", "maio", "junho",
   "julho", "agosto", "setembro", "outubro", "novembro", "dezembro",
 ];
 
-export function WhereToGoNow() {
-  const picks = getWhereToGoNow();
+export interface WhereToGoPick {
+  slug: string;
+  name: string;
+  note: string;
+  image: DemoImage;
+}
+
+export function WhereToGoNow({ picks }: { picks: WhereToGoPick[] }) {
   if (picks.length === 0) return null;
   const monthName = MONTH_NAMES[new Date().getMonth()];
 

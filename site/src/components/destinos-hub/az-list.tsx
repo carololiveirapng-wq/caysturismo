@@ -1,18 +1,20 @@
 import Link from "next/link";
 import Image from "next/image";
-import { azDestinations, continents, type AZDestination } from "@/data/destinations-hub";
+import { continents, type AZDestination } from "@/data/destinations-hub";
 import { destinationHref } from "@/lib/links";
 
 export function AZList({
+  items: allItems,
   filterContinent,
   onClearFilter,
 }: {
+  items: AZDestination[];
   filterContinent: string | null;
   onClearFilter: () => void;
 }) {
   const items = filterContinent
-    ? azDestinations.filter((d) => d.continentSlug === filterContinent)
-    : azDestinations;
+    ? allItems.filter((d) => d.continentSlug === filterContinent)
+    : allItems;
 
   const grouped = items.reduce<Record<string, AZDestination[]>>((acc, item) => {
     const letter = item.name[0]?.toUpperCase() ?? "#";

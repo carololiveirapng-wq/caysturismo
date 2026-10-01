@@ -36,12 +36,12 @@ const travelProductProjection = `{
   overview,
   highlights,
   itinerary,
-  "stays": stays[]{
+  "stays": coalesce(stays[]->{
     name,
-    region,
-    text,
+    "region": location,
+    "text": shortDescription,
     "image": image${imageFragment}
-  },
+  }, []),
   cabinCategories,
   inclusions,
   exclusions,

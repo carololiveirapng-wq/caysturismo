@@ -1,7 +1,6 @@
 "use client";
 
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
-import { azDestinations } from "@/data/destinations-hub";
 import { discoveryYears } from "@/data/travel-discovery";
 import { durationOptions } from "@/lib/contact-schema";
 import { TYPE_LABEL } from "@/lib/travel-product-status";
@@ -15,9 +14,11 @@ const selectClassName = cn(
 function FilterFields({
   idPrefix,
   experiences,
+  destinations,
 }: {
   idPrefix: string;
   experiences: Pick<ExperienceDetail, "slug" | "name">[];
+  destinations: { slug: string; name: string }[];
 }) {
   const router = useRouter();
   const pathname = usePathname();
@@ -45,7 +46,7 @@ function FilterFields({
           onChange={(e) => set("destino", e.target.value)}
         >
           <option value="">Qualquer destino</option>
-          {azDestinations.map((d) => (
+          {destinations.map((d) => (
             <option key={d.slug} value={d.slug}>{d.name}</option>
           ))}
         </select>
@@ -133,7 +134,13 @@ function FilterFields({
 }
 
 /** Mesmos campos duas vezes — um recolhível no mobile, outro sempre visível no desktop (mesmo padrão do índice de artigo). */
-export function TravelProductFilters({ experiences }: { experiences: Pick<ExperienceDetail, "slug" | "name">[] }) {
+export function TravelProductFilters({
+  experiences,
+  destinations,
+}: {
+  experiences: Pick<ExperienceDetail, "slug" | "name">[];
+  destinations: { slug: string; name: string }[];
+}) {
   return (
     <div>
       <details className="border border-ink/10 p-4 lg:hidden">
@@ -141,12 +148,12 @@ export function TravelProductFilters({ experiences }: { experiences: Pick<Experi
           Filtrar viagens
         </summary>
         <div className="mt-5">
-          <FilterFields idPrefix="mobile" experiences={experiences} />
+          <FilterFields idPrefix="mobile" experiences={experiences} destinations={destinations} />
         </div>
       </details>
 
       <div className="hidden lg:block">
-        <FilterFields idPrefix="desktop" experiences={experiences} />
+        <FilterFields idPrefix="desktop" experiences={experiences} destinations={destinations} />
       </div>
     </div>
   );

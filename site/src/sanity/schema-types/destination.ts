@@ -26,6 +26,22 @@ export const destination = defineType({
       validation: (r) => r.required(),
     }),
     defineField({ name: "parent", title: "Destino pai", type: "reference", to: [{ type: "destination" }] }),
+    defineField({
+      name: "continent",
+      title: "Continente",
+      type: "string",
+      description: "Usado pro hub /destinos agrupar e filtrar por continente — ver src/data/destinations-hub.ts pros slugs esperados.",
+      options: {
+        list: [
+          { title: "Américas", value: "americas" },
+          { title: "Europa", value: "europa" },
+          { title: "Ásia", value: "asia" },
+          { title: "África & Oriente Médio", value: "africa-oriente-medio" },
+          { title: "Índico", value: "indico" },
+          { title: "Oceania", value: "oceania" },
+        ],
+      },
+    }),
     defineField({ name: "breadcrumb", title: "Breadcrumb", type: "array", of: [{ type: "breadcrumbItem" }] }),
 
     defineField({
@@ -116,15 +132,8 @@ export const destination = defineType({
       name: "stays",
       title: "Onde ficar",
       type: "array",
-      of: [{
-        type: "object",
-        fields: [
-          defineField({ name: "name", title: "Nome", type: "string" }),
-          defineField({ name: "region", title: "Região", type: "string" }),
-          defineField({ name: "text", title: "Texto", type: "string" }),
-          defineField({ name: "image", title: "Imagem", type: "imageWithAlt" }),
-        ],
-      }],
+      of: [{ type: "reference", to: [{ type: "hotel" }] }],
+      description: "Referencia hotéis cadastrados em Hotéis — evita repetir nome/imagem/descrição do mesmo hotel em vários destinos/viagens.",
     }),
 
     defineField({

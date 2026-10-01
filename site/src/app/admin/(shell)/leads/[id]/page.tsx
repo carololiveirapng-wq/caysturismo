@@ -7,9 +7,7 @@ import { AdminEmptyState } from "@/components/admin/admin-empty-state";
 import { LeadStatusForm } from "@/components/admin/lead-status-form";
 import { getLeadById } from "@/lib/admin/leads-queries";
 import { getLeadInterest, buildWhatsAppLink } from "@/lib/admin/display";
-import { getDestinationDetailBySlug } from "@/data/destinations";
-import { getExperienceDetailBySlug } from "@/data/experiences";
-import { getTravelProductBySlug } from "@/data/travel-products";
+import { getDestinationBySlug, getExperienceBySlug, getTravelProductBySlug } from "@/lib/cms";
 
 export const metadata = { title: "Detalhe do lead | Admin Cays" };
 
@@ -40,25 +38,32 @@ export default async function AdminLeadDetailPage({ params }: PageProps<"/admin/
 
   if (!lead) notFound();
 
-  const destinationNames = lead.destinations
-    .filter((slug) => slug !== "nao-sei")
-    .map((slug) => getDestinationDetailBySlug(slug)?.name ?? slug);
+  const [destinationNames, experienceDetail, productDetail, interest] = await Promise.all([
+    Promise.all(
+      lead.destinations
+        .filter((slug) => slug !== "nao-sei")
+        .map(async (slug) => (await getDestinationBySlug(slug))?.name ?? slug),
+    ),
+    lead.experience && lead.experience !== "nao-sei" ? getExperienceBySlug(lead.experience) : undefined,
+    lead.travelProduct ? getTravelProductBySlug(lead.travelProduct) : undefined,
+    getLeadInterest(lead),
+  ]);
   const destinationsLabel = lead.destinations.includes("nao-sei")
     ? [...destinationNames, "Ainda não sabe"].join(", ")
     : destinationNames.join(", ");
   const experienceName =
     lead.experience && lead.experience !== "nao-sei"
-      ? (getExperienceDetailBySlug(lead.experience)?.name ?? lead.experience)
+      ? (experienceDetail?.name ?? lead.experience)
       : lead.experience === "nao-sei"
         ? "Ainda não sabe"
         : undefined;
-  const productName = lead.travelProduct ? (getTravelProductBySlug(lead.travelProduct)?.title ?? lead.travelProduct) : undefined;
+  const productName = lead.travelProduct ? (productDetail?.title ?? lead.travelProduct) : undefined;
 
   return (
     <div className="flex flex-col gap-8">
       <AdminPageHeader
         title={lead.name}
-        description={`${getLeadInterest(lead)} · Recebido em ${new Date(lead.createdAt).toLocaleString("pt-BR")}`}
+        description={`${interest} · Recebido em ${new Date(lead.createdAt).toLocaleString("pt-BR")}`}
         actions={
           <>
             <a

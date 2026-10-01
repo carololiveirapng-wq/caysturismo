@@ -3,8 +3,9 @@ import { ExperienciasHero } from "@/components/experiencias-hub/experiencias-her
 import { ExperienceCategoryGrid } from "@/components/experiencias-hub/category-grid";
 import { FeaturedJourneys } from "@/components/experiencias-hub/featured-journeys";
 import { DestinationFinalCTA } from "@/components/destination/destination-final-cta";
-import { occasions, styles } from "@/data/experiences-hub";
+import { getExperiences } from "@/lib/cms";
 import { siteConfig } from "@/lib/site-config";
+import type { ExperienceHubCard } from "@/data/experiences-hub";
 
 const title = "Experiências | Cays Turismo";
 const description =
@@ -22,7 +23,16 @@ export const metadata: Metadata = {
 const OCCASION_SPANS = ["md:col-span-4", "md:col-span-2", "md:col-span-3", "md:col-span-3"];
 const STYLE_SPANS = ["md:col-span-4", "md:col-span-2", "md:col-span-2", "md:col-span-2", "md:col-span-2", "md:col-span-6"];
 
-export default function ExperienciasHubPage() {
+export default async function ExperienciasHubPage() {
+  const experiences = await getExperiences();
+  const toCard = (e: (typeof experiences)[number]): ExperienceHubCard => ({
+    slug: e.slug,
+    name: e.name,
+    image: e.hero.image,
+  });
+  const occasions = experiences.filter((e) => e.axis === "occasion").map(toCard);
+  const styles = experiences.filter((e) => e.axis === "style").map(toCard);
+
   return (
     <>
       <ExperienciasHero />

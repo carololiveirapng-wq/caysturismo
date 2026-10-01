@@ -1,9 +1,17 @@
 import Link from "next/link";
 import { ImageReveal } from "@/components/ui/image-reveal";
 import { destinationHref } from "@/lib/links";
-import type { Destination } from "@/types";
+import type { DemoImage } from "@/types";
 
-export function DestinationCard({ destination }: { destination: Destination }) {
+interface DestinationCardData {
+  slug: string;
+  name: string;
+  image: DemoImage;
+  region?: string;
+  shortDescription?: string;
+}
+
+export function DestinationCard({ destination }: { destination: DestinationCardData }) {
   return (
     <Link href={destinationHref(destination.slug)} className="group/card block">
       <div className="relative h-[340px] overflow-hidden md:h-[380px] lg:h-[400px]">

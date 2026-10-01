@@ -6,6 +6,7 @@ import { Container } from "@/components/ui/container";
 import { ContinentGrid } from "./continent-grid";
 import { AZList } from "./az-list";
 import { cn } from "@/lib/utils";
+import type { AZDestination } from "@/data/destinations-hub";
 
 const TABS = [
   { key: "continente", label: "Por continente" },
@@ -14,7 +15,7 @@ const TABS = [
 
 type TabKey = (typeof TABS)[number]["key"];
 
-export function DestinosTabs() {
+export function DestinosTabs({ items }: { items: AZDestination[] }) {
   const [activeTab, setActiveTab] = useState<TabKey>("continente");
   const [continentFilter, setContinentFilter] = useState<string | null>(null);
 
@@ -65,7 +66,7 @@ export function DestinosTabs() {
             {activeTab === "continente" ? (
               <ContinentGrid onSelect={selectContinent} />
             ) : (
-              <AZList filterContinent={continentFilter} onClearFilter={() => setContinentFilter(null)} />
+              <AZList items={items} filterContinent={continentFilter} onClearFilter={() => setContinentFilter(null)} />
             )}
           </motion.div>
         </AnimatePresence>

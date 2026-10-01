@@ -6,7 +6,7 @@ import { ResultsGrid } from "@/components/viagens-hub/results-grid";
 import { EditorialShortcuts } from "@/components/viagens-hub/editorial-shortcuts";
 import { DestinationFinalCTA } from "@/components/destination/destination-final-cta";
 import { Container } from "@/components/ui/container";
-import { getTravelProducts, getExperiences } from "@/lib/cms";
+import { getTravelProducts, getExperiences, getDestinations } from "@/lib/cms";
 import { getActiveOrderedItems, getFeaturedItems } from "@/lib/content";
 import { filterTravelProducts, type TravelProductFilters as Filters } from "@/lib/travel-product-filters";
 import { unsplash } from "@/data/home/shared";
@@ -57,7 +57,11 @@ export default async function ViagensHubPage({ searchParams }: PageProps<"/viage
     periodo: first(params.periodo),
   };
 
-  const [allProducts, experiences] = await Promise.all([getTravelProducts(), getExperiences()]);
+  const [allProducts, experiences, destinations] = await Promise.all([
+    getTravelProducts(),
+    getExperiences(),
+    getDestinations(),
+  ]);
   const active = getActiveOrderedItems(allProducts);
   const featured = getFeaturedItems(active).slice(0, 2);
   const filtered = filterTravelProducts(active, filters);
@@ -75,7 +79,10 @@ export default async function ViagensHubPage({ searchParams }: PageProps<"/viage
 
       <section className="bg-ivory py-14 md:py-20">
         <Container>
-          <TravelProductFilters experiences={experiences} />
+          <TravelProductFilters
+            experiences={experiences}
+            destinations={destinations.filter((d) => d.active).map((d) => ({ slug: d.slug, name: d.name }))}
+          />
           <div className="mt-10">
             <ResultsGrid products={filtered} />
           </div>

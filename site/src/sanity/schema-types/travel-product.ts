@@ -101,12 +101,8 @@ export const travelProduct = defineType({
       name: "stays",
       title: "Hospedagem (sob medida)",
       type: "array",
-      of: [{ type: "object", fields: [
-        defineField({ name: "name", title: "Nome", type: "string" }),
-        defineField({ name: "region", title: "Região", type: "string" }),
-        defineField({ name: "text", title: "Texto", type: "string" }),
-        defineField({ name: "image", title: "Imagem", type: "imageWithAlt" }),
-      ] }],
+      of: [{ type: "reference", to: [{ type: "hotel" }] }],
+      description: "Referencia hotéis cadastrados em Hotéis — evita repetir nome/imagem/descrição do mesmo hotel em vários destinos/viagens.",
     }),
     defineField({
       name: "cabinCategories",
