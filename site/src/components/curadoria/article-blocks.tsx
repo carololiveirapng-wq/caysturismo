@@ -1,15 +1,60 @@
 import Image from "next/image";
 import Link from "next/link";
+import { PortableText, type PortableTextComponents } from "@portabletext/react";
 import { ImageReveal } from "@/components/ui/image-reveal";
 import { LinkArrow } from "@/components/ui/link-arrow";
 import { destinationHref, travelProductHref } from "@/lib/links";
 import { cn } from "@/lib/utils";
 import type { ArticleBlock } from "@/types";
 
+/**
+ * Conjunto restrito de estilos — parágrafo, H2/H3 (renderizados como
+ * h3/h4 na prática, já que cada seção do artigo já é um <h2>), negrito,
+ * itálico, link e listas. Sem cores, tabelas ou blocos customizados aqui;
+ * isso continua vivendo nos outros tipos de bloco do artigo (quote,
+ * expertNote, cta, etc.), não dentro do rich text.
+ */
+const portableTextComponents: PortableTextComponents = {
+  block: {
+    normal: ({ children }) => <p className="text-base leading-relaxed text-stone">{children}</p>,
+    h2: ({ children }) => <h3 className="mt-2 font-serif text-xl text-ink">{children}</h3>,
+    h3: ({ children }) => <h4 className="mt-2 font-serif text-lg text-ink">{children}</h4>,
+  },
+  marks: {
+    strong: ({ children }) => <strong className="font-medium text-ink">{children}</strong>,
+    em: ({ children }) => <em>{children}</em>,
+    link: ({ value, children }) => {
+      const href = (value?.href as string | undefined) ?? "#";
+      const isExternal = /^https?:\/\//.test(href);
+      return (
+        <Link
+          href={href}
+          className="text-ink underline decoration-ink/30 underline-offset-4 transition-colors duration-300 hover:decoration-ink"
+          {...(isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+        >
+          {children}
+        </Link>
+      );
+    },
+  },
+  list: {
+    bullet: ({ children }) => <ul className="list-disc space-y-1.5 pl-5 text-base leading-relaxed text-stone">{children}</ul>,
+    number: ({ children }) => <ol className="list-decimal space-y-1.5 pl-5 text-base leading-relaxed text-stone">{children}</ol>,
+  },
+  listItem: {
+    bullet: ({ children }) => <li>{children}</li>,
+    number: ({ children }) => <li>{children}</li>,
+  },
+};
+
 function Block({ block }: { block: ArticleBlock }) {
   switch (block.type) {
     case "richText":
-      return <p className="text-base leading-relaxed text-stone">{block.text}</p>;
+      return (
+        <div className="space-y-4">
+          <PortableText value={block.content} components={portableTextComponents} />
+        </div>
+      );
 
     case "imageFull":
       return (

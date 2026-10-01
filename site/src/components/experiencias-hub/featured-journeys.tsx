@@ -4,11 +4,12 @@ import { EditorialHeading } from "@/components/ui/editorial-heading";
 import { LinkArrow } from "@/components/ui/link-arrow";
 import { ImageReveal } from "@/components/ui/image-reveal";
 import { Reveal } from "@/components/ui/reveal";
-import { travelProducts } from "@/data/travel-products";
+import { getTravelProducts } from "@/lib/cms";
 import { getActiveOrderedItems } from "@/lib/content";
 
 /** Reaproveita os produtos de viagem já cadastrados — nada duplicado manualmente. */
-export function FeaturedJourneys() {
+export async function FeaturedJourneys() {
+  const travelProducts = await getTravelProducts();
   const items = getActiveOrderedItems(travelProducts).slice(0, 3);
   if (items.length === 0) return null;
 

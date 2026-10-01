@@ -1,4 +1,4 @@
-import { fetchFromSanity } from "./sanity-fetch";
+import { fetchEntityWithFallback, fetchListWithFallback } from "./sanity-fetch";
 import {
   TRAVEL_PRODUCT_BY_SLUG_QUERY,
   TRAVEL_PRODUCTS_QUERY,
@@ -11,16 +11,13 @@ import {
 import type { TravelProduct } from "@/types";
 
 export async function getTravelProductBySlug(slug: string): Promise<TravelProduct | undefined> {
-  const fromSanity = await fetchFromSanity<TravelProduct | null>(TRAVEL_PRODUCT_BY_SLUG_QUERY, { slug });
-  return fromSanity ?? getMockTravelProductBySlug(slug);
+  return fetchEntityWithFallback(TRAVEL_PRODUCT_BY_SLUG_QUERY, { slug }, () => getMockTravelProductBySlug(slug));
 }
 
 export async function getTravelProducts(): Promise<TravelProduct[]> {
-  const fromSanity = await fetchFromSanity<TravelProduct[]>(TRAVEL_PRODUCTS_QUERY);
-  return fromSanity && fromSanity.length > 0 ? fromSanity : mockTravelProducts;
+  return fetchListWithFallback(TRAVEL_PRODUCTS_QUERY, () => mockTravelProducts);
 }
 
 export async function getTravelProductSlugs(): Promise<string[]> {
-  const fromSanity = await fetchFromSanity<string[]>(TRAVEL_PRODUCT_SLUGS_QUERY);
-  return fromSanity && fromSanity.length > 0 ? fromSanity : mockTravelProducts.map((p) => p.slug);
+  return fetchListWithFallback(TRAVEL_PRODUCT_SLUGS_QUERY, () => mockTravelProducts.map((p) => p.slug));
 }

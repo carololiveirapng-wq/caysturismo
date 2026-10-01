@@ -1,8 +1,7 @@
 import { MessageCircle } from "lucide-react";
-import { whatsappHref } from "@/lib/site-config";
 
-/** Hidden until a real WhatsApp number is set in siteConfig — never a placeholder link. */
-export function WhatsAppButton() {
+/** Hidden until a real WhatsApp number is set (Settings no Sanity, ou siteConfig como fallback) — never a placeholder link. */
+export function WhatsAppButton({ whatsappHref }: { whatsappHref?: string }) {
   if (!whatsappHref) return null;
 
   return (

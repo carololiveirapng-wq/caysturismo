@@ -23,17 +23,20 @@ const mainLinks = [
   { label: "Leads", href: "/admin/leads", icon: Users },
 ];
 
+// Deep-links pro pane específico de cada tipo no Studio (ver IDs em
+// src/sanity/structure.ts) — abrir "Destinos" já cai direto na lista de
+// destinos, não na raiz do Studio.
 const contentLinks = [
-  { label: "Destinos", href: STUDIO_URL, icon: MapPin },
-  { label: "Experiências", href: STUDIO_URL, icon: Compass },
-  { label: "Viagens", href: STUDIO_URL, icon: Plane },
-  { label: "Curadoria", href: STUDIO_URL, icon: Newspaper },
+  { label: "Destinos", href: "/studio/structure/destination", icon: MapPin },
+  { label: "Experiências", href: "/studio/structure/experience", icon: Compass },
+  { label: "Viagens", href: "/studio/structure/travelProduct", icon: Plane },
+  { label: "Curadoria", href: "/studio/structure/curadoriaArticle", icon: Newspaper },
 ];
 
 const managementLinks = [
-  { label: "Equipe", href: STUDIO_URL, icon: UserRound },
-  { label: "Depoimentos", href: STUDIO_URL, icon: MessageSquareQuote },
-  { label: "Configurações", href: STUDIO_URL, icon: Settings },
+  { label: "Equipe", href: "/studio/structure/person", icon: UserRound },
+  { label: "Depoimentos", href: "/studio/structure/testimonial", icon: MessageSquareQuote },
+  { label: "Configurações", href: "/studio/structure/settings", icon: Settings },
 ];
 
 function NavGroup({
@@ -54,9 +57,9 @@ function NavGroup({
       )}
       <nav className={cn("flex flex-col gap-0.5", heading && "mt-2.5")}>
         {links.map((link) => {
-          const active = link.href !== STUDIO_URL && pathname === link.href;
+          const external = link.href.startsWith(STUDIO_URL);
+          const active = !external && pathname === link.href;
           const Icon = link.icon;
-          const external = link.href === STUDIO_URL;
           return (
             <Link
               key={link.label}
@@ -112,15 +115,26 @@ export function AdminSidebar({ mobileOpen, onClose }: { mobileOpen: boolean; onC
           <NavGroup heading="Gestão" links={managementLinks} pathname={pathname} onNavigate={onClose} />
         </div>
 
-        <Link
-          href="/"
-          target="_blank"
-          rel="noreferrer"
-          className="flex items-center gap-2.5 border-t border-ivory/10 px-3 pt-5 text-sm text-ivory/65 transition-colors duration-200 hover:text-ivory"
-        >
-          <ArrowUpRight className="size-4" aria-hidden />
-          Ver site
-        </Link>
+        <div className="flex flex-col gap-0.5 border-t border-ivory/10 px-3 pt-5">
+          <Link
+            href="/"
+            target="_blank"
+            rel="noreferrer"
+            className="flex items-center gap-2.5 py-1.5 text-sm text-ivory/65 transition-colors duration-200 hover:text-ivory"
+          >
+            <ArrowUpRight className="size-4" aria-hidden />
+            Ver site
+          </Link>
+          <Link
+            href={STUDIO_URL}
+            target="_blank"
+            rel="noreferrer"
+            className="flex items-center gap-2.5 py-1.5 text-sm text-ivory/65 transition-colors duration-200 hover:text-ivory"
+          >
+            <ArrowUpRight className="size-4" aria-hidden />
+            Abrir Studio
+          </Link>
+        </div>
       </aside>
     </>
   );

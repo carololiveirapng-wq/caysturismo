@@ -8,7 +8,6 @@ import { ImageReveal } from "@/components/ui/image-reveal";
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 import { CarouselCircleNav } from "@/components/ui/carousel-circle-nav";
 import { StatusBadge } from "@/components/travel-product/status-badge";
-import { whatsappHref } from "@/lib/site-config";
 import { TYPE_LABEL } from "@/lib/travel-product-status";
 import type { TravelProduct } from "@/types";
 
@@ -16,11 +15,13 @@ export function TravelProductHero({
   product,
   contactHref,
   relatedExperiences = [],
+  whatsappHref,
 }: {
   product: TravelProduct;
   contactHref: string;
   /** Experiências relacionadas já resolvidas (nome + slug) — fecha o laço Viagem → Experiência. */
   relatedExperiences?: { slug: string; name: string }[];
+  whatsappHref?: string;
 }) {
   const nextDeparture = product.departures?.find((d) => d.status !== "sold-out") ?? product.departures?.[0];
 

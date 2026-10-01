@@ -10,3 +10,4 @@ export * from "./destinations";
 export * from "./experiences";
 export * from "./travel-products";
 export * from "./curadoria-articles";
+export * from "./settings";

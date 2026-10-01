@@ -1,8 +1,8 @@
-import { whatsappHref } from "@/lib/site-config";
 import { StarRating } from "@/components/ui/star-rating";
 import { GoogleIcon } from "@/components/ui/google-icon";
 import { getActiveOrderedItems } from "@/lib/content";
 import { reviews as allReviews } from "@/data/home";
+import type { SiteSettings } from "@/lib/cms";
 
 const NEXT_STEPS = [
   { number: "01", title: "Entendemos sua viagem" },
@@ -23,7 +23,7 @@ function getShortestReview() {
   return reviews.reduce((shortest, r) => (r.text.length < shortest.text.length ? r : shortest));
 }
 
-export function ContactSidebar() {
+export function ContactSidebar({ settings }: { settings: SiteSettings }) {
   const review = getShortestReview();
 
   return (
@@ -66,11 +66,11 @@ export function ContactSidebar() {
         </ul>
       </div>
 
-      {whatsappHref && (
+      {settings.whatsappHref && (
         <div className="mt-8 border-t border-ink/10 pt-8">
           <p className="font-serif text-lg text-ink">Prefere conversar agora?</p>
           <a
-            href={whatsappHref}
+            href={settings.whatsappHref}
             target="_blank"
             rel="noreferrer"
             className="group/cta mt-3 inline-flex items-center gap-2 text-sm font-medium text-ink transition-colors duration-300 hover:text-magenta"

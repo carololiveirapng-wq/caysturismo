@@ -25,6 +25,7 @@ import {
   type ContactFormValues,
 } from "@/lib/contact-schema";
 import { cn } from "@/lib/utils";
+import type { SiteSettings } from "@/lib/cms";
 
 const MONTHS = [
   "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
@@ -36,9 +37,10 @@ interface ContactFlowProps {
   initialTripValues?: Partial<TripStepValues>;
   travelProduct?: string;
   sourcePath?: string;
+  settings: SiteSettings;
 }
 
-export function ContactFlow({ planningLabel, initialTripValues, travelProduct, sourcePath }: ContactFlowProps) {
+export function ContactFlow({ planningLabel, initialTripValues, travelProduct, sourcePath, settings }: ContactFlowProps) {
   const router = useRouter();
   const [trip, setTrip] = useState<TripStepValues>({ ...defaultTripValues, ...initialTripValues });
   const [about, setAbout] = useState<AboutYouFormState>(defaultAboutYouValues);
@@ -362,7 +364,7 @@ export function ContactFlow({ planningLabel, initialTripValues, travelProduct, s
         </div>
 
         <div className="lg:col-span-4">
-          <ContactSidebar />
+          <ContactSidebar settings={settings} />
         </div>
       </form>
     </div>

@@ -1,4 +1,5 @@
 import type { CuradoriaArticle } from "@/types";
+import { pt } from "@/lib/portable-text";
 import { unsplash } from "@/data/home/shared";
 
 // TODO CMS: substituir pelos dados reais do painel.
@@ -30,7 +31,7 @@ export const melhorEpocaParaIrAoJapao: CuradoriaArticle = {
       blocks: [
         {
           type: "richText",
-          text: "O Japão muda de personalidade a cada estação — e isso importa mais do que em boa parte dos destinos. A primavera traz as cerejeiras; o outono, o kōyō (folhas vermelhas); o verão, calor úmido; o inverno, céu limpo e paisagens de neve nas montanhas.",
+          content: pt("O Japão muda de personalidade a cada estação — e isso importa mais do que em boa parte dos destinos. A primavera traz as cerejeiras; o outono, o kōyō (folhas vermelhas); o verão, calor úmido; o inverno, céu limpo e paisagens de neve nas montanhas."),
         },
         {
           type: "imageFull",
@@ -45,7 +46,7 @@ export const melhorEpocaParaIrAoJapao: CuradoriaArticle = {
       blocks: [
         {
           type: "richText",
-          text: "A floração (sakura) não tem uma data fixa — varia a cada ano e por região, geralmente entre fins de março e início de abril no sul e centro do país, um pouco mais tarde ao norte.",
+          content: pt("A floração (sakura) não tem uma data fixa — varia a cada ano e por região, geralmente entre fins de março e início de abril no sul e centro do país, um pouco mais tarde ao norte."),
         },
         {
           type: "expertNote",
@@ -67,7 +68,7 @@ export const melhorEpocaParaIrAoJapao: CuradoriaArticle = {
       blocks: [
         {
           type: "richText",
-          text: "Entre outubro e novembro, o kōyō pinta parques e templos de vermelho e laranja — com menos multidões do que a primavera.",
+          content: pt("Entre outubro e novembro, o kōyō pinta parques e templos de vermelho e laranja — com menos multidões do que a primavera."),
         },
         {
           type: "imageText",
@@ -84,7 +85,7 @@ export const melhorEpocaParaIrAoJapao: CuradoriaArticle = {
       blocks: [
         {
           type: "richText",
-          text: "O inverno favorece paisagens nevadas e onsens ao ar livre; o verão, mais quente e úmido, ainda assim é a temporada de festivais tradicionais.",
+          content: pt("O inverno favorece paisagens nevadas e onsens ao ar livre; o verão, mais quente e úmido, ainda assim é a temporada de festivais tradicionais."),
         },
         {
           type: "gallery",

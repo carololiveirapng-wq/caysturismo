@@ -6,6 +6,7 @@ import { getExperienceDetailBySlug } from "@/data/experiences";
 import { getTravelProductBySlug } from "@/data/travel-products";
 import { experienceTypeValues, type TripStepValues } from "@/lib/contact-schema";
 import { siteConfig } from "@/lib/site-config";
+import { getSettings } from "@/lib/cms";
 
 const title = "Planeje sua viagem | Cays Turismo";
 const description = "Conte para a Cays como você imagina sua próxima viagem — a gente cuida do resto.";
@@ -28,7 +29,7 @@ function isKnownExperienceType(slug: string): slug is TripStepValues["tipoExperi
 }
 
 export default async function ContatoPage({ searchParams }: PageProps<"/contato">) {
-  const params = await searchParams;
+  const [params, settings] = await Promise.all([searchParams, getSettings()]);
   const destinoSlug = first(params.destino);
   const experienciaSlug = first(params.experiencia);
   const viagemSlug = first(params.viagem);
@@ -72,6 +73,7 @@ export default async function ContatoPage({ searchParams }: PageProps<"/contato"
           initialTripValues={initialTripValues}
           travelProduct={travelProduct}
           sourcePath={sourcePath}
+          settings={settings}
         />
       </Container>
     </section>

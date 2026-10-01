@@ -13,7 +13,9 @@
   },
   "dependencies": {
     "@base-ui/react": "^1.8.0",
+    "@portabletext/react": "^7.0.1",
     "@sanity/image-url": "^2.1.1",
+    "@sanity/locale-pt-br": "^1.1.37",
     "@sanity/vision": "^6.16.0",
     "@supabase/ssr": "^0.12.7",
     "@supabase/supabase-js": "^2.117.2",
@@ -36,6 +38,7 @@
     "zod": "^4.6.5"
   },
   "devDependencies": {
+    "@portabletext/types": "^4.0.2",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",

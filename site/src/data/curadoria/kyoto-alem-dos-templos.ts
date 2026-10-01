@@ -1,4 +1,5 @@
 import type { CuradoriaArticle } from "@/types";
+import { pt } from "@/lib/portable-text";
 import { unsplash } from "@/data/home/shared";
 
 // TODO CMS: substituir pelos dados reais do painel.
@@ -30,7 +31,7 @@ export const kyotoAlemDosTemplos: CuradoriaArticle = {
       blocks: [
         {
           type: "richText",
-          text: "Kyoto costuma entrar no roteiro como \"a cidade dos templos\" — e embora tenha milhares deles, reduzir a cidade a isso é perder o que a torna única: o jeito como o cotidiano convive com séculos de tradição.",
+          content: pt("Kyoto costuma entrar no roteiro como \"a cidade dos templos\" — e embora tenha milhares deles, reduzir a cidade a isso é perder o que a torna única: o jeito como o cotidiano convive com séculos de tradição."),
         },
         {
           type: "imageFull",
@@ -45,7 +46,7 @@ export const kyotoAlemDosTemplos: CuradoriaArticle = {
       blocks: [
         {
           type: "richText",
-          text: "Higashiyama e Gion guardam ruas de pedra, casas de madeira e o ocasional encontro com uma gueixa a caminho de um compromisso.",
+          content: pt("Higashiyama e Gion guardam ruas de pedra, casas de madeira e o ocasional encontro com uma gueixa a caminho de um compromisso."),
         },
         {
           type: "imageText",
@@ -62,7 +63,7 @@ export const kyotoAlemDosTemplos: CuradoriaArticle = {
       blocks: [
         {
           type: "richText",
-          text: "Nenhuma foto prepara para a primeira vista do Pavilhão Dourado refletido na água — mas vale chegar cedo, antes das excursões.",
+          content: pt("Nenhuma foto prepara para a primeira vista do Pavilhão Dourado refletido na água — mas vale chegar cedo, antes das excursões."),
         },
         { type: "quote", text: "Kyoto não se visita, se atravessa devagar.", author: "Curadoria Cays" },
       ],
@@ -73,7 +74,7 @@ export const kyotoAlemDosTemplos: CuradoriaArticle = {
       blocks: [
         {
           type: "richText",
-          text: "Um ryokan tradicional, com tatames e um jardim próprio, muda o ritmo da estadia — é tão parte da experiência quanto os templos.",
+          content: pt("Um ryokan tradicional, com tatames e um jardim próprio, muda o ritmo da estadia — é tão parte da experiência quanto os templos."),
         },
         {
           type: "gallery",

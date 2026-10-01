@@ -1,17 +1,15 @@
-import { defineField, defineType } from "sanity";
+import { defineArrayMember, defineField, defineType } from "sanity";
 
 /**
  * Mapeamento 1:1 do block system local (`src/types/curadoria-article.ts`)
  * pra objects do Sanity — juntos formam o array `body` de cada seção do
  * artigo (ver `curadoria-article.ts`).
  *
- * `richTextBlock` usa um campo `text` simples (não o `block` nativo de
- * Portable Text) de propósito: assim a forma do dado é idêntica entre o
- * mock local e o Sanity, sem precisar de um serializer diferente pra cada
- * fonte. Fica documentado como próximo passo natural evoluir isso pra
- * Portable Text de verdade (negrito/link dentro do parágrafo) quando a
- * edição de conteúdo justificar — não é preciso agora pra fechar a base do
- * CMS.
+ * `richTextBlock` usa Portable Text nativo (campo `content`, array de
+ * `block`) — parágrafo, H2/H3, negrito, itálico, link e listas. O conjunto
+ * é deliberadamente restrito (sem cores, tabelas, etc.) pra manter o editor
+ * simples e o visual do artigo consistente; ver `ArticleBlocks` no frontend
+ * pros componentes que estilizam cada marca/estilo.
  */
 
 export const richTextBlock = defineType({
@@ -19,9 +17,49 @@ export const richTextBlock = defineType({
   title: "Texto",
   type: "object",
   fields: [
-    defineField({ name: "text", title: "Texto", type: "text", rows: 4, validation: (r) => r.required() }),
+    defineField({
+      name: "content",
+      title: "Conteúdo",
+      type: "array",
+      of: [
+        defineArrayMember({
+          type: "block",
+          styles: [
+            { title: "Normal", value: "normal" },
+            { title: "Título 2", value: "h2" },
+            { title: "Título 3", value: "h3" },
+          ],
+          lists: [
+            { title: "Lista", value: "bullet" },
+            { title: "Lista numerada", value: "number" },
+          ],
+          marks: {
+            decorators: [
+              { title: "Negrito", value: "strong" },
+              { title: "Itálico", value: "em" },
+            ],
+            annotations: [
+              {
+                name: "link",
+                type: "object",
+                title: "Link",
+                fields: [
+                  defineField({
+                    name: "href",
+                    title: "URL (ex.: /contato?destino=japao ou https://...)",
+                    type: "string",
+                    validation: (r) => r.required(),
+                  }),
+                ],
+              },
+            ],
+          },
+        }),
+      ],
+      validation: (r) => r.required().min(1),
+    }),
   ],
-  preview: { select: { title: "text" } },
+  preview: { select: { title: "content.0.children.0.text" }, prepare: ({ title }) => ({ title: title || "Texto" }) },
 });
 
 export const imageFullBlock = defineType({

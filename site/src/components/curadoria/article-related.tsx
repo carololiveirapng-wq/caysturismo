@@ -4,12 +4,10 @@ import { EditorialHeading } from "@/components/ui/editorial-heading";
 import { ImageReveal } from "@/components/ui/image-reveal";
 import { Reveal } from "@/components/ui/reveal";
 import { destinationHref, travelProductHref, curadoriaArticleHref } from "@/lib/links";
-import { getTravelProductBySlug } from "@/data/travel-products";
-import { getDestinationDetailBySlug } from "@/data/destinations";
-import { getCuradoriaArticleBySlug } from "@/data/curadoria";
+import { getTravelProductBySlug, getDestinationBySlug, getArticleBySlug } from "@/lib/cms";
 import { cn } from "@/lib/utils";
 
-export function ArticleRelated({
+export async function ArticleRelated({
   relatedTravelProducts,
   relatedDestination,
   relatedArticles,
@@ -18,11 +16,12 @@ export function ArticleRelated({
   relatedDestination?: string;
   relatedArticles?: string[];
 }) {
-  const product = relatedTravelProducts?.[0] ? getTravelProductBySlug(relatedTravelProducts[0]) : undefined;
-  const destination = relatedDestination ? getDestinationDetailBySlug(relatedDestination) : undefined;
-  const articles = (relatedArticles ?? [])
-    .map((slug) => getCuradoriaArticleBySlug(slug))
-    .filter((article) => article !== undefined);
+  const [product, destination, articlesResult] = await Promise.all([
+    relatedTravelProducts?.[0] ? getTravelProductBySlug(relatedTravelProducts[0]) : undefined,
+    relatedDestination ? getDestinationBySlug(relatedDestination) : undefined,
+    Promise.all((relatedArticles ?? []).map((slug) => getArticleBySlug(slug))),
+  ]);
+  const articles = articlesResult.filter((article) => article !== undefined);
 
   const hasCards = Boolean(product || destination);
   if (!hasCards && articles.length === 0) return null;

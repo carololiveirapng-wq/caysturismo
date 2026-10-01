@@ -2,7 +2,7 @@ import { Container } from "@/components/ui/container";
 import { Breadcrumb } from "@/components/ui/breadcrumb";
 import { Reveal } from "@/components/ui/reveal";
 import { ImageReveal } from "@/components/ui/image-reveal";
-import { getDestinationDetailBySlug } from "@/data/destinations";
+import { getDestinationBySlug } from "@/lib/cms";
 import type { CuradoriaArticle } from "@/types";
 
 function formatDate(iso?: string) {
@@ -10,9 +10,9 @@ function formatDate(iso?: string) {
   return new Date(iso).toLocaleDateString("pt-BR", { day: "2-digit", month: "long", year: "numeric" });
 }
 
-export function ArticleHero({ article }: { article: CuradoriaArticle }) {
+export async function ArticleHero({ article }: { article: CuradoriaArticle }) {
   const destinationName = article.destinationIds?.[0]
-    ? getDestinationDetailBySlug(article.destinationIds[0])?.name
+    ? (await getDestinationBySlug(article.destinationIds[0]))?.name
     : undefined;
 
   return (

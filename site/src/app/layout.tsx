@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Manrope } from "next/font/google";
 import { PublicChrome } from "@/components/layout/public-chrome";
+import { Header } from "@/components/layout/header";
+import { Footer } from "@/components/layout/footer";
+import { WhatsAppButton } from "@/components/layout/whatsapp-button";
 import { siteConfig } from "@/lib/site-config";
+import { getSettings } from "@/lib/cms";
 import "./globals.css";
 
 const manrope = Manrope({
@@ -51,13 +55,15 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default async function RootLayout({ children }: LayoutProps<"/">) {
+  const settings = await getSettings();
+
   const organizationJsonLd = {
     "@context": "https://schema.org",
     "@type": "TravelAgency",
     name: siteConfig.name,
     url: siteConfig.url,
-    sameAs: [siteConfig.instagram].filter(Boolean),
+    sameAs: [settings.instagram].filter(Boolean),
   };
 
   return (
@@ -73,7 +79,13 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
         />
-        <PublicChrome>{children}</PublicChrome>
+        <PublicChrome
+          header={<Header settings={settings} />}
+          footer={<Footer settings={settings} />}
+          whatsappButton={<WhatsAppButton whatsappHref={settings.whatsappHref} />}
+        >
+          {children}
+        </PublicChrome>
       </body>
     </html>
   );

@@ -1,8 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Container } from "@/components/ui/container";
-import { siteConfig, whatsappHref } from "@/lib/site-config";
+import { siteConfig } from "@/lib/site-config";
 import { experienceHref } from "@/lib/links";
+import type { SiteSettings } from "@/lib/cms";
 
 const columns = [
   {
@@ -32,7 +33,7 @@ const legalLinks = [
   { label: "Termos", href: "/termos" },
 ];
 
-export function Footer() {
+export function Footer({ settings }: { settings: SiteSettings }) {
   const legalMeta = [
     siteConfig.cnpj && `CNPJ ${siteConfig.cnpj}`,
     siteConfig.cadastur && `Cadastur ${siteConfig.cadastur}`,
@@ -84,31 +85,33 @@ export function Footer() {
               Contato
             </h3>
             <ul className="mt-6 space-y-3.5 text-sm text-ivory/75">
-              {whatsappHref && (
+              {settings.whatsappHref && (
                 <li>
-                  <a href={whatsappHref} target="_blank" rel="noreferrer" className="hover:text-ivory">
+                  <a href={settings.whatsappHref} target="_blank" rel="noreferrer" className="hover:text-ivory">
                     WhatsApp
                   </a>
                 </li>
               )}
-              {siteConfig.email && (
+              {settings.email && (
                 <li>
-                  <a href={`mailto:${siteConfig.email}`} className="hover:text-ivory">
-                    {siteConfig.email}
+                  <a href={`mailto:${settings.email}`} className="hover:text-ivory">
+                    {settings.email}
                   </a>
                 </li>
               )}
-              {siteConfig.address && <li className="text-ivory/55">{siteConfig.address}</li>}
-              <li>
-                <a
-                  href={siteConfig.instagram}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="hover:text-ivory"
-                >
-                  Instagram
-                </a>
-              </li>
+              {settings.address && <li className="text-ivory/55">{settings.address}</li>}
+              {settings.instagram && (
+                <li>
+                  <a
+                    href={settings.instagram}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="hover:text-ivory"
+                  >
+                    Instagram
+                  </a>
+                </li>
+              )}
             </ul>
           </div>
         </div>

@@ -37,7 +37,12 @@ const destinationProjection = `{
     title,
     subtitle,
     "durationLabel": duration,
-    "typeLabel": type,
+    "typeLabel": select(
+      type == "custom" => "Sob medida",
+      type == "fixed-date" => "Data fixa",
+      type == "offer" => "Oferta",
+      type
+    ),
     "image": gallery[0]${imageFragment}
   },
   "experiences": experiences[]{

@@ -7,7 +7,7 @@ import { imageFragment } from "./fragments";
  * testado contra dataset real — ver nota em `destination.ts`.
  */
 const bodyProjection = `{
-  _type == "richTextBlock" => { "type": "richText", text },
+  _type == "richTextBlock" => { "type": "richText", content },
   _type == "imageFullBlock" => { "type": "imageFull", "image": image${imageFragment}, caption },
   _type == "imageTextBlock" => { "type": "imageText", "image": image${imageFragment}, heading, text, imagePosition },
   _type == "galleryBlock" => { "type": "gallery", "images": images[]${imageFragment} },

@@ -114,5 +114,14 @@ export const experience = defineType({
     defineField({ name: "faq", title: "FAQ", type: "array", of: [{ type: "faqItem" }] }),
     defineField({ name: "seo", title: "SEO", type: "seo" }),
   ],
-  preview: { select: { title: "name", subtitle: "axis", media: "hero.image" } },
+  preview: {
+    select: { title: "name", axis: "axis", active: "active", featured: "featured", media: "hero.image" },
+    prepare: ({ title, axis, active, featured, media }) => {
+      const axisLabels: Record<string, string> = { occasion: "Ocasião", style: "Estilo" };
+      const parts = [axisLabels[axis as string] ?? axis, active ? "Ativo" : "Inativo", featured ? "Destaque" : null].filter(
+        Boolean,
+      );
+      return { title, subtitle: parts.join(" · "), media };
+    },
+  },
 });

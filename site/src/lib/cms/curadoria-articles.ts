@@ -1,4 +1,4 @@
-import { fetchFromSanity } from "./sanity-fetch";
+import { fetchEntityWithFallback, fetchListWithFallback } from "./sanity-fetch";
 import {
   CURADORIA_ARTICLE_BY_SLUG_QUERY,
   CURADORIA_ARTICLES_QUERY,
@@ -11,16 +11,13 @@ import {
 import type { CuradoriaArticle } from "@/types";
 
 export async function getArticleBySlug(slug: string): Promise<CuradoriaArticle | undefined> {
-  const fromSanity = await fetchFromSanity<CuradoriaArticle | null>(CURADORIA_ARTICLE_BY_SLUG_QUERY, { slug });
-  return fromSanity ?? getMockCuradoriaArticleBySlug(slug);
+  return fetchEntityWithFallback(CURADORIA_ARTICLE_BY_SLUG_QUERY, { slug }, () => getMockCuradoriaArticleBySlug(slug));
 }
 
 export async function getArticles(): Promise<CuradoriaArticle[]> {
-  const fromSanity = await fetchFromSanity<CuradoriaArticle[]>(CURADORIA_ARTICLES_QUERY);
-  return fromSanity && fromSanity.length > 0 ? fromSanity : mockCuradoriaArticles;
+  return fetchListWithFallback(CURADORIA_ARTICLES_QUERY, () => mockCuradoriaArticles);
 }
 
 export async function getArticleSlugs(): Promise<string[]> {
-  const fromSanity = await fetchFromSanity<string[]>(CURADORIA_ARTICLE_SLUGS_QUERY);
-  return fromSanity && fromSanity.length > 0 ? fromSanity : mockCuradoriaArticles.map((a) => a.slug);
+  return fetchListWithFallback(CURADORIA_ARTICLE_SLUGS_QUERY, () => mockCuradoriaArticles.map((a) => a.slug));
 }

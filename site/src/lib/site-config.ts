@@ -19,7 +19,3 @@ export const siteConfig = {
   cadastur: "",
   instagram: "https://www.instagram.com/caysturismo/",
 } as const;
-
-export const whatsappHref = siteConfig.whatsapp
-  ? `https://wa.me/${siteConfig.whatsapp}`
-  : undefined;

@@ -1,4 +1,5 @@
 import type { CuradoriaArticle } from "@/types";
+import { pt } from "@/lib/portable-text";
 import { unsplash } from "@/data/home/shared";
 
 // TODO CMS: substituir pelos dados reais do painel.
@@ -30,7 +31,7 @@ export const guiaDeGastronomiaJaponesa: CuradoriaArticle = {
       blocks: [
         {
           type: "richText",
-          text: "Reduzir a cozinha japonesa a sushi é perder a maior parte da história. Ramen, izakaya, kaiseki e a cerimônia do chá contam versões muito diferentes da mesma cultura.",
+          content: pt("Reduzir a cozinha japonesa a sushi é perder a maior parte da história. Ramen, izakaya, kaiseki e a cerimônia do chá contam versões muito diferentes da mesma cultura."),
         },
         {
           type: "imageFull",
@@ -45,7 +46,7 @@ export const guiaDeGastronomiaJaponesa: CuradoriaArticle = {
       blocks: [
         {
           type: "richText",
-          text: "O ramen varia de região para região — do caldo leve de shoyu ao miso mais encorpado. Já os izakayas são onde a rotina japonesa desacelera, entre pequenos pratos e conversa.",
+          content: pt("O ramen varia de região para região — do caldo leve de shoyu ao miso mais encorpado. Já os izakayas são onde a rotina japonesa desacelera, entre pequenos pratos e conversa."),
         },
         {
           type: "imageText",
@@ -62,7 +63,7 @@ export const guiaDeGastronomiaJaponesa: CuradoriaArticle = {
       blocks: [
         {
           type: "richText",
-          text: "Mais que uma bebida, o chá no Japão é um ritual de atenção — cada gesto, do preparo ao servir, tem um propósito.",
+          content: pt("Mais que uma bebida, o chá no Japão é um ritual de atenção — cada gesto, do preparo ao servir, tem um propósito."),
         },
         {
           type: "expertNote",
@@ -84,7 +85,7 @@ export const guiaDeGastronomiaJaponesa: CuradoriaArticle = {
       blocks: [
         {
           type: "richText",
-          text: "No outro extremo, o kaiseki é uma sequência de pratos pequenos que segue a estação do ano — uma forma de comer que é também uma forma de contar o tempo.",
+          content: pt("No outro extremo, o kaiseki é uma sequência de pratos pequenos que segue a estação do ano — uma forma de comer que é também uma forma de contar o tempo."),
         },
         {
           type: "gallery",

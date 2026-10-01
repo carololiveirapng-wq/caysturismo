@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getTravelProductBySlug, getTravelProductSlugs, getExperienceBySlug } from "@/lib/cms";
+import { getTravelProductBySlug, getTravelProductSlugs, getExperienceBySlug, getSettings } from "@/lib/cms";
 import { TravelProductHero } from "@/components/travel-product/travel-product-hero";
 import { ProductOverview } from "@/components/travel-product/overview";
 import { ProductHighlights } from "@/components/travel-product/highlights";
@@ -55,6 +55,7 @@ export default async function TravelProductPage({ params }: PageProps<"/viagens/
   if (!product) notFound();
 
   const contactHref = `/contato?viagem=${product.slug}`;
+  const { whatsappHref } = await getSettings();
   const relatedExperiences = (
     await Promise.all(product.experiences.map((expSlug) => getExperienceBySlug(expSlug)))
   )
@@ -81,7 +82,12 @@ export default async function TravelProductPage({ params }: PageProps<"/viagens/
 
   return (
     <>
-      <TravelProductHero product={product} contactHref={contactHref} relatedExperiences={relatedExperiences} />
+      <TravelProductHero
+        product={product}
+        contactHref={contactHref}
+        relatedExperiences={relatedExperiences}
+        whatsappHref={whatsappHref}
+      />
 
       <StickySubnav items={subnavItems} ctaLabel="Planejar viagem" ctaHref={contactHref} />
 

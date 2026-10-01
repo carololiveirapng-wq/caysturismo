@@ -3,12 +3,12 @@ import { ImageReveal } from "@/components/ui/image-reveal";
 import { LinkArrow } from "@/components/ui/link-arrow";
 import { StatusBadge } from "@/components/travel-product/status-badge";
 import { TYPE_LABEL } from "@/lib/travel-product-status";
-import { getDestinationDetailBySlug } from "@/data/destinations";
+import { getDestinationBySlug } from "@/lib/cms";
 import type { TravelProduct } from "@/types";
 
-function ResultCard({ product }: { product: TravelProduct }) {
+async function ResultCard({ product }: { product: TravelProduct }) {
   const destinationName = product.destinations[0]
-    ? (getDestinationDetailBySlug(product.destinations[0])?.name ?? product.destinations[0])
+    ? ((await getDestinationBySlug(product.destinations[0]))?.name ?? product.destinations[0])
     : undefined;
   const period = product.type === "fixed-date" ? product.departures?.[0]?.label : product.bestMonths;
 

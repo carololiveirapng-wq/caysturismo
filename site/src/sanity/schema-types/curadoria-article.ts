@@ -49,6 +49,10 @@ export const curadoriaArticle = defineType({
     defineField({ name: "seo", title: "SEO", type: "seo" }),
   ],
   preview: {
-    select: { title: "title", subtitle: "category", media: "heroImage" },
+    select: { title: "title", category: "category", active: "active", featured: "featured", media: "heroImage" },
+    prepare: ({ title, category, active, featured, media }) => {
+      const parts = [category, active ? "Ativo" : "Inativo", featured ? "Destaque" : null].filter(Boolean);
+      return { title, subtitle: parts.join(" · "), media };
+    },
   },
 });

@@ -62,6 +62,33 @@ export default async function AdminDashboardPage() {
               <ArrowUpRight className="size-3.5" aria-hidden />
             </Link>
             <Link
+              href="/studio/structure/destination"
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-1.5 border border-ink/15 bg-ivory px-4 py-2.5 text-xs font-medium tracking-wide text-ink uppercase transition-colors duration-200 hover:border-ink/30"
+            >
+              Novo destino
+              <ArrowUpRight className="size-3.5" aria-hidden />
+            </Link>
+            <Link
+              href="/studio/structure/travelProduct"
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-1.5 border border-ink/15 bg-ivory px-4 py-2.5 text-xs font-medium tracking-wide text-ink uppercase transition-colors duration-200 hover:border-ink/30"
+            >
+              Nova viagem
+              <ArrowUpRight className="size-3.5" aria-hidden />
+            </Link>
+            <Link
+              href="/studio/structure/curadoriaArticle"
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-1.5 border border-ink/15 bg-ivory px-4 py-2.5 text-xs font-medium tracking-wide text-ink uppercase transition-colors duration-200 hover:border-ink/30"
+            >
+              Novo artigo
+              <ArrowUpRight className="size-3.5" aria-hidden />
+            </Link>
+            <Link
               href="/"
               target="_blank"
               rel="noreferrer"

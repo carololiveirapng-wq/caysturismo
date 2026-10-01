@@ -9,6 +9,7 @@ import { Container } from "@/components/ui/container";
 import { MobileNavigation } from "@/components/layout/mobile-navigation";
 import { experienceHref, travelProductHref } from "@/lib/links";
 import { cn } from "@/lib/utils";
+import type { SiteSettings } from "@/lib/cms";
 
 const navLinks = [
   { label: "Destinos", href: "/destinos" },
@@ -42,7 +43,7 @@ const navLinks = [
 // sólido desde o início nelas.
 const NO_HERO_PATHS = ["/contato", "/contato/obrigado"];
 
-export function Header() {
+export function Header({ settings }: { settings: SiteSettings }) {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
@@ -173,6 +174,8 @@ export function Header() {
         open={menuOpen}
         onClose={() => setMenuOpen(false)}
         links={navLinks}
+        instagram={settings.instagram}
+        whatsappHref={settings.whatsappHref}
       />
     </>
   );

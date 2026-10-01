@@ -3,12 +3,12 @@ import { Container } from "@/components/ui/container";
 import { ImageReveal } from "@/components/ui/image-reveal";
 import { Reveal } from "@/components/ui/reveal";
 import { LinkArrow } from "@/components/ui/link-arrow";
-import { getDestinationDetailBySlug } from "@/data/destinations";
+import { getDestinationBySlug } from "@/lib/cms";
 import type { CuradoriaArticle } from "@/types";
 
-export function FeaturedArticle({ article }: { article: CuradoriaArticle }) {
+export async function FeaturedArticle({ article }: { article: CuradoriaArticle }) {
   const destinationName = article.destinationIds?.[0]
-    ? getDestinationDetailBySlug(article.destinationIds[0])?.name
+    ? (await getDestinationBySlug(article.destinationIds[0]))?.name
     : undefined;
 
   return (

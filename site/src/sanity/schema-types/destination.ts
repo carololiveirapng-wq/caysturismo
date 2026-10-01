@@ -15,7 +15,14 @@ export const destination = defineType({
       name: "type",
       title: "Nível geográfico",
       type: "string",
-      options: { list: ["continent", "region", "country", "city"] },
+      options: {
+        list: [
+          { title: "Continente", value: "continent" },
+          { title: "Região", value: "region" },
+          { title: "País", value: "country" },
+          { title: "Cidade", value: "city" },
+        ],
+      },
       validation: (r) => r.required(),
     }),
     defineField({ name: "parent", title: "Destino pai", type: "reference", to: [{ type: "destination" }] }),
@@ -50,9 +57,16 @@ export const destination = defineType({
       title: "Informações-chave",
       type: "object",
       fields: [
-        "bestTime", "suggestedDuration", "timeZone", "currency", "language",
-        "visa", "vaccines", "electricity", "flightFromBrazil",
-      ].map((name) => defineField({ name, title: name, type: "string" })),
+        { name: "bestTime", title: "Melhor época" },
+        { name: "suggestedDuration", title: "Duração sugerida" },
+        { name: "timeZone", title: "Fuso horário" },
+        { name: "currency", title: "Moeda" },
+        { name: "language", title: "Idioma" },
+        { name: "visa", title: "Visto" },
+        { name: "vaccines", title: "Vacinas" },
+        { name: "electricity", title: "Eletricidade" },
+        { name: "flightFromBrazil", title: "Voo a partir do Brasil" },
+      ].map(({ name, title }) => defineField({ name, title, type: "string" })),
     }),
 
     defineField({
@@ -121,7 +135,18 @@ export const destination = defineType({
         type: "object",
         fields: [
           defineField({ name: "month", title: "Mês (1-12)", type: "number", validation: (r) => r.min(1).max(12) }),
-          defineField({ name: "status", title: "Status", type: "string", options: { list: ["ideal", "good", "avoid"] } }),
+          defineField({
+            name: "status",
+            title: "Status",
+            type: "string",
+            options: {
+              list: [
+                { title: "Ideal", value: "ideal" },
+                { title: "Bom", value: "good" },
+                { title: "Evitar", value: "avoid" },
+              ],
+            },
+          }),
           defineField({ name: "note", title: "Nota", type: "string" }),
         ],
       }],
@@ -146,6 +171,18 @@ export const destination = defineType({
     defineField({ name: "seo", title: "SEO", type: "seo" }),
   ],
   preview: {
-    select: { title: "name", subtitle: "type", media: "hero.image" },
+    select: { title: "name", type: "type", active: "active", featured: "featured", media: "hero.image" },
+    prepare: ({ title, type, active, featured, media }) => {
+      const typeLabels: Record<string, string> = {
+        continent: "Continente",
+        region: "Região",
+        country: "País",
+        city: "Cidade",
+      };
+      const parts = [typeLabels[type as string] ?? type, active ? "Ativo" : "Inativo", featured ? "Destaque" : null].filter(
+        Boolean,
+      );
+      return { title, subtitle: parts.join(" · "), media };
+    },
   },
 });

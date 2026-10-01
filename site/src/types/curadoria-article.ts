@@ -1,8 +1,9 @@
+import type { PortableTextBlock } from "@portabletext/types";
 import type { BaseContent, DemoImage } from "./content";
 
 export interface RichTextBlock {
   type: "richText";
-  text: string;
+  content: PortableTextBlock[];
 }
 
 export interface ImageFullBlock {

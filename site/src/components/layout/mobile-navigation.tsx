@@ -5,7 +5,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
 import { X, AtSign, ChevronDown } from "lucide-react";
-import { siteConfig, whatsappHref } from "@/lib/site-config";
 
 interface NavLink {
   label: string;
@@ -17,9 +16,11 @@ interface MobileNavigationProps {
   open: boolean;
   onClose: () => void;
   links: readonly NavLink[];
+  instagram: string;
+  whatsappHref?: string;
 }
 
-export function MobileNavigation({ open, onClose, links }: MobileNavigationProps) {
+export function MobileNavigation({ open, onClose, links, instagram, whatsappHref }: MobileNavigationProps) {
   const panelRef = useRef<HTMLDivElement>(null);
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
 
@@ -141,14 +142,16 @@ export function MobileNavigation({ open, onClose, links }: MobileNavigationProps
             style={{ paddingBottom: "calc(1.5rem + env(safe-area-inset-bottom))" }}
           >
             <div className="flex items-center gap-5">
-              <a
-                href={siteConfig.instagram}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center gap-2 text-ivory/80 hover:text-ivory"
-              >
-                <AtSign className="size-4" /> Instagram
-              </a>
+              {instagram && (
+                <a
+                  href={instagram}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-2 text-ivory/80 hover:text-ivory"
+                >
+                  <AtSign className="size-4" /> Instagram
+                </a>
+              )}
               {whatsappHref && (
                 <a
                   href={whatsappHref}

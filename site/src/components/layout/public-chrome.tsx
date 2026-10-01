@@ -2,9 +2,6 @@
 
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
-import { Header } from "@/components/layout/header";
-import { Footer } from "@/components/layout/footer";
-import { WhatsAppButton } from "@/components/layout/whatsapp-button";
 
 /**
  * Decide se o Header/Footer/WhatsApp do site público entram no DOM — em
@@ -14,8 +11,25 @@ import { WhatsAppButton } from "@/components/layout/whatsapp-button";
  * tirariam TODAS as páginas do modo estático (inclusive as 40+ páginas de
  * destino/experiência que hoje são pré-renderizadas), já que o Next marca a
  * árvore inteira como dinâmica quando o layout raiz as usa.
+ *
+ * Header/Footer/WhatsAppButton chegam como ReactNode já renderizados pelo
+ * layout raiz (Server Component), não são importados/instanciados aqui —
+ * assim eles podem buscar `getSettings()` no Sanity normalmente. Um client
+ * component que importasse e renderizasse um Server Component async
+ * diretamente quebraria o build ("async/await não é suportado em client
+ * components"); recebê-los prontos como slot evita isso.
  */
-export function PublicChrome({ children }: { children: ReactNode }) {
+export function PublicChrome({
+  header,
+  footer,
+  whatsappButton,
+  children,
+}: {
+  header: ReactNode;
+  footer: ReactNode;
+  whatsappButton: ReactNode;
+  children: ReactNode;
+}) {
   const pathname = usePathname();
   const isAdmin = pathname.startsWith("/admin");
 
@@ -25,10 +39,10 @@ export function PublicChrome({ children }: { children: ReactNode }) {
 
   return (
     <>
-      <Header />
+      {header}
       <main className="flex-1">{children}</main>
-      <Footer />
-      <WhatsAppButton />
+      {footer}
+      {whatsappButton}
     </>
   );
 }

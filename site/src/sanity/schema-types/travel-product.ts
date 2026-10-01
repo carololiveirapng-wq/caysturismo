@@ -58,7 +58,14 @@ export const travelProduct = defineType({
             name: "status",
             title: "Status",
             type: "string",
-            options: { list: ["active", "few-spots", "sold-out", "expired"] },
+            options: {
+              list: [
+                { title: "Disponível", value: "active" },
+                { title: "Últimas vagas", value: "few-spots" },
+                { title: "Esgotado", value: "sold-out" },
+                { title: "Encerrado", value: "expired" },
+              ],
+            },
           }),
         ],
       }],
@@ -118,6 +125,21 @@ export const travelProduct = defineType({
     defineField({ name: "seo", title: "SEO", type: "seo" }),
   ],
   preview: {
-    select: { title: "title", subtitle: "type", media: "gallery.0" },
+    select: { title: "title", type: "type", status: "status", active: "active", media: "gallery.0" },
+    prepare: ({ title, type, status, active, media }) => {
+      const typeLabels: Record<string, string> = { custom: "Sob medida", "fixed-date": "Data fixa", offer: "Oferta" };
+      const statusLabels: Record<string, string> = {
+        active: "Disponível",
+        "few-spots": "Últimas vagas",
+        "sold-out": "Esgotado",
+        expired: "Encerrado",
+      };
+      const parts = [
+        typeLabels[type as string] ?? type,
+        statusLabels[status as string] ?? status,
+        active ? "Ativa" : "Inativa",
+      ].filter(Boolean);
+      return { title, subtitle: parts.join(" · "), media };
+    },
   },
 });
