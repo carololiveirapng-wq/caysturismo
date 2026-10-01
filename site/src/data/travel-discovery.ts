@@ -1,10 +1,4 @@
-import type {
-  DiscoveryDestination,
-  DiscoveryExperience,
-  DiscoveryMonth,
-  DiscoveryRegion,
-  MockJourney,
-} from "@/types";
+import type { DiscoveryDestination, DiscoveryMonth, MockJourney } from "@/types";
 import { unsplash } from "@/data/home";
 
 /**
@@ -19,78 +13,6 @@ export const unknownDestination: DiscoveryDestination = {
   name: "Não sei para onde ir",
   regionSlug: "",
 };
-
-export const travelRegions: DiscoveryRegion[] = [
-  {
-    slug: "brasil",
-    name: "Brasil",
-    destinations: [
-      { slug: "amazonia", name: "Amazônia", regionSlug: "brasil" },
-      { slug: "fernando-de-noronha", name: "Fernando de Noronha", regionSlug: "brasil" },
-      { slug: "lencois-maranhenses", name: "Lençóis Maranhenses", regionSlug: "brasil" },
-    ],
-  },
-  {
-    slug: "europa",
-    name: "Europa",
-    destinations: [
-      { slug: "italia", name: "Itália", regionSlug: "europa" },
-      { slug: "franca", name: "França", regionSlug: "europa" },
-      { slug: "grecia", name: "Grécia", regionSlug: "europa" },
-      { slug: "portugal", name: "Portugal", regionSlug: "europa" },
-    ],
-  },
-  {
-    slug: "asia",
-    name: "Ásia",
-    destinations: [
-      { slug: "japao", name: "Japão", regionSlug: "asia" },
-      { slug: "china", name: "China", regionSlug: "asia" },
-      { slug: "tailandia", name: "Tailândia", regionSlug: "asia" },
-    ],
-  },
-  {
-    slug: "africa-oriente-medio",
-    name: "África & Oriente Médio",
-    destinations: [
-      { slug: "egito", name: "Egito", regionSlug: "africa-oriente-medio" },
-      { slug: "emirados-arabes", name: "Emirados Árabes", regionSlug: "africa-oriente-medio" },
-      { slug: "africa-oriental", name: "África Oriental", regionSlug: "africa-oriente-medio" },
-    ],
-  },
-  {
-    slug: "indico",
-    name: "Índico",
-    destinations: [
-      { slug: "maldivas", name: "Maldivas", regionSlug: "indico" },
-      { slug: "seychelles", name: "Seychelles", regionSlug: "indico" },
-      { slug: "mauricio", name: "Maurício", regionSlug: "indico" },
-    ],
-  },
-  {
-    slug: "cruzeiros-expedicoes",
-    name: "Cruzeiros & Expedições",
-    destinations: [
-      { slug: "mediterraneo", name: "Mediterrâneo", regionSlug: "cruzeiros-expedicoes" },
-      { slug: "alasca", name: "Alasca", regionSlug: "cruzeiros-expedicoes" },
-      { slug: "antartica", name: "Antártica", regionSlug: "cruzeiros-expedicoes" },
-      { slug: "nilo", name: "Nilo", regionSlug: "cruzeiros-expedicoes" },
-    ],
-  },
-];
-
-export const travelExperiences: DiscoveryExperience[] = [
-  { slug: "lua-de-mel", name: "Lua de Mel" },
-  { slug: "familia", name: "Viagem em Família" },
-  { slug: "destination-wedding", name: "Destination Wedding" },
-  { slug: "cruzeiros", name: "Cruzeiros" },
-  { slug: "expedicoes", name: "Expedições" },
-  { slug: "grandes-eventos", name: "Grandes Eventos" },
-  { slug: "gastronomia-cultura", name: "Gastronomia & Cultura" },
-  { slug: "praia-descanso", name: "Praia & Descanso" },
-  { slug: "natureza-aventura", name: "Natureza & Aventura" },
-  { slug: "personalizada", name: "Viagem Personalizada" },
-];
 
 /**
  * Preparado para o caso "Não sei para onde ir": futuramente a experiência

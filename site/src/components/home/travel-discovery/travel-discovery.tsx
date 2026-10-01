@@ -10,11 +10,17 @@ import { PeriodSelector, type PeriodValue } from "./period-selector";
 import { ExperienceSelector } from "./experience-selector";
 import { DiscoveryResults } from "./discovery-results";
 import { mockJourneys, unknownDestination } from "@/data/travel-discovery";
-import type { DiscoveryDestination, DiscoveryExperience } from "@/types";
+import type { DiscoveryDestination, DiscoveryExperience, DiscoveryRegion, HomeContent } from "@/types";
 
 type PanelKey = "destination" | "period" | "experience" | null;
 
-export function TravelDiscovery() {
+interface TravelDiscoveryProps {
+  content?: HomeContent["travelDiscovery"];
+  regions: DiscoveryRegion[];
+  experiences: DiscoveryExperience[];
+}
+
+export function TravelDiscovery({ content, regions, experiences }: TravelDiscoveryProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [activePanel, setActivePanel] = useState<PanelKey>(null);
   const [destination, setDestination] = useState<DiscoveryDestination | null>(null);
@@ -63,8 +69,9 @@ export function TravelDiscovery() {
         <div className="max-w-xl">
           <SectionLabel>Curadoria Cays</SectionLabel>
           <EditorialHeading as="h2" size="md" className="mt-4">
-            Por onde começamos?
+            {content?.title || "Por onde começamos?"}
           </EditorialHeading>
+          {content?.text && <p className="mt-3 text-sm leading-relaxed text-stone">{content.text}</p>}
         </div>
 
         <div ref={containerRef} className="relative mt-8 md:mt-10">
@@ -75,6 +82,7 @@ export function TravelDiscovery() {
               onClose={closePanel}
               value={destination}
               onChange={setDestination}
+              regions={regions}
             />
             <PeriodSelector
               isOpen={activePanel === "period"}
@@ -90,6 +98,7 @@ export function TravelDiscovery() {
               value={experience}
               onChange={setExperience}
               emphasize={destination?.slug === unknownDestination.slug}
+              experiences={experiences}
             />
             <button
               type="button"

@@ -74,6 +74,18 @@ export interface FeaturedJourney extends BaseContent {
  * a integração não existe, os dados ficam marcados como TEMP em
  * `data/home/reviews.ts`.
  */
+/** Membro real da equipe (schema `person` no Sanity) — nunca um placeholder/nome inventado. */
+export interface Person {
+  id: string;
+  name: string;
+  role?: string;
+  bio?: string;
+  photo?: DemoImage;
+  specialties?: string[];
+  active: boolean;
+  order: number;
+}
+
 export type GoogleReview = Omit<BaseContent, "slug"> & {
   authorName: string;
   /** 1 a 5 — nunca assumir 5 por padrão. */

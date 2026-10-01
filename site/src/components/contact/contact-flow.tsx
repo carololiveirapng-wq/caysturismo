@@ -26,6 +26,7 @@ import {
 } from "@/lib/contact-schema";
 import { cn } from "@/lib/utils";
 import type { SiteSettings } from "@/lib/cms";
+import type { GoogleReview } from "@/types";
 
 const MONTHS = [
   "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
@@ -39,9 +40,10 @@ interface ContactFlowProps {
   sourcePath?: string;
   settings: SiteSettings;
   destinations: { slug: string; name: string }[];
+  reviews: GoogleReview[];
 }
 
-export function ContactFlow({ planningLabel, initialTripValues, travelProduct, sourcePath, settings, destinations }: ContactFlowProps) {
+export function ContactFlow({ planningLabel, initialTripValues, travelProduct, sourcePath, settings, destinations, reviews }: ContactFlowProps) {
   const router = useRouter();
   const [trip, setTrip] = useState<TripStepValues>({ ...defaultTripValues, ...initialTripValues });
   const [about, setAbout] = useState<AboutYouFormState>(defaultAboutYouValues);
@@ -365,7 +367,7 @@ export function ContactFlow({ planningLabel, initialTripValues, travelProduct, s
         </div>
 
         <div className="lg:col-span-4">
-          <ContactSidebar settings={settings} />
+          <ContactSidebar settings={settings} reviews={reviews} />
         </div>
       </form>
     </div>

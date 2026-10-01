@@ -2,14 +2,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { Container } from "@/components/ui/container";
 import { Reveal } from "@/components/ui/reveal";
-import { heroImage } from "@/data/home";
+import type { HomeContent } from "@/types";
 
-export function Hero() {
+export function Hero({ hero }: { hero: HomeContent["hero"] }) {
   return (
     <section className="relative flex min-h-[100svh] items-end overflow-hidden bg-ink">
       <Image
-        src={heroImage.src}
-        alt={heroImage.alt}
+        src={hero.image.src}
+        alt={hero.image.alt}
         fill
         priority
         sizes="100vw"
@@ -26,21 +26,19 @@ export function Hero() {
 
       <Container className="relative z-10 pb-16 md:pb-24">
         <Reveal className="max-w-xl">
-          <h1 className="font-serif text-[clamp(2.375rem,5.6vw,5rem)] leading-[1.08] text-balance text-ivory">
-            Viagens que acompanham
-            <br />
-            <em className="italic">a sua história</em>.
+          <h1 className="font-serif text-[clamp(2.375rem,5.6vw,5rem)] leading-[1.08] text-balance whitespace-pre-line text-ivory">
+            {hero.title}
           </h1>
 
-          <p className="mt-4 max-w-[26rem] border-l border-ivory/25 pl-5 text-base leading-relaxed text-ivory/80">
-            Da primeira viagem a dois às jornadas em família.
-            <br />
-            Cada roteiro começa por quem vai vivê-lo.
-          </p>
+          {hero.text && (
+            <p className="mt-4 max-w-[26rem] border-l border-ivory/25 pl-5 text-base leading-relaxed whitespace-pre-line text-ivory/80">
+              {hero.text}
+            </p>
+          )}
 
           <div className="mt-7 flex flex-wrap items-center gap-x-10 gap-y-5">
             <Link
-              href="/contato"
+              href={hero.ctaHref || "/contato"}
               className="group/cta inline-flex items-center gap-4 text-sm font-medium tracking-[0.08em] text-ivory uppercase"
             >
               <span className="flex size-12 items-center justify-center rounded-full border border-ivory/70 transition-colors duration-500 ease-[var(--ease-editorial)] group-hover/cta:bg-ivory">
@@ -51,7 +49,7 @@ export function Hero() {
                   ↗
                 </span>
               </span>
-              Comece sua jornada
+              {hero.ctaLabel || "Comece sua jornada"}
             </Link>
             <Link
               href="/sobre"

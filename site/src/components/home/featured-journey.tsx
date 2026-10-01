@@ -1,11 +1,11 @@
 import Image from "next/image";
 import { LinkArrow } from "@/components/ui/link-arrow";
 import { Reveal } from "@/components/ui/reveal";
-import { featuredJourneys } from "@/data/home";
-import { getFeaturedItems } from "@/lib/content";
+import { travelProductHref } from "@/lib/links";
+import type { HomeFeaturedTravelProduct } from "@/types";
 
-export function FeaturedJourney() {
-  const journey = getFeaturedItems(featuredJourneys)[0];
+export function FeaturedJourney({ travelProducts }: { travelProducts: HomeFeaturedTravelProduct[] }) {
+  const journey = travelProducts[0];
   if (!journey) return null;
 
   return (
@@ -37,11 +37,11 @@ export function FeaturedJourney() {
           <h2 className="mt-6 font-serif text-[clamp(2rem,3.4vw,3.25rem)] leading-[1.1] text-balance text-ivory">
             {journey.title}
           </h2>
-          {journey.description && (
-            <p className="mt-5 text-base leading-relaxed text-ivory/70">{journey.description}</p>
+          {journey.subtitle && (
+            <p className="mt-5 text-base leading-relaxed text-ivory/70">{journey.subtitle}</p>
           )}
-          <LinkArrow href={journey.ctaHref ?? "#"} tone="ivory" className="mt-8">
-            {journey.ctaLabel ?? "Conhecer"}
+          <LinkArrow href={travelProductHref(journey.slug)} tone="ivory" className="mt-8">
+            Conhecer
           </LinkArrow>
         </Reveal>
       </div>

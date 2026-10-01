@@ -11,12 +11,10 @@ import { ImageReveal } from "@/components/ui/image-reveal";
 import { Reveal } from "@/components/ui/reveal";
 import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from "@/components/ui/carousel";
 import { CarouselCircleNav } from "@/components/ui/carousel-circle-nav";
-import { experiences as allExperiences } from "@/data/home";
-import { getActiveOrderedItems } from "@/lib/content";
 import { experienceHref } from "@/lib/links";
-import type { Experience } from "@/types";
+import type { HomeFeaturedExperience } from "@/types";
 
-function ExperienceCard({ experience }: { experience: Experience }) {
+function ExperienceCard({ experience }: { experience: HomeFeaturedExperience }) {
   return (
     <Link
       href={experienceHref(experience.slug)}
@@ -35,7 +33,7 @@ function ExperienceCard({ experience }: { experience: Experience }) {
       />
       <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-3 p-5 md:p-6">
         <div>
-          <h3 className="font-serif text-xl text-ivory md:text-2xl">{experience.title}</h3>
+          <h3 className="font-serif text-xl text-ivory md:text-2xl">{experience.name}</h3>
           {experience.shortDescription && (
             <p className="mt-1.5 max-w-[22ch] text-sm leading-snug text-ivory/80">
               {experience.shortDescription}
@@ -53,8 +51,7 @@ function ExperienceCard({ experience }: { experience: Experience }) {
   );
 }
 
-export function Experiences() {
-  const experiences = getActiveOrderedItems(allExperiences);
+export function Experiences({ experiences }: { experiences: HomeFeaturedExperience[] }) {
   const [reducedMotion, setReducedMotion] = useState(
     () => typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches,
   );
@@ -124,7 +121,7 @@ export function Experiences() {
               <CarouselContent className="-ml-5">
                 {experiences.map((experience) => (
                   <CarouselItem
-                    key={experience.id}
+                    key={experience.slug}
                     className="aspect-[3/4] basis-[80%] pl-5 sm:basis-[55%] lg:basis-[34%]"
                   >
                     <ExperienceCard experience={experience} />

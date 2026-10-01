@@ -3,8 +3,8 @@
 import { AnimatePresence } from "motion/react";
 import { SelectorTrigger } from "./selector-trigger";
 import { DiscoveryPanel } from "./discovery-panel";
-import { travelRegions, unknownDestination } from "@/data/travel-discovery";
-import type { DiscoveryDestination } from "@/types";
+import { unknownDestination } from "@/data/travel-discovery";
+import type { DiscoveryDestination, DiscoveryRegion } from "@/types";
 import { cn } from "@/lib/utils";
 
 interface DestinationSelectorProps {
@@ -13,6 +13,7 @@ interface DestinationSelectorProps {
   onClose: () => void;
   value: DiscoveryDestination | null;
   onChange: (destination: DiscoveryDestination | null) => void;
+  regions: DiscoveryRegion[];
 }
 
 const TRIGGER_ID = "discovery-destination-trigger";
@@ -24,6 +25,7 @@ export function DestinationSelector({
   onClose,
   value,
   onChange,
+  regions,
 }: DestinationSelectorProps) {
   const select = (destination: DiscoveryDestination) => {
     onChange(destination);
@@ -64,7 +66,7 @@ export function DestinationSelector({
             </button>
 
             <div className="grid grid-cols-2 gap-x-6 gap-y-8 md:grid-cols-3 lg:grid-cols-6">
-              {travelRegions.map((region) => (
+              {regions.map((region) => (
                 <div key={region.slug}>
                   <p className="text-[0.65rem] font-medium tracking-[0.18em] text-stone uppercase">
                     {region.name}

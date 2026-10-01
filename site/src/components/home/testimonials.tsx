@@ -12,14 +12,9 @@ import { GoogleIcon } from "@/components/ui/google-icon";
 import { LinkArrow } from "@/components/ui/link-arrow";
 import { Dialog, DialogClose, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { TestimonialCard } from "@/components/home/testimonial-card";
-// TODO CMS: reviews — substituir pela integração com a Google Places API
-// assim que estiver disponível. Nunca exibir como avaliação real até lá.
-import { reviews as allReviews } from "@/data/home";
-import { getActiveOrderedItems } from "@/lib/content";
 import type { GoogleReview } from "@/types";
 
-export function Testimonials() {
-  const reviews = getActiveOrderedItems(allReviews);
+export function Testimonials({ reviews }: { reviews: GoogleReview[] }) {
   const [reducedMotion, setReducedMotion] = useState(
     () => typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches,
   );

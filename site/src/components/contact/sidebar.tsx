@@ -1,8 +1,7 @@
 import { StarRating } from "@/components/ui/star-rating";
 import { GoogleIcon } from "@/components/ui/google-icon";
-import { getActiveOrderedItems } from "@/lib/content";
-import { reviews as allReviews } from "@/data/home";
 import type { SiteSettings } from "@/lib/cms";
+import type { GoogleReview } from "@/types";
 
 const NEXT_STEPS = [
   { number: "01", title: "Entendemos sua viagem" },
@@ -17,14 +16,13 @@ const DIFFERENTIALS = [
 ];
 
 /** O review mais curto de verdade do catálogo — nunca um texto inventado, e curto o bastante pra não pesar a lateral. */
-function getShortestReview() {
-  const reviews = getActiveOrderedItems(allReviews);
+function getShortestReview(reviews: GoogleReview[]) {
   if (reviews.length === 0) return null;
   return reviews.reduce((shortest, r) => (r.text.length < shortest.text.length ? r : shortest));
 }
 
-export function ContactSidebar({ settings }: { settings: SiteSettings }) {
-  const review = getShortestReview();
+export function ContactSidebar({ settings, reviews }: { settings: SiteSettings; reviews: GoogleReview[] }) {
+  const review = getShortestReview(reviews);
 
   return (
     <div className="flex flex-col lg:sticky lg:top-28">

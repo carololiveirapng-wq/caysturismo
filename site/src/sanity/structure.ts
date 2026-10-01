@@ -18,6 +18,10 @@ export const structure: StructureResolver = (S) =>
           S.list()
             .title("Conteúdo")
             .items([
+              S.listItem()
+                .id("home")
+                .title("Home")
+                .child(S.document().schemaType("home").documentId("home")),
               S.documentTypeListItem("destination").title("Destinos"),
               S.documentTypeListItem("experience").title("Experiências"),
               S.documentTypeListItem("travelProduct").title("Viagens"),

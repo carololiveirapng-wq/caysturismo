@@ -2,17 +2,23 @@ import { Container } from "@/components/ui/container";
 import { SectionLabel } from "@/components/ui/section-label";
 import { EditorialHeading } from "@/components/ui/editorial-heading";
 import { Reveal } from "@/components/ui/reveal";
-import { journeyProcess } from "@/data/home";
+import type { HomeContent } from "@/types";
 
-export function JourneyProcess() {
+export function JourneyProcess({ process }: { process: NonNullable<HomeContent["process"]> }) {
+  const steps = process.steps ?? [];
+  if (steps.length === 0) return null;
+
   return (
     <section className="bg-sand py-16 md:py-20">
       <Container>
         <Reveal className="max-w-md">
           <SectionLabel>Nosso jeito de viajar</SectionLabel>
-          <EditorialHeading as="h2" size="md" className="mt-4">
-            Tudo começa antes do embarque.
-          </EditorialHeading>
+          {process.heading && (
+            <EditorialHeading as="h2" size="md" className="mt-4">
+              {process.heading}
+            </EditorialHeading>
+          )}
+          {process.intro && <p className="mt-3 text-sm leading-relaxed text-stone">{process.intro}</p>}
         </Reveal>
 
         <div className="relative mt-12 md:mt-14">
@@ -22,7 +28,7 @@ export function JourneyProcess() {
           />
 
           <div className="grid grid-cols-1 gap-x-8 gap-y-8 md:grid-cols-4">
-            {journeyProcess.map((step, i) => (
+            {steps.map((step, i) => (
               <Reveal
                 key={step.number}
                 delay={i * 0.08}

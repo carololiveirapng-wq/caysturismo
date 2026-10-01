@@ -5,6 +5,8 @@ export const SETTINGS_QUERY = `*[_type == "settings"][0]{
   email,
   hours,
   address,
+  slogan,
+  foundedDate,
   socialLinks,
   defaultCTA,
   seoDefaults

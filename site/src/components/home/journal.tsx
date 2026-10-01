@@ -5,18 +5,12 @@ import { EditorialHeading } from "@/components/ui/editorial-heading";
 import { LinkArrow } from "@/components/ui/link-arrow";
 import { ImageReveal } from "@/components/ui/image-reveal";
 import { Reveal } from "@/components/ui/reveal";
-import { journalPosts as allJournalPosts } from "@/data/home";
-import { getActiveOrderedItems, getFeaturedItems } from "@/lib/content";
 import { curadoriaArticleHref } from "@/lib/links";
+import type { HomeFeaturedArticle } from "@/types";
 
-export function Journal() {
-  const featuredPosts = getFeaturedItems(allJournalPosts);
-  const posts = (featuredPosts.length > 0 ? featuredPosts : getActiveOrderedItems(allJournalPosts)).slice(
-    0,
-    3,
-  );
-  if (posts.length === 0) return null;
-  const [featured, ...rest] = posts;
+export function Journal({ articles }: { articles: HomeFeaturedArticle[] }) {
+  if (articles.length === 0) return null;
+  const [featured, ...rest] = articles;
 
   return (
     <section className="bg-ivory py-24 md:py-32">

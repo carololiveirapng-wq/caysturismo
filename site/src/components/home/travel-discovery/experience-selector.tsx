@@ -3,7 +3,6 @@
 import { AnimatePresence } from "motion/react";
 import { SelectorTrigger } from "./selector-trigger";
 import { DiscoveryPanel } from "./discovery-panel";
-import { travelExperiences } from "@/data/travel-discovery";
 import type { DiscoveryExperience } from "@/types";
 import { cn } from "@/lib/utils";
 
@@ -15,6 +14,7 @@ interface ExperienceSelectorProps {
   onChange: (experience: DiscoveryExperience | null) => void;
   /** true quando "Não sei para onde ir" está selecionado — este campo passa a liderar a busca. */
   emphasize?: boolean;
+  experiences: DiscoveryExperience[];
 }
 
 const TRIGGER_ID = "discovery-experience-trigger";
@@ -27,6 +27,7 @@ export function ExperienceSelector({
   value,
   onChange,
   emphasize,
+  experiences,
 }: ExperienceSelectorProps) {
   const select = (experience: DiscoveryExperience) => {
     onChange(experience);
@@ -60,7 +61,7 @@ export function ExperienceSelector({
               </p>
             )}
             <div className="grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-2">
-              {travelExperiences.map((experience, i) => (
+              {experiences.map((experience, i) => (
                 <button
                   key={experience.slug}
                   type="button"

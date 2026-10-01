@@ -11,3 +11,7 @@ export * from "./experiences";
 export * from "./travel-products";
 export * from "./curadoria-articles";
 export * from "./settings";
+export * from "./home";
+export * from "./testimonials";
+export * from "./people";
+export * from "./travel-discovery";

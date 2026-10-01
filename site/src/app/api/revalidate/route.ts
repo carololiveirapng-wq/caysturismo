@@ -9,7 +9,7 @@ import { sanityClient } from "@/sanity/client";
  *   URL: https://<domínio>/api/revalidate?secret=<SANITY_REVALIDATE_SECRET>
  *   Dataset: production
  *   Trigger on: Create, Update, Delete
- *   Filter: _type in ["destination", "experience", "travelProduct", "curadoriaArticle", "settings", "hotel"]
+ *   Filter: _type in ["destination", "experience", "travelProduct", "curadoriaArticle", "settings", "hotel", "home", "testimonial", "person"]
  *   Projection: { "type": _type, "id": _id, "slug": slug.current }
  *
  * O secret vai na query string (não só num header) porque o painel de
@@ -64,9 +64,24 @@ export async function POST(request: NextRequest) {
 
   if (type === "settings") {
     // Settings alimenta o Header/Footer/WhatsApp em TODA página pública,
-    // via o layout raiz — revalidar o layout propaga pra árvore inteira.
+    // via o layout raiz — revalidar o layout propaga pra árvore inteira,
+    // incluindo slogan/"Desde {ano}" usados na Home e em /sobre.
     revalidatePath("/", "layout");
     revalidated.push("/ (layout)");
+  } else if (type === "home") {
+    // Singleton — sem página de detalhe própria, só a Home em si.
+    revalidatePath("/");
+    revalidated.push("/");
+  } else if (type === "testimonial") {
+    // Depoimentos aparecem na Home, em /sobre e na lateral de /contato.
+    revalidatePath("/");
+    revalidatePath("/sobre");
+    revalidatePath("/contato");
+    revalidated.push("/", "/sobre", "/contato");
+  } else if (type === "person") {
+    // Equipe só aparece em /sobre.
+    revalidatePath("/sobre");
+    revalidated.push("/sobre");
   } else if (type === "hotel") {
     if (!id || !sanityClient) {
       return NextResponse.json({ error: "Campo 'id' ausente no payload (necessário pra resolver dependentes de hotel)" }, { status: 400 });

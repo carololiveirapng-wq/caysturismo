@@ -14,12 +14,19 @@ export const aboutHero = {
 
 export const aboutStory = {
   heading: "Por que a Cays existe",
-  text: "A Cays nasceu de uma inquietação simples: viagens muito bem organizadas nem sempre são viagens bem vividas. Faltava alguém que ouvisse antes de sugerir — e que desenhasse cada roteiro a partir de quem vai viajar, não de um pacote pronto.",
-  milestones: [
-    { label: "Início", text: "Uma equipe nasce para repensar como se planeja uma viagem." },
-    { label: "Hoje", text: "Curadoria personalizada para cada jornada, do primeiro contato ao retorno." },
-  ],
+  text: "A Cays nasceu para cuidar de viagens com a mesma atenção de quem organiza algo pessoal — sem fórmulas prontas, sempre a partir de quem vai viajar. Ficou conhecida primeiro pelas luas de mel e destination weddings, e hoje acompanha essas mesmas histórias em novas fases: viagens a dois, em família, em grandes celebrações.",
 };
+
+/**
+ * Timeline institucional — só datas reais. O ano de fundação vem de
+ * `settings.foundedDate` (nunca hardcoded aqui); os três marcos seguintes
+ * são deliberadamente sem data, igual pedido: nunca inventar anos
+ * intermediários que a Cays não confirmou.
+ */
+export const aboutMilestones = [
+  { label: "Lua de Mel & Destination Wedding", text: "Como a Cays se tornou conhecida." },
+  { label: "Novas fases da vida", text: "As mesmas histórias continuam — a dois, em família, em novas celebrações." },
+];
 
 export const aboutPillars = [
   { title: "Escuta", text: "Cada roteiro começa numa conversa, não num formulário." },

@@ -3,7 +3,7 @@ import { Container } from "@/components/ui/container";
 import { ContactFlow } from "@/components/contact/contact-flow";
 import { experienceTypeValues, type TripStepValues } from "@/lib/contact-schema";
 import { siteConfig } from "@/lib/site-config";
-import { getSettings, getDestinations, getDestinationBySlug, getExperienceBySlug, getTravelProductBySlug } from "@/lib/cms";
+import { getSettings, getDestinations, getDestinationBySlug, getExperienceBySlug, getTravelProductBySlug, getTestimonials } from "@/lib/cms";
 
 const title = "Planeje sua viagem | Cays Turismo";
 const description = "Conte para a Cays como você imagina sua próxima viagem — a gente cuida do resto.";
@@ -26,7 +26,12 @@ function isKnownExperienceType(slug: string): slug is TripStepValues["tipoExperi
 }
 
 export default async function ContatoPage({ searchParams }: PageProps<"/contato">) {
-  const [params, settings, destinations] = await Promise.all([searchParams, getSettings(), getDestinations()]);
+  const [params, settings, destinations, reviews] = await Promise.all([
+    searchParams,
+    getSettings(),
+    getDestinations(),
+    getTestimonials(),
+  ]);
   const destinoSlug = first(params.destino);
   const experienciaSlug = first(params.experiencia);
   const viagemSlug = first(params.viagem);
@@ -72,6 +77,7 @@ export default async function ContatoPage({ searchParams }: PageProps<"/contato"
           sourcePath={sourcePath}
           settings={settings}
           destinations={destinations.filter((d) => d.active).map((d) => ({ slug: d.slug, name: d.name }))}
+          reviews={reviews}
         />
       </Container>
     </section>

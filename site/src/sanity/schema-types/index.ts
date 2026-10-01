@@ -21,9 +21,11 @@ import { person } from "./person";
 import { testimonial } from "./testimonial";
 import { hotel } from "./hotel";
 import { settings } from "./settings";
+import { home } from "./home";
 
 export const schemaTypes: SchemaTypeDefinition[] = [
   // documentos
+  home,
   destination,
   experience,
   travelProduct,

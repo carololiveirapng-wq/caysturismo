@@ -8,6 +8,8 @@ interface SanitySettings {
   email?: string;
   hours?: string;
   address?: string;
+  slogan?: string;
+  foundedDate?: string;
   socialLinks?: { label?: string; url?: string }[];
   defaultCTA?: { label?: string; href?: string };
   seoDefaults?: { title?: string; description?: string };
@@ -21,6 +23,10 @@ export interface SiteSettings {
   email: string;
   address: string;
   instagram: string;
+  /** Ex.: "Do Altar para a vida toda" — vazio se ainda não cadastrado, nunca um texto inventado. */
+  slogan: string;
+  /** ISO (YYYY-MM-DD) da fundação real — "Desde 1997" é derivado disto no front-end, nunca escrito solto. */
+  foundedDate?: string;
   defaultCTA?: { label: string; href: string };
 }
 
@@ -47,6 +53,8 @@ export async function getSettings(): Promise<SiteSettings> {
     email: fromSanity?.email || siteConfig.email,
     address: fromSanity?.address || siteConfig.address,
     instagram: instagram || siteConfig.instagram,
+    slogan: fromSanity?.slogan || "",
+    foundedDate: fromSanity?.foundedDate,
     defaultCTA:
       fromSanity?.defaultCTA?.label && fromSanity?.defaultCTA?.href
         ? { label: fromSanity.defaultCTA.label, href: fromSanity.defaultCTA.href }
