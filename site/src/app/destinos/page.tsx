@@ -35,9 +35,16 @@ function buildWhereToGoNow(destinations: Awaited<ReturnType<typeof getDestinatio
 export default async function DestinosHubPage() {
   const destinations = await getDestinations();
 
-  const azItems: AZDestination[] = destinations
-    .filter((d) => d.continent)
-    .map((d) => ({ slug: d.slug, name: d.name, image: d.hero.image, continentSlug: d.continent! }));
+  // `continent` é opcional no schema — um destino publicado sem esse campo
+  // ainda precisa aparecer na lista A–Z (ele só não vai surgir ao filtrar
+  // por um continente específico). Sem isso, um destino "incompleto" fica
+  // invisível no hub mesmo com a página própria funcionando normalmente.
+  const azItems: AZDestination[] = destinations.map((d) => ({
+    slug: d.slug,
+    name: d.name,
+    image: d.hero.image,
+    continentSlug: d.continent ?? "outros",
+  }));
 
   const featuredItems = destinations
     .filter((d) => d.featured)

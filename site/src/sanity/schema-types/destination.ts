@@ -41,6 +41,11 @@ export const destination = defineType({
           { title: "Oceania", value: "oceania" },
         ],
       },
+      // Sem isto, um destino publicado sem continente ainda aparece na
+      // lista A–Z do hub (fallback "outros" no front-end), mas nunca surge
+      // ao filtrar por um continente específico — exigir o campo aqui evita
+      // essa lacuna silenciosa de cara, direto no Studio.
+      validation: (r) => r.required(),
     }),
     defineField({ name: "breadcrumb", title: "Breadcrumb", type: "array", of: [{ type: "breadcrumbItem" }] }),
 

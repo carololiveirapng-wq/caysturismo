@@ -1,30 +1,30 @@
-import { getDestinationDetailBySlug } from "@/data/destinations";
-import { getExperienceDetailBySlug } from "@/data/experiences";
-import { getTravelProductBySlug } from "@/data/travel-products";
-import { getCuradoriaArticleBySlug } from "@/data/curadoria";
-
 /**
- * O painel só tem página completa pra parte dos destinos/experiências/
- * viagens/artigos mockados até agora. Essas funções são o único lugar que
- * decide "essa página existe de verdade?" — todo card/link do site deve
- * passar por aqui em vez de montar a URL na mão, pra nunca mandar alguém
- * pra um 404. Quando não existe página própria, cai no contato com o
- * contexto certo (nunca um link morto).
+ * Constrói a URL de uma entidade editorial a partir do slug — determinístico,
+ * sem checar mock nem CMS. Todo chamador já tem o slug de uma entidade
+ * confirmada: ou veio de uma query GROQ (que só dereferencia documentos
+ * publicados e ativos — `active == true` nas queries de `@/sanity/queries`),
+ * ou é um slug fixo conhecido na navegação estática (Header/Footer). Nos
+ * dois casos a página de destino sempre existe, então não há nada pra
+ * "perguntar" — um destino/experiência/viagem/artigo novo criado só no
+ * Studio já funciona aqui sem precisar tocar neste arquivo.
+ *
+ * Isso NÃO é o lugar pra uma opção conceitual sem página própria (ex.: uma
+ * pergunta do formulário de contato sem destino real associado) — esse
+ * caso monta a URL `/contato?x=slug` diretamente no chamador, não aqui.
  */
 
 export function destinationHref(slug: string): string {
-  return getDestinationDetailBySlug(slug) ? `/destinos/${slug}` : `/contato?destino=${slug}`;
+  return `/destinos/${slug}`;
 }
 
 export function experienceHref(slug: string): string {
-  return getExperienceDetailBySlug(slug) ? `/experiencias/${slug}` : `/contato?experiencia=${slug}`;
+  return `/experiencias/${slug}`;
 }
 
 export function travelProductHref(slug: string): string {
-  return getTravelProductBySlug(slug) ? `/viagens/${slug}` : `/contato?viagem=${slug}`;
+  return `/viagens/${slug}`;
 }
 
-/** Sem query param equivalente pra artigo — na ausência da página, volta pro hub em vez de 404. */
 export function curadoriaArticleHref(slug: string): string {
-  return getCuradoriaArticleBySlug(slug) ? `/curadoria/${slug}` : "/curadoria";
+  return `/curadoria/${slug}`;
 }
