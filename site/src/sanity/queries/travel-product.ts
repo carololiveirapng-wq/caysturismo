@@ -1,6 +1,15 @@
 import { imageFragment } from "./fragments";
 
-/** Espelha `TravelProduct` (`src/types/travel-product.ts`). Não testado contra dataset real — ver nota em `destination.ts`. */
+/**
+ * Espelha `TravelProduct` (`src/types/travel-product.ts`). `destinations`,
+ * `experiences` e `gallery` são arrays OBRIGATÓRIOS no tipo local (sem
+ * `?`), mas nada no schema do Sanity impede um editor publicar o
+ * documento com esses campos vazios — e um array dereferenciado vazio
+ * vira `null` em GROQ, não `[]`. `coalesce(..., [])` garante que a
+ * página nunca recebe `null` onde o front-end espera sempre um array
+ * (achado validando um documento de teste de verdade, não só a
+ * estrutura da query — virava erro 500 em produção).
+ */
 const travelProductProjection = `{
   "id": _id,
   "slug": slug.current,
@@ -11,10 +20,10 @@ const travelProductProjection = `{
   status,
   title,
   eyebrow,
-  "destinations": destinations[]->slug.current,
-  "experiences": experiences[]->slug.current,
+  "destinations": coalesce(destinations[]->slug.current, []),
+  "experiences": coalesce(experiences[]->slug.current, []),
   breadcrumb,
-  "gallery": gallery[]${imageFragment},
+  "gallery": coalesce(gallery[]${imageFragment}, []),
   subtitle,
   duration,
   bestMonths,

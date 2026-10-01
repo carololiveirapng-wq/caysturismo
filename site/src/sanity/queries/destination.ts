@@ -3,10 +3,11 @@ import { imageFragment } from "./fragments";
 /**
  * Reshapa o documento Sanity pro formato exato de `DestinationDetail`
  * (`src/types/destination-detail.ts`) — a página não sabe se o dado veio
- * daqui ou do mock. NÃO testado contra um dataset real (sem projeto Sanity
- * configurado neste ambiente); a forma da query segue o schema em
- * `src/sanity/schema-types/destination.ts`, mas precisa validação contra
- * conteúdo real antes de confiar em produção.
+ * daqui ou do mock. `whyCays.items` é array obrigatório no tipo local
+ * quando `whyCays` existe, mas nada no schema impede publicar sem
+ * preencher `items` — um array dereferenciado/ausente vira `null` em
+ * GROQ, não `[]`, e quebra o `.map()` do front-end (validado contra um
+ * documento real, não só a estrutura da query).
  */
 const destinationProjection = `{
   "id": _id,
@@ -30,7 +31,7 @@ const destinationProjection = `{
   whyCays{
     heading,
     "image": image${imageFragment},
-    items
+    "items": coalesce(items, [])
   },
   "journeys": journeys[]->{
     "slug": slug.current,
