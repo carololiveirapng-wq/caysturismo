@@ -15,3 +15,5 @@ export * from "./home";
 export * from "./testimonials";
 export * from "./people";
 export * from "./travel-discovery";
+export * from "./about";
+export * from "./hubs";

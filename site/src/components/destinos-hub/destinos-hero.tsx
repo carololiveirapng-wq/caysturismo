@@ -1,6 +1,6 @@
 import { ShortHero } from "@/components/ui/short-hero";
-import { heroImage } from "@/data/home";
+import type { HubPageContent } from "@/types";
 
-export function DestinosHero() {
-  return <ShortHero eyebrow="Destinos" title="Para onde a Cays pode levar você." image={heroImage} />;
+export function DestinosHero({ hero }: { hero: HubPageContent["hero"] }) {
+  return <ShortHero eyebrow={hero.eyebrow ?? "Destinos"} title={hero.title} subtitle={hero.text} image={hero.image} />;
 }

@@ -84,7 +84,21 @@ export const home = defineType({
       title: "Destinos em destaque",
       type: "array",
       of: [{ type: "reference", to: [{ type: "destination" }] }],
-      description: "Seleção específica da Home — não precisa coincidir com o \"Destaque\" de cada destino individual.",
+      description: "Seleção específica da Home — não precisa coincidir com o \"Destaque\" de cada destino individual. Usada quando não há coleções abaixo.",
+    }),
+    defineField({
+      name: "destinationCollections",
+      title: "Coleções de destinos (opcional)",
+      type: "array",
+      description: "Agrupa os destinos em destaque por tema (ex.: \"Clássicos\", \"Praia\") e mostra abas na Home. Deixe vazio pra manter a lista única atual — só crie uma coleção quando o tema for uma decisão real da Cays, nunca um rótulo inventado.",
+      of: [{
+        type: "object",
+        fields: [
+          defineField({ name: "title", title: "Título da coleção", type: "string", validation: (r) => r.required() }),
+          defineField({ name: "destinations", title: "Destinos", type: "array", of: [{ type: "reference", to: [{ type: "destination" }] }], validation: (r) => r.min(1) }),
+        ],
+        preview: { select: { title: "title", items: "destinations" }, prepare: ({ title, items }) => ({ title, subtitle: `${items?.length ?? 0} destino(s)` }) },
+      }],
     }),
     defineField({
       name: "featuredExperiences",

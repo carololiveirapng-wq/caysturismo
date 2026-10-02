@@ -4,7 +4,11 @@ import { imageFragment } from "./fragments";
  * `home` é singleton — sempre um único documento. Os arrays `featured*`
  * dereferenciam pro shape mínimo que cada seção da Home realmente usa
  * (não o objeto completo do destino/experiência/viagem/artigo), igual ao
- * padrão já usado nos hubs — ver `src/sanity/queries/destination.ts`.
+ * padrão já usado nos hubs — ver `src/sanity/queries/destination.ts`. Todo
+ * array vem com `coalesce(..., [])`: o GROQ devolve `null` (não `[]`) pra
+ * um campo array totalmente ausente no documento, o que quebra `.map()` no
+ * front-end — já aconteceu antes com um campo novo adicionado a um
+ * documento já existente.
  */
 export const HOME_QUERY = `*[_type == "home"][0]{
   hero{
@@ -20,42 +24,52 @@ export const HOME_QUERY = `*[_type == "home"][0]{
   process{
     heading,
     intro,
-    steps
+    "steps": coalesce(steps, [])
   },
-  "featuredDestinations": featuredDestinations[]->{
+  "featuredDestinations": coalesce(featuredDestinations[]->{
     "slug": slug.current,
     name,
     "image": hero.image${imageFragment},
     "region": type,
     "shortDescription": hero.subtitle
-  },
-  "featuredExperiences": featuredExperiences[]->{
+  }, []),
+  "destinationCollections": coalesce(destinationCollections[]{
+    title,
+    "destinations": coalesce(destinations[]->{
+      "slug": slug.current,
+      name,
+      "image": hero.image${imageFragment},
+      "region": type,
+      "shortDescription": hero.subtitle
+    }, [])
+  }, []),
+  "featuredExperiences": coalesce(featuredExperiences[]->{
     "slug": slug.current,
     name,
     "image": hero.image${imageFragment},
     "shortDescription": hero.subtitle
-  },
-  "featuredTravelProducts": featuredTravelProducts[]->{
+  }, []),
+  "featuredTravelProducts": coalesce(featuredTravelProducts[]->{
     "slug": slug.current,
     title,
     eyebrow,
     "image": gallery[0]${imageFragment},
     subtitle
-  },
-  "featuredArticles": featuredArticles[]->{
+  }, []),
+  "featuredArticles": coalesce(featuredArticles[]->{
     "slug": slug.current,
     title,
     category,
     "image": heroImage${imageFragment},
     readingTime,
     publishedAt
-  },
-  "travelerStories": travelerStories[]{
+  }, []),
+  "travelerStories": coalesce(travelerStories[]{
     "image": image${imageFragment},
     caption,
     clientName,
     "destinationName": destination->name
-  },
+  }, []),
   finalCta{ title, text, ctaLabel },
   seo
 }`;

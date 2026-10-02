@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { ShortHero } from "@/components/ui/short-hero";
 import { FeaturedProducts } from "@/components/viagens-hub/featured-products";
 import { TravelProductFilters } from "@/components/viagens-hub/filters";
@@ -6,20 +7,14 @@ import { ResultsGrid } from "@/components/viagens-hub/results-grid";
 import { EditorialShortcuts } from "@/components/viagens-hub/editorial-shortcuts";
 import { DestinationFinalCTA } from "@/components/destination/destination-final-cta";
 import { Container } from "@/components/ui/container";
-import { getTravelProducts, getExperiences, getDestinations } from "@/lib/cms";
+import { getTravelProducts, getExperiences, getDestinations, getTravelHub } from "@/lib/cms";
 import { getActiveOrderedItems, getFeaturedItems } from "@/lib/content";
 import { filterTravelProducts, type TravelProductFilters as Filters } from "@/lib/travel-product-filters";
-import { unsplash } from "@/data/home/shared";
 import { siteConfig } from "@/lib/site-config";
 import type { TravelProductType } from "@/types";
 
-const title = "Viagens | Cays Turismo";
-const description = "Roteiros sob medida, cruzeiros e viagens com data fixa — descubra as viagens com a curadoria da Cays Turismo.";
-
-const heroImage = {
-  src: unsplash("1530789253388-582c481c54b0", 2400),
-  alt: "Balões de ar quente sobre a Capadócia ao amanhecer",
-};
+const fallbackTitle = "Viagens | Cays Turismo";
+const fallbackDescription = "Roteiros sob medida, cruzeiros e viagens com data fixa — descubra as viagens com a curadoria da Cays Turismo.";
 
 const VALID_TYPES: TravelProductType[] = ["custom", "fixed-date", "offer"];
 
@@ -30,8 +25,10 @@ function first(value: string | string[] | undefined): string | undefined {
 export async function generateMetadata({
   searchParams,
 }: PageProps<"/viagens">): Promise<Metadata> {
-  const params = await searchParams;
+  const [params, hub] = await Promise.all([searchParams, getTravelHub()]);
   const hasFilters = Object.keys(params).length > 0;
+  const title = hub?.seo?.title || fallbackTitle;
+  const description = hub?.seo?.description || fallbackDescription;
 
   return {
     // `title` já vem completo (com "Cays Turismo" no fim) — absolute evita
@@ -57,11 +54,13 @@ export default async function ViagensHubPage({ searchParams }: PageProps<"/viage
     periodo: first(params.periodo),
   };
 
-  const [allProducts, experiences, destinations] = await Promise.all([
+  const [allProducts, experiences, destinations, hub] = await Promise.all([
     getTravelProducts(),
     getExperiences(),
     getDestinations(),
+    getTravelHub(),
   ]);
+  if (!hub) notFound();
   const active = getActiveOrderedItems(allProducts);
   const featured = getFeaturedItems(active).slice(0, 2);
   const filtered = filterTravelProducts(active, filters);
@@ -69,10 +68,10 @@ export default async function ViagensHubPage({ searchParams }: PageProps<"/viage
   return (
     <>
       <ShortHero
-        eyebrow="Viagens"
-        title="Viagens para inspirar a próxima história."
-        subtitle="Roteiros sob medida, cruzeiros e datas fixas — cada um com a mesma curadoria."
-        image={heroImage}
+        eyebrow={hub.hero.eyebrow ?? "Viagens"}
+        title={hub.hero.title}
+        subtitle={hub.hero.text}
+        image={hub.hero.image}
       />
 
       <FeaturedProducts products={featured} />

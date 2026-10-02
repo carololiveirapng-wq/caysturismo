@@ -2,14 +2,23 @@ import { Container } from "@/components/ui/container";
 import { EditorialHeading } from "@/components/ui/editorial-heading";
 import { Reveal } from "@/components/ui/reveal";
 
-export function Philosophy({ pillars }: { pillars: { title: string; text: string }[] }) {
+export function Philosophy({
+  title,
+  text,
+  pillars,
+}: {
+  title?: string;
+  text?: string;
+  pillars: { title: string; text: string }[];
+}) {
   return (
     <section className="bg-sand py-14 md:py-20">
       <Container>
         <Reveal>
           <EditorialHeading as="h2" size="md">
-            Como enxergamos viagem
+            {title || "Como enxergamos viagem"}
           </EditorialHeading>
+          {text && <p className="mt-2.5 max-w-md text-sm text-stone">{text}</p>}
         </Reveal>
 
         <div className="mt-9 grid grid-cols-1 gap-8 sm:grid-cols-3">

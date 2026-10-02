@@ -13,11 +13,11 @@ export function ShortHero({
   eyebrow: string;
   title: string;
   subtitle?: string;
-  image: DemoImage;
+  image?: DemoImage;
 }) {
   return (
     <section className="relative flex h-[52vh] min-h-[380px] items-end overflow-hidden bg-ink md:h-[58vh]">
-      <Image src={image.src} alt={image.alt} fill priority sizes="100vw" className="object-cover" />
+      {image && <Image src={image.src} alt={image.alt} fill priority sizes="100vw" className="object-cover" />}
       <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-ink/80 via-ink/15 to-ink/30" />
       <Container className="relative z-10 pb-12 md:pb-16">
         <Reveal className="max-w-xl">

@@ -22,10 +22,17 @@ import { testimonial } from "./testimonial";
 import { hotel } from "./hotel";
 import { settings } from "./settings";
 import { home } from "./home";
+import { aboutPage } from "./about-page";
+import { destinationHub, experienceHub, travelHub, curadoriaHub } from "./hub-pages";
 
 export const schemaTypes: SchemaTypeDefinition[] = [
   // documentos
   home,
+  aboutPage,
+  destinationHub,
+  experienceHub,
+  travelHub,
+  curadoriaHub,
   destination,
   experience,
   travelProduct,

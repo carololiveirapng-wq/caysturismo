@@ -1,30 +1,37 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { ExperienciasHero } from "@/components/experiencias-hub/experiencias-hero";
 import { ExperienceCategoryGrid } from "@/components/experiencias-hub/category-grid";
 import { FeaturedJourneys } from "@/components/experiencias-hub/featured-journeys";
 import { DestinationFinalCTA } from "@/components/destination/destination-final-cta";
-import { getExperiences } from "@/lib/cms";
+import { getExperiences, getExperienceHub } from "@/lib/cms";
 import { siteConfig } from "@/lib/site-config";
 import type { ExperienceHubCard } from "@/data/experiences-hub";
 
-const title = "Experiências | Cays Turismo";
-const description =
+const fallbackTitle = "Experiências | Cays Turismo";
+const fallbackDescription =
   "Lua de mel, destination wedding, cruzeiros, safári e mais — descubra as experiências de viagem com a curadoria da Cays Turismo.";
 
-export const metadata: Metadata = {
-  // `title` já vem completo (com "Cays Turismo" no fim) — absolute evita
-  // que o template do layout raiz ("%s | Cays Turismo") duplique o nome.
-  title: { absolute: title },
-  description,
-  alternates: { canonical: "/experiencias" },
-  openGraph: { title, description, url: `${siteConfig.url}/experiencias` },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const hub = await getExperienceHub();
+  const title = hub?.seo?.title || fallbackTitle;
+  const description = hub?.seo?.description || fallbackDescription;
+  return {
+    // `title` já vem completo (com "Cays Turismo" no fim) — absolute evita
+    // que o template do layout raiz ("%s | Cays Turismo") duplique o nome.
+    title: { absolute: title },
+    description,
+    alternates: { canonical: "/experiencias" },
+    openGraph: { title, description, url: `${siteConfig.url}/experiencias` },
+  };
+}
 
 const OCCASION_SPANS = ["md:col-span-4", "md:col-span-2", "md:col-span-3", "md:col-span-3"];
 const STYLE_SPANS = ["md:col-span-4", "md:col-span-2", "md:col-span-2", "md:col-span-2", "md:col-span-2", "md:col-span-6"];
 
 export default async function ExperienciasHubPage() {
-  const experiences = await getExperiences();
+  const [experiences, hub] = await Promise.all([getExperiences(), getExperienceHub()]);
+  if (!hub) notFound();
   const toCard = (e: (typeof experiences)[number]): ExperienceHubCard => ({
     slug: e.slug,
     name: e.name,
@@ -35,7 +42,7 @@ export default async function ExperienciasHubPage() {
 
   return (
     <>
-      <ExperienciasHero />
+      <ExperienciasHero hero={hub.hero} />
       <ExperienceCategoryGrid heading="Ocasiões" items={occasions} tileSpans={OCCASION_SPANS} />
       <ExperienceCategoryGrid heading="Estilos" items={styles} tileSpans={STYLE_SPANS} />
       <FeaturedJourneys />

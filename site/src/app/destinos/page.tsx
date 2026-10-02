@@ -1,26 +1,32 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { DestinosHero } from "@/components/destinos-hub/destinos-hero";
 import { DestinosTabs } from "@/components/destinos-hub/destinos-tabs";
 import { FeaturedDestinations } from "@/components/destinos-hub/featured-destinations";
 import { WhereToGoNow, type WhereToGoPick } from "@/components/destinos-hub/where-to-go-now";
 import { ExperienceShortcut } from "@/components/destinos-hub/experience-shortcut";
 import { DestinationFinalCTA } from "@/components/destination/destination-final-cta";
-import { getDestinations } from "@/lib/cms";
+import { getDestinations, getDestinationHub } from "@/lib/cms";
 import { siteConfig } from "@/lib/site-config";
 import type { AZDestination } from "@/data/destinations-hub";
 
-const title = "Destinos | Cays Turismo";
-const description =
+const fallbackTitle = "Destinos | Cays Turismo";
+const fallbackDescription =
   "Explore os destinos da curadoria Cays Turismo por continente ou em ordem alfabética, e descubra para onde ir em cada época do ano.";
 
-export const metadata: Metadata = {
-  // `title` já vem completo (com "Cays Turismo" no fim) — absolute evita
-  // que o template do layout raiz ("%s | Cays Turismo") duplique o nome.
-  title: { absolute: title },
-  description,
-  alternates: { canonical: "/destinos" },
-  openGraph: { title, description, url: `${siteConfig.url}/destinos` },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const hub = await getDestinationHub();
+  const title = hub?.seo?.title || fallbackTitle;
+  const description = hub?.seo?.description || fallbackDescription;
+  return {
+    // `title` já vem completo (com "Cays Turismo" no fim) — absolute evita
+    // que o template do layout raiz ("%s | Cays Turismo") duplique o nome.
+    title: { absolute: title },
+    description,
+    alternates: { canonical: "/destinos" },
+    openGraph: { title, description, url: `${siteConfig.url}/destinos` },
+  };
+}
 
 /** "Onde ir agora" derivado do `months[]` real de cada destino (status "ideal" no mês atual) — nada inventado, sem precisar de um segundo schema de "seasonal picks". */
 function buildWhereToGoNow(destinations: Awaited<ReturnType<typeof getDestinations>>, month: number): WhereToGoPick[] {
@@ -33,7 +39,8 @@ function buildWhereToGoNow(destinations: Awaited<ReturnType<typeof getDestinatio
 }
 
 export default async function DestinosHubPage() {
-  const destinations = await getDestinations();
+  const [destinations, hub] = await Promise.all([getDestinations(), getDestinationHub()]);
+  if (!hub) notFound();
 
   // `continent` é opcional no schema — um destino publicado sem esse campo
   // ainda precisa aparecer na lista A–Z (ele só não vai surgir ao filtrar
@@ -56,7 +63,7 @@ export default async function DestinosHubPage() {
 
   return (
     <>
-      <DestinosHero />
+      <DestinosHero hero={hub.hero} />
       <DestinosTabs items={azItems} />
       <FeaturedDestinations items={featuredItems} />
       <WhereToGoNow picks={whereToGoPicks} />

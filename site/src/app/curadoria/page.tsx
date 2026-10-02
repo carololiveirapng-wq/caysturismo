@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { ShortHero } from "@/components/ui/short-hero";
 import { FeaturedArticle } from "@/components/curadoria/featured-article";
 import { LatestSection } from "@/components/curadoria/latest-section";
@@ -6,40 +7,40 @@ import { ByDestination } from "@/components/curadoria/by-destination";
 import { ByExperience } from "@/components/curadoria/by-experience";
 import { DestinationFinalCTA } from "@/components/destination/destination-final-cta";
 import { curadoriaCategories } from "@/data/curadoria";
-import { getArticles } from "@/lib/cms";
+import { getArticles, getCuradoriaHub } from "@/lib/cms";
 import { getActiveOrderedItems, getFeaturedItems } from "@/lib/content";
-import { unsplash } from "@/data/home/shared";
 import { siteConfig } from "@/lib/site-config";
 
-const title = "Curadoria | Cays Turismo";
-const description = "Destinos, histórias e ideias para viajar melhor — a curadoria editorial da Cays Turismo.";
+const fallbackTitle = "Curadoria | Cays Turismo";
+const fallbackDescription = "Destinos, histórias e ideias para viajar melhor — a curadoria editorial da Cays Turismo.";
 
-export const metadata: Metadata = {
-  // `title` já vem completo (com "Cays Turismo" no fim) — absolute evita
-  // que o template do layout raiz ("%s | Cays Turismo") duplique o nome.
-  title: { absolute: title },
-  description,
-  alternates: { canonical: "/curadoria" },
-  openGraph: { title, description, url: `${siteConfig.url}/curadoria` },
-};
-
-const heroImage = {
-  src: unsplash("1476514525535-07fb3b4ae5f1", 2400),
-  alt: "Barco de madeira em lago alpino cercado por montanhas nas Dolomitas",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const hub = await getCuradoriaHub();
+  const title = hub?.seo?.title || fallbackTitle;
+  const description = hub?.seo?.description || fallbackDescription;
+  return {
+    // `title` já vem completo (com "Cays Turismo" no fim) — absolute evita
+    // que o template do layout raiz ("%s | Cays Turismo") duplique o nome.
+    title: { absolute: title },
+    description,
+    alternates: { canonical: "/curadoria" },
+    openGraph: { title, description, url: `${siteConfig.url}/curadoria` },
+  };
+}
 
 export default async function CuradoriaHubPage() {
-  const allArticles = await getArticles();
+  const [allArticles, hub] = await Promise.all([getArticles(), getCuradoriaHub()]);
+  if (!hub) notFound();
   const active = getActiveOrderedItems(allArticles);
   const featured = getFeaturedItems(allArticles)[0] ?? active[0];
 
   return (
     <>
       <ShortHero
-        eyebrow="Curadoria"
-        title="Curadoria Cays"
-        subtitle="Destinos, histórias e ideias para viajar melhor."
-        image={heroImage}
+        eyebrow={hub.hero.eyebrow ?? "Curadoria"}
+        title={hub.hero.title}
+        subtitle={hub.hero.text}
+        image={hub.hero.image}
       />
 
       {featured && <FeaturedArticle article={featured} />}

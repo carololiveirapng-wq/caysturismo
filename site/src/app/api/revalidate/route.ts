@@ -9,7 +9,7 @@ import { sanityClient } from "@/sanity/client";
  *   URL: https://<domínio>/api/revalidate?secret=<SANITY_REVALIDATE_SECRET>
  *   Dataset: production
  *   Trigger on: Create, Update, Delete
- *   Filter: _type in ["destination", "experience", "travelProduct", "curadoriaArticle", "settings", "hotel", "home", "testimonial", "person"]
+ *   Filter: _type in ["destination", "experience", "travelProduct", "curadoriaArticle", "settings", "hotel", "home", "testimonial", "person", "aboutPage", "destinationHub", "experienceHub", "travelHub", "curadoriaHub"]
  *   Projection: { "type": _type, "id": _id, "slug": slug.current }
  *
  * O secret vai na query string (não só num header) porque o painel de
@@ -35,6 +35,15 @@ const TYPE_TO_DETAIL_PREFIX: Record<string, string> = {
   experience: "/experiencias",
   travelProduct: "/viagens",
   curadoriaArticle: "/curadoria",
+};
+
+/** Páginas singleton própria — editar só revalida a página delas, nada mais. */
+const SINGLETON_TYPE_TO_PATH: Record<string, string> = {
+  aboutPage: "/sobre",
+  destinationHub: "/destinos",
+  experienceHub: "/experiencias",
+  travelHub: "/viagens",
+  curadoriaHub: "/curadoria",
 };
 
 export async function POST(request: NextRequest) {
@@ -82,6 +91,10 @@ export async function POST(request: NextRequest) {
     // Equipe só aparece em /sobre.
     revalidatePath("/sobre");
     revalidated.push("/sobre");
+  } else if (type in SINGLETON_TYPE_TO_PATH) {
+    const path = SINGLETON_TYPE_TO_PATH[type];
+    revalidatePath(path);
+    revalidated.push(path);
   } else if (type === "hotel") {
     if (!id || !sanityClient) {
       return NextResponse.json({ error: "Campo 'id' ausente no payload (necessário pra resolver dependentes de hotel)" }, { status: 400 });

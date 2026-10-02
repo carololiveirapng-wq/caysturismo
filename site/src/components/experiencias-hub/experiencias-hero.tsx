@@ -1,11 +1,6 @@
 import { ShortHero } from "@/components/ui/short-hero";
-import { unsplash } from "@/data/home/shared";
+import type { HubPageContent } from "@/types";
 
-const heroImage = {
-  src: unsplash("1531969179221-3946e6b5a5e7", 2400),
-  alt: "Chá sendo servido em xícaras tradicionais japonesas, com vapor subindo",
-};
-
-export function ExperienciasHero() {
-  return <ShortHero eyebrow="Experiências" title="Há muitas formas de viajar. Qual é a sua?" image={heroImage} />;
+export function ExperienciasHero({ hero }: { hero: HubPageContent["hero"] }) {
+  return <ShortHero eyebrow={hero.eyebrow ?? "Experiências"} title={hero.title} subtitle={hero.text} image={hero.image} />;
 }

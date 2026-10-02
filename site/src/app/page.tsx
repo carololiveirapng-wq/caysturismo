@@ -35,7 +35,9 @@ export default async function Home() {
       )}
       {home.featuredExperiences.length > 0 && <Experiences experiences={home.featuredExperiences} />}
       {home.process && <JourneyProcess process={home.process} />}
-      {home.featuredDestinations.length > 0 && <DestinationsSection destinations={home.featuredDestinations} />}
+      {(home.featuredDestinations.length > 0 || home.destinationCollections.length > 0) && (
+        <DestinationsSection destinations={home.featuredDestinations} collections={home.destinationCollections} />
+      )}
       {home.featuredArticles.length > 0 && <Journal articles={home.featuredArticles} />}
       {home.featuredTravelProducts.length > 0 && <FeaturedJourney travelProducts={home.featuredTravelProducts} />}
       <TravelerStories stories={home.travelerStories} />

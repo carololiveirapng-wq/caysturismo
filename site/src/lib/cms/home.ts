@@ -55,6 +55,7 @@ function buildMockHome(): HomeContent {
     positioning: undefined,
     process: { steps: journeyProcess },
     featuredDestinations,
+    destinationCollections: [],
     featuredExperiences,
     featuredTravelProducts,
     featuredArticles,

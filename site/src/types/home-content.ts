@@ -39,6 +39,11 @@ export interface HomeTravelerStory {
   destinationName?: string;
 }
 
+export interface HomeDestinationCollection {
+  title: string;
+  destinations: HomeFeaturedDestination[];
+}
+
 /**
  * Conteúdo da Home vindo do singleton `home` no Sanity (ou do fallback
  * mock montado em `src/lib/cms/home.ts` quando o CMS não está
@@ -59,6 +64,7 @@ export interface HomeContent {
   positioning?: { heading?: string; text?: string };
   process?: { heading?: string; intro?: string; steps?: ProcessStep[] };
   featuredDestinations: HomeFeaturedDestination[];
+  destinationCollections: HomeDestinationCollection[];
   featuredExperiences: HomeFeaturedExperience[];
   featuredTravelProducts: HomeFeaturedTravelProduct[];
   featuredArticles: HomeFeaturedArticle[];

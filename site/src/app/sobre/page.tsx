@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { ShortHero } from "@/components/ui/short-hero";
 import { Story } from "@/components/about/story";
 import { Philosophy } from "@/components/about/philosophy";
@@ -8,46 +9,66 @@ import { Credentials } from "@/components/about/credentials";
 import { Positioning } from "@/components/home/positioning";
 import { Testimonials } from "@/components/home/testimonials";
 import { DestinationFinalCTA } from "@/components/destination/destination-final-cta";
-import { aboutHero, aboutStory, aboutMilestones, aboutPillars, aboutTeamRoles } from "@/data/about";
-import { getHome, getSettings, getPeople, getTestimonials } from "@/lib/cms";
+import { aboutTeamRoles } from "@/data/about";
+import { getAboutPage, getHome, getSettings, getPeople, getTestimonials } from "@/lib/cms";
 import { siteConfig } from "@/lib/site-config";
 
-const title = "Sobre a Cays | Cays Turismo";
-const description = "Conheça a filosofia por trás da curadoria de viagens da Cays Turismo — escuta, curadoria e cuidado em cada roteiro.";
+const fallbackTitle = "Sobre a Cays | Cays Turismo";
+const fallbackDescription = "Conheça a filosofia por trás da curadoria de viagens da Cays Turismo — escuta, curadoria e cuidado em cada roteiro.";
 
-export const metadata: Metadata = {
-  // `title` já vem completo (com "Cays Turismo" no fim) — absolute evita
-  // que o template do layout raiz ("%s | Cays Turismo") duplique o nome.
-  title: { absolute: title },
-  description,
-  alternates: { canonical: "/sobre" },
-  openGraph: { title, description, url: `${siteConfig.url}/sobre` },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const about = await getAboutPage();
+  const title = about?.seo?.title || fallbackTitle;
+  const description = about?.seo?.description || fallbackDescription;
+  return {
+    // `title` já vem completo (com "Cays Turismo" no fim) — absolute evita
+    // que o template do layout raiz ("%s | Cays Turismo") duplique o nome.
+    title: { absolute: title },
+    description,
+    alternates: { canonical: "/sobre" },
+    openGraph: { title, description, url: `${siteConfig.url}/sobre` },
+  };
+}
 
 export default async function SobrePage() {
-  const [home, settings, people, testimonials] = await Promise.all([
+  const [about, home, settings, people, testimonials] = await Promise.all([
+    getAboutPage(),
     getHome(),
     getSettings(),
     getPeople(),
     getTestimonials(),
   ]);
+  if (!about) notFound();
 
   const foundedYear = settings.foundedDate ? new Date(settings.foundedDate).getFullYear() : undefined;
-  const milestones = foundedYear
-    ? [{ label: String(foundedYear), text: "O começo." }, ...aboutMilestones]
-    : aboutMilestones;
+  const timeline = about.history?.timeline ?? [];
 
   return (
     <>
-      <ShortHero eyebrow={aboutHero.eyebrow} title={aboutHero.title} image={aboutHero.image} />
+      <ShortHero
+        eyebrow={about.hero.eyebrow ?? "Sobre a Cays"}
+        title={about.hero.title}
+        subtitle={about.hero.text}
+        image={about.hero.image}
+      />
 
-      <Story heading={aboutStory.heading} text={aboutStory.text} milestones={milestones} />
+      <Story heading={about.history?.title} text={about.history?.text} timeline={timeline} />
 
       {settings.slogan && (
-        <Positioning slogan={settings.slogan} foundedYear={foundedYear} positioning={home?.positioning} />
+        <Positioning
+          slogan={settings.slogan}
+          foundedYear={foundedYear}
+          positioning={{ heading: about.positioning?.title, text: about.positioning?.text }}
+        />
       )}
 
-      <Philosophy pillars={aboutPillars} />
+      {about.pillars.length > 0 && (
+        <Philosophy
+          title={about.philosophy?.title}
+          text={about.philosophy?.text}
+          pillars={about.pillars.map((p) => ({ title: p.title, text: p.description ?? "" }))}
+        />
+      )}
 
       {home?.process?.steps && home.process.steps.length > 0 && <HowWeWork steps={home.process.steps} />}
 
@@ -57,12 +78,14 @@ export default async function SobrePage() {
 
       {testimonials.length > 0 && <Testimonials reviews={testimonials} />}
 
-      <DestinationFinalCTA
-        title="Quer conversar com a gente sobre sua próxima viagem?"
-        supporting="Conte para a Cays o que você imagina viver. Nós cuidamos do caminho."
-        ctaLabel="Planejar minha viagem"
-        ctaHref="/contato"
-      />
+      {about.finalCta && (
+        <DestinationFinalCTA
+          title={about.finalCta.title ?? ""}
+          supporting={about.finalCta.text ?? ""}
+          ctaLabel={about.finalCta.ctaLabel || "Planejar minha viagem"}
+          ctaHref="/contato"
+        />
+      )}
     </>
   );
 }

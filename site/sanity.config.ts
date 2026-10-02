@@ -7,6 +7,9 @@ import { structure } from "./src/sanity/structure";
 import { projectId, dataset, apiVersion } from "./src/sanity/env";
 import { StudioLogo } from "./src/sanity/components/logo";
 
+/** Tipos singleton — documentId fixo, sem segunda instância permitida (ver `structure.ts`). */
+const SINGLETON_TYPES = new Set(["home", "aboutPage", "destinationHub", "experienceHub", "travelHub", "curadoriaHub", "settings"]);
+
 export default defineConfig({
   name: "cays-turismo",
   title: "Cays Turismo — Conteúdo",
@@ -25,6 +28,18 @@ export default defineConfig({
 
   schema: {
     types: schemaTypes,
+  },
+
+  // Tira os tipos singleton do botão genérico "+ Criar novo" — o único
+  // jeito de chegar neles continua sendo o item fixo em "Páginas"/
+  // "Configurações" na `structure.ts`, nunca uma segunda instância nova.
+  document: {
+    newDocumentOptions: (prev, { creationContext }) => {
+      if (creationContext.type === "global") {
+        return prev.filter((template) => !SINGLETON_TYPES.has(template.templateId));
+      }
+      return prev;
+    },
   },
 
   studio: {
