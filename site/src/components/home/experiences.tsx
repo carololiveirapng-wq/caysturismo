@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Autoplay from "embla-carousel-autoplay";
+import { Pause, Play } from "lucide-react";
 import { Container } from "@/components/ui/container";
 import { SectionLabel } from "@/components/ui/section-label";
 import { EditorialHeading } from "@/components/ui/editorial-heading";
@@ -74,6 +75,10 @@ export function Experiences({ experiences }: { experiences: HomeFeaturedExperien
   );
   const [api, setApi] = useState<CarouselApi>();
 
+  // Controle manual sempre disponível — hover só funciona com mouse; sem
+  // isto, quem usa toque não tem como pausar o carrossel (WCAG 2.2.2).
+  const [manuallyPaused, setManuallyPaused] = useState(false);
+
   useEffect(() => {
     // A instância do plugin só fica utilizável depois que o Embla termina de
     // inicializar (é isso que `api` sinaliza) — chamar .play()/.stop() antes
@@ -82,7 +87,7 @@ export function Experiences({ experiences }: { experiences: HomeFeaturedExperien
     const plugin = api.plugins().autoplay;
     if (!plugin) return;
 
-    if (reducedMotion) {
+    if (reducedMotion || manuallyPaused) {
       plugin.stop();
       return;
     }
@@ -94,7 +99,7 @@ export function Experiences({ experiences }: { experiences: HomeFeaturedExperien
     };
     document.addEventListener("visibilitychange", onVisibility);
     return () => document.removeEventListener("visibilitychange", onVisibility);
-  }, [api, reducedMotion]);
+  }, [api, reducedMotion, manuallyPaused]);
 
   if (experiences.length === 0) return null;
 
@@ -111,9 +116,19 @@ export function Experiences({ experiences }: { experiences: HomeFeaturedExperien
                   <br />
                   Encontre a sua.
                 </EditorialHeading>
-                <LinkArrow href="/experiencias" className="mt-7">
-                  Explorar experiências
-                </LinkArrow>
+                <div className="mt-7 flex items-center gap-5">
+                  <LinkArrow href="/experiencias">Explorar experiências</LinkArrow>
+                  {!reducedMotion && (
+                    <button
+                      type="button"
+                      onClick={() => setManuallyPaused((v) => !v)}
+                      aria-label={manuallyPaused ? "Retomar apresentação automática das experiências" : "Pausar apresentação automática das experiências"}
+                      className="flex size-9 shrink-0 items-center justify-center rounded-full border border-ink/15 text-ink transition-colors duration-300 hover:border-ink/30 hover:bg-sand"
+                    >
+                      {manuallyPaused ? <Play className="size-3.5" aria-hidden /> : <Pause className="size-3.5" aria-hidden />}
+                    </button>
+                  )}
+                </div>
               </Reveal>
             </div>
 

@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Autoplay from "embla-carousel-autoplay";
-import { X } from "lucide-react";
+import { Pause, Play, X } from "lucide-react";
 import { Container } from "@/components/ui/container";
 import { EditorialHeading } from "@/components/ui/editorial-heading";
 import { Carousel, CarouselContent, CarouselItem, type CarouselApi } from "@/components/ui/carousel";
@@ -37,6 +37,10 @@ export function Testimonials({ reviews }: { reviews: GoogleReview[] }) {
   );
   const [api, setApi] = useState<CarouselApi>();
 
+  // Controle manual sempre disponível — hover só funciona com mouse; sem
+  // isto, quem usa toque não tem como pausar o carrossel (WCAG 2.2.2).
+  const [manuallyPaused, setManuallyPaused] = useState(false);
+
   // Depoimento aberto no modal "ler completo" — null = modal fechado.
   const [activeReview, setActiveReview] = useState<GoogleReview | null>(null);
   const lastTriggerRef = useRef<HTMLButtonElement | null>(null);
@@ -58,9 +62,9 @@ export function Testimonials({ reviews }: { reviews: GoogleReview[] }) {
     const plugin = api.plugins().autoplay;
     if (!plugin) return;
 
-    // Modal aberto pausa o autoplay, assim como reduced-motion; os dois têm
-    // prioridade sobre a visibilidade da aba.
-    if (reducedMotion || activeReview) {
+    // Modal aberto, pausa manual e reduced-motion têm prioridade sobre a
+    // visibilidade da aba.
+    if (reducedMotion || activeReview || manuallyPaused) {
       plugin.stop();
       return;
     }
@@ -72,16 +76,26 @@ export function Testimonials({ reviews }: { reviews: GoogleReview[] }) {
     };
     document.addEventListener("visibilitychange", onVisibility);
     return () => document.removeEventListener("visibilitychange", onVisibility);
-  }, [api, reducedMotion, activeReview]);
+  }, [api, reducedMotion, activeReview, manuallyPaused]);
 
   if (reviews.length === 0) return null;
 
   return (
     <section className="bg-sand py-16 md:py-20">
-      <Container className="text-center">
+      <Container className="relative text-center">
         <EditorialHeading as="h2" size="lg" className="mx-auto max-w-xl">
           Histórias de quem já viajou com a Cays.
         </EditorialHeading>
+        {!reducedMotion && (
+          <button
+            type="button"
+            onClick={() => setManuallyPaused((v) => !v)}
+            aria-label={manuallyPaused ? "Retomar apresentação automática dos depoimentos" : "Pausar apresentação automática dos depoimentos"}
+            className="absolute top-0 right-0 flex size-9 items-center justify-center rounded-full border border-ink/15 text-ink transition-colors duration-300 hover:border-ink/30 hover:bg-ivory sm:right-6 lg:right-16"
+          >
+            {manuallyPaused ? <Play className="size-3.5" aria-hidden /> : <Pause className="size-3.5" aria-hidden />}
+          </button>
+        )}
       </Container>
 
       <Carousel opts={{ align: "start", loop: true }} plugins={[autoplay]} setApi={setApi}>

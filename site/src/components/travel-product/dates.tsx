@@ -14,7 +14,7 @@ function DepartureRow({ departure }: { departure: TravelProductDeparture }) {
           "inline-flex items-center gap-1.5 text-xs font-medium tracking-wide uppercase",
           departure.status === "active" && "text-stone",
           departure.status === "few-spots" && "text-magenta",
-          (departure.status === "sold-out" || departure.status === "expired") && "text-stone/50",
+          (departure.status === "sold-out" || departure.status === "expired") && "text-stone/75",
         )}
       >
         <span
@@ -71,7 +71,7 @@ export function ProductDates({
                   <DepartureRow key={departure.label} departure={departure} />
                 ))}
               </div>
-              <p className="mt-6 max-w-md text-xs leading-relaxed text-stone/70">
+              <p className="mt-6 max-w-md text-xs leading-relaxed text-stone/85">
                 Valores e disponibilidade sujeitos a confirmação no momento da reserva.
               </p>
             </>

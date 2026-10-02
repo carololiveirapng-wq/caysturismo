@@ -45,7 +45,7 @@ export function LoginForm({ next }: { next: string }) {
       <button
         type="submit"
         disabled={pending}
-        className="mt-2 bg-ivory px-5 py-3 text-sm font-medium tracking-wide text-ink uppercase transition-colors duration-300 hover:bg-magenta hover:text-ivory disabled:opacity-60"
+        className="mt-2 bg-ivory px-5 py-3 text-sm font-medium tracking-wide text-ink uppercase transition-colors duration-300 hover:bg-magenta-dark hover:text-ivory disabled:opacity-60"
       >
         {pending ? "Entrando…" : "Entrar"}
       </button>

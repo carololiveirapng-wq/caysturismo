@@ -52,7 +52,7 @@ export function ProductStays({ id, stays, cabinCategories }: ProductStaysProps) 
           <div className="mt-9 grid grid-cols-1 gap-8 sm:grid-cols-3">
             {cabinCategories!.map((cabin, i) => (
               <div key={cabin.name} className="border-t border-ink/10 pt-5">
-                <span className="text-xs text-stone/70 tabular-nums">{String(i + 1).padStart(2, "0")}</span>
+                <span className="text-xs text-stone/85 tabular-nums">{String(i + 1).padStart(2, "0")}</span>
                 <h3 className="mt-1.5 font-serif text-xl text-ink">{cabin.name}</h3>
                 {cabin.text && <p className="mt-2 text-sm leading-relaxed text-stone">{cabin.text}</p>}
               </div>

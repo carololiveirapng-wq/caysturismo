@@ -67,7 +67,7 @@ function Block({ block }: { block: ArticleBlock }) {
             sizes="(min-width: 1024px) 700px, 90vw"
             containerClassName="aspect-[16/10]"
           />
-          {block.caption && <figcaption className="mt-2.5 text-xs text-stone/70">{block.caption}</figcaption>}
+          {block.caption && <figcaption className="mt-2.5 text-xs text-stone/85">{block.caption}</figcaption>}
         </figure>
       );
 

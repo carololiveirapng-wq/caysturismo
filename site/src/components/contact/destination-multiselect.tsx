@@ -56,7 +56,7 @@ export function DestinationMultiSelect({
         aria-haspopup="listbox"
         className="flex w-full items-center justify-between gap-3 border-0 border-b border-ink/20 bg-transparent py-2.5 text-left text-base outline-none transition-colors duration-300 focus:border-ink"
       >
-        <span className={cn("truncate", selectedNames.length === 0 ? "text-stone/50" : "text-ink")}>
+        <span className={cn("truncate", selectedNames.length === 0 ? "text-stone/75" : "text-ink")}>
           {selectedNames.length > 0 ? selectedNames.join(", ") : "Escolha um ou mais destinos"}
         </span>
         <ChevronDown

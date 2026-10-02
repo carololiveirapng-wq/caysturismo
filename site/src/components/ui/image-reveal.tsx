@@ -1,7 +1,7 @@
 "use client";
 
 import Image, { type ImageProps } from "next/image";
-import { motion } from "motion/react";
+import { motion, useReducedMotion } from "motion/react";
 import { cn } from "@/lib/utils";
 
 interface ImageRevealProps extends Omit<ImageProps, "className"> {
@@ -24,12 +24,15 @@ export function ImageReveal({
   alt,
   ...imageProps
 }: ImageRevealProps) {
+  const shouldReduceMotion = useReducedMotion();
+  const revealed = { clipPath: "inset(0% 0% 0% 0%)", opacity: 1 };
+
   return (
     <motion.div
-      initial={{ clipPath: "inset(6% 6% 6% 6%)", opacity: 0 }}
-      whileInView={{ clipPath: "inset(0% 0% 0% 0%)", opacity: 1 }}
+      initial={shouldReduceMotion ? revealed : { clipPath: "inset(6% 6% 6% 6%)", opacity: 0 }}
+      whileInView={revealed}
       viewport={{ once: true, margin: "-10% 0px" }}
-      transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
+      transition={shouldReduceMotion ? { duration: 0 } : { duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
       className={cn("group/image relative overflow-hidden", containerClassName)}
     >
       <Image

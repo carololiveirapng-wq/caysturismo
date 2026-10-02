@@ -37,7 +37,7 @@ export async function FeaturedArticle({ article }: { article: CuradoriaArticle }
             </Link>
             <p className="mt-4 max-w-md text-base leading-relaxed text-stone">{article.excerpt}</p>
             {article.readingTime && (
-              <p className="mt-4 text-xs text-stone/70">{article.readingTime} min de leitura</p>
+              <p className="mt-4 text-xs text-stone/85">{article.readingTime} min de leitura</p>
             )}
             <LinkArrow href={`/curadoria/${article.slug}`} className="mt-6">
               Ler artigo

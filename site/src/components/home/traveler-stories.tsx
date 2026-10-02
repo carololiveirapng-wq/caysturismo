@@ -32,7 +32,7 @@ export function TravelerStories({ stories }: { stories: HomeTravelerStory[] }) {
               </div>
               <p className="mt-3.5 text-sm leading-relaxed text-stone">{story.caption}</p>
               {(story.clientName || story.destinationName) && (
-                <p className="mt-1 text-xs text-stone/70">
+                <p className="mt-1 text-xs text-stone/85">
                   {[story.clientName, story.destinationName].filter(Boolean).join(" — ")}
                 </p>
               )}

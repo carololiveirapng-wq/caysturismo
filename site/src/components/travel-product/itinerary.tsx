@@ -25,7 +25,7 @@ export function ProductItinerary({ id, stops }: { id: string; stops: ItinerarySt
             <details key={`${stop.label}-${stop.place}`} open={i === 0} className="group py-4">
               <summary className="flex cursor-pointer list-none items-center justify-between gap-4 marker:content-none">
                 <span className="flex items-baseline gap-4">
-                  <span className="shrink-0 text-xs tracking-[0.1em] text-stone/70 uppercase tabular-nums">
+                  <span className="shrink-0 text-xs tracking-[0.1em] text-stone/85 uppercase tabular-nums">
                     {stop.label}
                   </span>
                   <span className="font-serif text-lg text-ink md:text-xl">{stop.place}</span>

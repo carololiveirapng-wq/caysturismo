@@ -33,7 +33,7 @@ export default function ContatoObrigadoPage() {
           <div className="mt-9 flex flex-wrap items-center justify-center gap-x-8 gap-y-4">
             <Link
               href="/"
-              className="inline-flex items-center gap-2 bg-ink px-6 py-3 text-sm font-medium tracking-wide text-ivory uppercase transition-colors duration-300 hover:bg-magenta"
+              className="inline-flex items-center gap-2 bg-ink px-6 py-3 text-sm font-medium tracking-wide text-ivory uppercase transition-colors duration-300 hover:bg-magenta-dark"
             >
               Voltar ao site
             </Link>

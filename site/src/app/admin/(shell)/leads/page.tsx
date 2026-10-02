@@ -187,7 +187,7 @@ export default async function AdminLeadsPage({ searchParams }: PageProps<"/admin
 
         <button
           type="submit"
-          className="bg-ink px-5 py-2.5 text-xs font-medium tracking-wide text-ivory uppercase transition-colors duration-200 hover:bg-magenta"
+          className="bg-ink px-5 py-2.5 text-xs font-medium tracking-wide text-ivory uppercase transition-colors duration-200 hover:bg-magenta-dark"
         >
           Filtrar
         </button>

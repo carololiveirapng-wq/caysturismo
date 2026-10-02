@@ -142,7 +142,7 @@ export function TravelProductHero({
               ) : (
                 <Link
                   href={contactHref}
-                  className="mt-6 flex items-center justify-center bg-ink px-6 py-3.5 text-sm font-medium tracking-wide text-ivory uppercase transition-colors duration-300 hover:bg-magenta"
+                  className="mt-6 flex items-center justify-center bg-ink px-6 py-3.5 text-sm font-medium tracking-wide text-ivory uppercase transition-colors duration-300 hover:bg-magenta-dark"
                 >
                   Planejar esta viagem
                 </Link>

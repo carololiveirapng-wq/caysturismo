@@ -119,7 +119,7 @@ export function PeriodSelector({ isOpen, onToggle, onClose, value, onChange }: P
                         onClick={() => setSelectedYear(year)}
                         className={cn(
                           "px-2.5 py-1 font-serif text-base transition-colors",
-                          year === selectedYear ? "text-ink" : "text-stone/60 hover:text-ink",
+                          year === selectedYear ? "text-ink" : "text-stone/80 hover:text-ink",
                         )}
                       >
                         {year}

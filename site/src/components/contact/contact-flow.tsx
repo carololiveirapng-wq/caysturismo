@@ -130,9 +130,7 @@ export function ContactFlow({ planningLabel, initialTripValues, travelProduct, s
 
             <div className="mt-7 space-y-8">
               <FormField label="Para onde você gostaria de ir?" error={errors.destinos}>
-                <div data-field-error={errors.destinos ? "" : undefined}>
-                  <DestinationMultiSelect value={trip.destinos} onChange={(v) => setTrip1("destinos", v)} destinations={destinations} />
-                </div>
+                <DestinationMultiSelect value={trip.destinos} onChange={(v) => setTrip1("destinos", v)} destinations={destinations} />
               </FormField>
 
               <div>
@@ -170,10 +168,13 @@ export function ContactFlow({ planningLabel, initialTripValues, travelProduct, s
                 </div>
               </div>
 
-              <FormField label="Por quanto tempo?" error={errors.duracao}>
+              <FormField label="Por quanto tempo?" htmlFor="duracao" error={errors.duracao}>
                 <select
+                  id="duracao"
                   value={trip.duracao}
                   onChange={(e) => setTrip1("duracao", e.target.value as TripStepValues["duracao"])}
+                  aria-invalid={Boolean(errors.duracao)}
+                  aria-describedby={errors.duracao ? "duracao-error" : undefined}
                   className={cn(textInputClassName, "cursor-pointer")}
                 >
                   {durationOptions.map((option) => (
@@ -199,10 +200,13 @@ export function ContactFlow({ planningLabel, initialTripValues, travelProduct, s
                 )}
               </div>
 
-              <FormField label="Que tipo de viagem você imagina?" error={errors.tipoExperiencia}>
+              <FormField label="Que tipo de viagem você imagina?" htmlFor="tipoExperiencia" error={errors.tipoExperiencia}>
                 <select
+                  id="tipoExperiencia"
                   value={trip.tipoExperiencia}
                   onChange={(e) => setTrip1("tipoExperiencia", e.target.value as TripStepValues["tipoExperiencia"])}
+                  aria-invalid={Boolean(errors.tipoExperiencia)}
+                  aria-describedby={errors.tipoExperiencia ? "tipoExperiencia-error" : undefined}
                   className={cn(textInputClassName, "cursor-pointer")}
                 >
                   {experienceTypeOptions.map((option) => (
@@ -254,8 +258,11 @@ export function ContactFlow({ planningLabel, initialTripValues, travelProduct, s
                 <input
                   id="nome"
                   type="text"
+                  autoComplete="name"
                   value={about.nome}
                   onChange={(e) => setAbout1("nome", e.target.value)}
+                  aria-invalid={Boolean(errors.nome)}
+                  aria-describedby={errors.nome ? "nome-error" : undefined}
                   className={textInputClassName}
                 />
               </FormField>
@@ -265,9 +272,12 @@ export function ContactFlow({ planningLabel, initialTripValues, travelProduct, s
                   <input
                     id="whatsapp"
                     type="tel"
+                    autoComplete="tel"
                     placeholder="(11) 99999-9999"
                     value={about.whatsapp}
                     onChange={(e) => setAbout1("whatsapp", e.target.value)}
+                    aria-invalid={Boolean(errors.whatsapp)}
+                    aria-describedby={errors.whatsapp ? "whatsapp-error" : undefined}
                     className={textInputClassName}
                   />
                 </FormField>
@@ -275,8 +285,11 @@ export function ContactFlow({ planningLabel, initialTripValues, travelProduct, s
                   <input
                     id="email"
                     type="email"
+                    autoComplete="email"
                     value={about.email}
                     onChange={(e) => setAbout1("email", e.target.value)}
+                    aria-invalid={Boolean(errors.email)}
+                    aria-describedby={errors.email ? "email-error" : undefined}
                     className={textInputClassName}
                   />
                 </FormField>
@@ -354,13 +367,13 @@ export function ContactFlow({ planningLabel, initialTripValues, travelProduct, s
           </div>
 
           {submitError && (
-            <p className="border border-magenta/30 bg-magenta/5 px-4 py-3 text-sm text-magenta">{submitError}</p>
+            <p role="alert" className="border border-magenta/30 bg-magenta/5 px-4 py-3 text-sm text-magenta">{submitError}</p>
           )}
 
           <button
             type="submit"
             disabled={submitting}
-            className="bg-ink px-8 py-4 text-sm font-medium tracking-wide text-ivory uppercase transition-colors duration-300 hover:bg-magenta disabled:opacity-60 sm:self-start"
+            className="bg-ink px-8 py-4 text-sm font-medium tracking-wide text-ivory uppercase transition-colors duration-300 hover:bg-magenta-dark disabled:opacity-60 sm:self-start"
           >
             {submitting ? "Enviando…" : "Enviar pedido de planejamento"}
           </button>

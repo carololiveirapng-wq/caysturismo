@@ -35,7 +35,7 @@ export function WhyCays({
           <div className="mt-8 divide-y divide-ink/10 border-t border-ink/10">
             {data.items.map((item, i) => (
               <Reveal key={item.title} delay={i * 0.08} className="flex gap-6 py-5">
-                <span className="shrink-0 text-xs text-stone/70 tabular-nums">
+                <span className="shrink-0 text-xs text-stone/85 tabular-nums">
                   {String(i + 1).padStart(2, "0")}
                 </span>
                 <div>

@@ -71,7 +71,7 @@ export function ExperienceSelector({
                     value?.slug === experience.slug ? "text-magenta" : "text-ink/85",
                   )}
                 >
-                  <span className="text-xs text-stone/70 tabular-nums">
+                  <span className="text-xs text-stone/85 tabular-nums">
                     {String(i + 1).padStart(2, "0")}
                   </span>
                   <span className="text-[0.95rem]">{experience.name}</span>
