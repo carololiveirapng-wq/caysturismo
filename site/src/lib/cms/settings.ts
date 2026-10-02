@@ -8,6 +8,11 @@ interface SanitySettings {
   email?: string;
   hours?: string;
   address?: string;
+  city?: string;
+  state?: string;
+  instagram?: string;
+  cnpj?: string;
+  cadastur?: string;
   slogan?: string;
   foundedDate?: string;
   socialLinks?: { label?: string; url?: string }[];
@@ -22,7 +27,12 @@ export interface SiteSettings {
   hours: string;
   email: string;
   address: string;
+  city: string;
+  state: string;
   instagram: string;
+  /** Vazio se não cadastrado — `Credentials` só renderiza quando real. */
+  cnpj: string;
+  cadastur: string;
   /** Ex.: "Do Altar para a vida toda" — vazio se ainda não cadastrado, nunca um texto inventado. */
   slogan: string;
   /** ISO (YYYY-MM-DD) da fundação real — "Desde 1997" é derivado disto no front-end, nunca escrito solto. */
@@ -43,7 +53,11 @@ export async function getSettings(): Promise<SiteSettings> {
   const fromSanity = await fetchFromSanity<SanitySettings | null>(SETTINGS_QUERY);
 
   const whatsapp = fromSanity?.whatsapp || siteConfig.whatsapp;
-  const instagram = fromSanity?.socialLinks?.find((link) => link.label?.toLowerCase().includes("instagram"))?.url;
+  // Campo dedicado é a fonte preferida; `socialLinks` com um rótulo
+  // "Instagram" continua funcionando pra quem já tinha cadastrado assim.
+  const instagram =
+    fromSanity?.instagram ||
+    fromSanity?.socialLinks?.find((link) => link.label?.toLowerCase().includes("instagram"))?.url;
 
   return {
     whatsapp,
@@ -52,7 +66,11 @@ export async function getSettings(): Promise<SiteSettings> {
     hours: fromSanity?.hours || siteConfig.hours,
     email: fromSanity?.email || siteConfig.email,
     address: fromSanity?.address || siteConfig.address,
+    city: fromSanity?.city || "",
+    state: fromSanity?.state || "",
     instagram: instagram || siteConfig.instagram,
+    cnpj: fromSanity?.cnpj || siteConfig.cnpj,
+    cadastur: fromSanity?.cadastur || siteConfig.cadastur,
     slogan: fromSanity?.slogan || "",
     foundedDate: fromSanity?.foundedDate,
     defaultCTA:

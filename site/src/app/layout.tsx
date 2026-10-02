@@ -5,7 +5,7 @@ import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { WhatsAppButton } from "@/components/layout/whatsapp-button";
 import { siteConfig } from "@/lib/site-config";
-import { getSettings } from "@/lib/cms";
+import { getSettings, getHome } from "@/lib/cms";
 import "./globals.css";
 
 const manrope = Manrope({
@@ -29,31 +29,41 @@ const description =
 // Google indexaria cada URL de preview junto com o site de produção.
 const isVercelPreview = process.env.VERCEL_ENV === "preview";
 
-export const metadata: Metadata = {
-  metadataBase: new URL(siteConfig.url),
-  title: {
-    default: title,
-    template: `%s | ${siteConfig.name}`,
-  },
-  description,
-  alternates: {
-    canonical: "/",
-  },
-  ...(isVercelPreview && { robots: { index: false, follow: false } }),
-  openGraph: {
-    title,
+export async function generateMetadata(): Promise<Metadata> {
+  // Imagem padrão de Open Graph pro site inteiro — qualquer página que não
+  // defina a própria (como a Home) herda esta. Reaproveita o hero real da
+  // Home em vez de uma imagem OG dedicada que ainda não existe.
+  const home = await getHome();
+  const ogImage = home?.hero.image.src;
+
+  return {
+    metadataBase: new URL(siteConfig.url),
+    title: {
+      default: title,
+      template: `%s | ${siteConfig.name}`,
+    },
     description,
-    url: siteConfig.url,
-    siteName: siteConfig.name,
-    locale: "pt_BR",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title,
-    description,
-  },
-};
+    alternates: {
+      canonical: "/",
+    },
+    ...(isVercelPreview && { robots: { index: false, follow: false } }),
+    openGraph: {
+      title,
+      description,
+      url: siteConfig.url,
+      siteName: siteConfig.name,
+      locale: "pt_BR",
+      type: "website",
+      ...(ogImage && { images: [{ url: ogImage }] }),
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      ...(ogImage && { images: [ogImage] }),
+    },
+  };
+}
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {
   const settings = await getSettings();

@@ -1,13 +1,13 @@
 import { Container } from "@/components/ui/container";
 import { EditorialHeading } from "@/components/ui/editorial-heading";
 import { Reveal } from "@/components/ui/reveal";
-import { siteConfig } from "@/lib/site-config";
+import type { SiteSettings } from "@/lib/cms";
 
-/** Só renderiza se houver dado real em siteConfig — nunca inventa CNPJ, Cadastur ou parceiros. */
-export function Credentials() {
+/** Só renderiza se houver dado real em Settings — nunca inventa CNPJ, Cadastur ou parceiros. */
+export function Credentials({ settings }: { settings: SiteSettings }) {
   const items: { label: string; value: string }[] = [];
-  if (siteConfig.cnpj) items.push({ label: "CNPJ", value: siteConfig.cnpj });
-  if (siteConfig.cadastur) items.push({ label: "Cadastur", value: siteConfig.cadastur });
+  if (settings.cnpj) items.push({ label: "CNPJ", value: settings.cnpj });
+  if (settings.cadastur) items.push({ label: "Cadastur", value: settings.cadastur });
 
   if (items.length === 0) return null;
 

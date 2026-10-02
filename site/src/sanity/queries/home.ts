@@ -64,7 +64,7 @@ export const HOME_QUERY = `*[_type == "home"][0]{
     readingTime,
     publishedAt
   }, []),
-  "travelerStories": coalesce(travelerStories[]{
+  "travelerStories": coalesce(travelerStories[active != false] | order(order asc) {
     "image": image${imageFragment},
     caption,
     clientName,

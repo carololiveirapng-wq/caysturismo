@@ -36,7 +36,12 @@ export async function generateMetadata({
     title: { absolute: title },
     description,
     alternates: { canonical: "/viagens" },
-    openGraph: { title, description, url: `${siteConfig.url}/viagens` },
+    openGraph: {
+      title,
+      description,
+      url: `${siteConfig.url}/viagens`,
+      ...(hub?.hero.image && { images: [{ url: hub.hero.image.src }] }),
+    },
     // Página com filtro é uma vista derivada, não um destino de indexação próprio.
     robots: hasFilters ? { index: false, follow: true } : undefined,
   };

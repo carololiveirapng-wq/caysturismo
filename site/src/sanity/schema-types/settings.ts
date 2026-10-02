@@ -11,6 +11,11 @@ export const settings = defineType({
     defineField({ name: "email", title: "E-mail", type: "string" }),
     defineField({ name: "hours", title: "Horário de atendimento", type: "string" }),
     defineField({ name: "address", title: "Endereço", type: "string" }),
+    defineField({ name: "city", title: "Cidade", type: "string" }),
+    defineField({ name: "state", title: "UF", type: "string", description: "Sigla do estado, ex.: SP." }),
+    defineField({ name: "instagram", title: "Instagram (link completo)", type: "url" }),
+    defineField({ name: "cnpj", title: "CNPJ", type: "string" }),
+    defineField({ name: "cadastur", title: "Cadastur", type: "string", description: "Número de registro no Cadastur, se houver." }),
     defineField({
       name: "slogan",
       title: "Slogan oficial",
@@ -25,7 +30,8 @@ export const settings = defineType({
     }),
     defineField({
       name: "socialLinks",
-      title: "Redes sociais",
+      title: "Outras redes sociais",
+      description: "Instagram já tem campo próprio acima — use isto só para Facebook, LinkedIn, TikTok etc.",
       type: "array",
       of: [{
         type: "object",

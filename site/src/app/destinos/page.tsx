@@ -24,7 +24,12 @@ export async function generateMetadata(): Promise<Metadata> {
     title: { absolute: title },
     description,
     alternates: { canonical: "/destinos" },
-    openGraph: { title, description, url: `${siteConfig.url}/destinos` },
+    openGraph: {
+      title,
+      description,
+      url: `${siteConfig.url}/destinos`,
+      ...(hub?.hero.image && { images: [{ url: hub.hero.image.src }] }),
+    },
   };
 }
 
@@ -67,7 +72,7 @@ export default async function DestinosHubPage() {
       <DestinosTabs items={azItems} />
       <FeaturedDestinations items={featuredItems} />
       <WhereToGoNow picks={whereToGoPicks} />
-      <ExperienceShortcut />
+      <ExperienceShortcut experiences={hub.spotlightExperiences ?? []} />
       <DestinationFinalCTA
         title="Ainda não sabe para onde ir?"
         supporting="Conte para a Cays o que você quer viver. A gente ajuda a decidir o destino."

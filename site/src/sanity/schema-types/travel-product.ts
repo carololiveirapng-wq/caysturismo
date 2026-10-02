@@ -6,10 +6,34 @@ export const travelProduct = defineType({
   type: "document",
   fields: [
     defineField({ name: "title", title: "Título", type: "string", validation: (r) => r.required() }),
-    defineField({ name: "slug", title: "Slug", type: "slug", options: { source: "title" }, validation: (r) => r.required() }),
-    defineField({ name: "active", title: "Ativo", type: "boolean", initialValue: true }),
-    defineField({ name: "featured", title: "Destaque", type: "boolean" }),
-    defineField({ name: "order", title: "Ordem", type: "number", validation: (r) => r.required() }),
+    defineField({
+      name: "slug",
+      title: "Slug (link da página)",
+      type: "slug",
+      options: { source: "title" },
+      description: "Gera a URL da viagem, ex.: /viagens/japao-em-flor. Evite mudar depois de publicado — quebra o link.",
+      validation: (r) => r.required(),
+    }),
+    defineField({
+      name: "active",
+      title: "Ativo",
+      type: "boolean",
+      initialValue: true,
+      description: "Desmarque pra esconder esta viagem do site sem apagar os dados.",
+    }),
+    defineField({
+      name: "featured",
+      title: "Destacar na página inicial",
+      type: "boolean",
+      description: "Só tem efeito se esta viagem também for selecionada manualmente nos blocos de destaque da Home ou dos hubs.",
+    }),
+    defineField({
+      name: "order",
+      title: "Ordem de exibição",
+      type: "number",
+      description: "Entre as viagens — menor número aparece primeiro.",
+      validation: (r) => r.required(),
+    }),
 
     defineField({
       name: "type",
@@ -24,8 +48,9 @@ export const travelProduct = defineType({
     }),
     defineField({
       name: "status",
-      title: "Status",
+      title: "Disponibilidade",
       type: "string",
+      description: "Vagas/disponibilidade da viagem — diferente de \"Ativo\" acima, que é só se a página existe ou não.",
       options: { list: [
         { title: "Disponível", value: "active" },
         { title: "Últimas vagas", value: "few-spots" },
@@ -35,12 +60,23 @@ export const travelProduct = defineType({
       initialValue: "active",
       validation: (r) => r.required(),
     }),
-    defineField({ name: "eyebrow", title: "Eyebrow", type: "string" }),
+    defineField({
+      name: "eyebrow",
+      title: "Texto pequeno acima do título (eyebrow)",
+      type: "string",
+      description: "Ex.: \"Lua de Mel\" ou \"Sob medida\" — aparece pequeno, acima do título principal.",
+    }),
 
     defineField({ name: "destinations", title: "Destinos", type: "array", of: [{ type: "reference", to: [{ type: "destination" }] }] }),
     defineField({ name: "experiences", title: "Experiências", type: "array", of: [{ type: "reference", to: [{ type: "experience" }] }] }),
 
-    defineField({ name: "breadcrumb", title: "Breadcrumb", type: "array", of: [{ type: "breadcrumbItem" }] }),
+    defineField({
+      name: "breadcrumb",
+      title: "Trilha de navegação (breadcrumb)",
+      type: "array",
+      of: [{ type: "breadcrumbItem" }],
+      description: "Os links no topo da página (Home › Viagens › ...). Normalmente não precisa editar.",
+    }),
     defineField({ name: "gallery", title: "Galeria", type: "array", of: [{ type: "imageWithAlt" }], validation: (r) => r.min(1) }),
     defineField({ name: "subtitle", title: "Subtítulo", type: "text", rows: 2 }),
 
@@ -56,8 +92,9 @@ export const travelProduct = defineType({
           defineField({ name: "label", title: "Rótulo", type: "string" }),
           defineField({
             name: "status",
-            title: "Status",
+            title: "Disponibilidade desta data",
             type: "string",
+            description: "Vagas desta saída específica — pode ser diferente da disponibilidade geral da viagem.",
             options: {
               list: [
                 { title: "Disponível", value: "active" },
@@ -70,11 +107,16 @@ export const travelProduct = defineType({
         ],
       }],
     }),
-    defineField({ name: "priceFrom", title: "\"A partir de\" (texto — nunca valor final inventado)", type: "string" }),
+    defineField({
+      name: "priceFrom",
+      title: "\"A partir de\"",
+      type: "string",
+      description: "Texto livre (ex.: \"A partir de R$ 8.900\") — nunca um valor final inventado.",
+    }),
     defineField({ name: "supplier", title: "Fornecedor", type: "string" }),
-    defineField({ name: "ship", title: "Navio", type: "string" }),
-    defineField({ name: "embarkation", title: "Embarque", type: "string" }),
-    defineField({ name: "disembarkation", title: "Desembarque", type: "string" }),
+    defineField({ name: "ship", title: "Navio (cruzeiro)", type: "string" }),
+    defineField({ name: "embarkation", title: "Porto de embarque (cruzeiro)", type: "string" }),
+    defineField({ name: "disembarkation", title: "Porto de desembarque (cruzeiro)", type: "string" }),
 
     defineField({ name: "overview", title: "Visão geral", type: "text", rows: 4 }),
     defineField({

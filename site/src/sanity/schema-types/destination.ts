@@ -25,12 +25,18 @@ export const destination = defineType({
       },
       validation: (r) => r.required(),
     }),
-    defineField({ name: "parent", title: "Destino pai", type: "reference", to: [{ type: "destination" }] }),
+    defineField({
+      name: "parent",
+      title: "Destino pai",
+      type: "reference",
+      to: [{ type: "destination" }],
+      description: "Só pra cidades/regiões dentro de um país — ex.: Kyoto tem o Japão como pai. Deixe vazio pra países e continentes.",
+    }),
     defineField({
       name: "continent",
       title: "Continente",
       type: "string",
-      description: "Usado pro hub /destinos agrupar e filtrar por continente — ver src/data/destinations-hub.ts pros slugs esperados.",
+      description: "Usado pra agrupar e filtrar destinos na página /destinos.",
       options: {
         list: [
           { title: "Américas", value: "americas" },

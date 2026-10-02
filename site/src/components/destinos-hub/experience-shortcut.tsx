@@ -4,23 +4,12 @@ import { EditorialHeading } from "@/components/ui/editorial-heading";
 import { LinkArrow } from "@/components/ui/link-arrow";
 import { ImageReveal } from "@/components/ui/image-reveal";
 import { Reveal } from "@/components/ui/reveal";
-import { unsplash } from "@/data/home/shared";
 import { experienceHref } from "@/lib/links";
+import type { HubSpotlightItem } from "@/types";
 
-const shortcuts = [
-  {
-    slug: "lua-de-mel",
-    name: "Lua de Mel",
-    image: { src: unsplash("1519307212971-dd9561667ffb", 1000), alt: "Casal em silhueta observando o pôr do sol na praia" },
-  },
-  {
-    slug: "cruzeiros",
-    name: "Cruzeiros",
-    image: { src: unsplash("1548574505-5e239809ee19", 1000), alt: "Navio de cruzeiro ancorado em um porto, visto do alto" },
-  },
-];
+export function ExperienceShortcut({ experiences }: { experiences: HubSpotlightItem[] }) {
+  if (experiences.length === 0) return null;
 
-export function ExperienceShortcut() {
   return (
     <section className="bg-sand py-14 md:py-20">
       <Container>
@@ -36,7 +25,7 @@ export function ExperienceShortcut() {
         </div>
 
         <div className="mt-9 grid grid-cols-1 gap-8 sm:grid-cols-2">
-          {shortcuts.map((s) => (
+          {experiences.map((s) => (
             <Link key={s.slug} href={experienceHref(s.slug)} className="group/card relative block">
               <div className="relative aspect-[16/10] overflow-hidden">
                 <ImageReveal

@@ -80,10 +80,16 @@ function ensureSchema(sql: Sql): Promise<void> {
         utm_term text,
         source_path text,
         status text NOT NULL DEFAULT 'new',
+        internal_notes text,
         created_at timestamptz NOT NULL DEFAULT now(),
         updated_at timestamptz NOT NULL DEFAULT now()
       )
     `
+      // Tabela criada antes de `internal_notes` existir no schema não ganha
+      // a coluna só com `CREATE TABLE IF NOT EXISTS` — sem isto,
+      // `updateLeadStatus` (`src/lib/admin/leads-queries.ts`) falha ao
+      // salvar observação interna contra um banco mais antigo.
+      .then(() => sql`ALTER TABLE leads ADD COLUMN IF NOT EXISTS internal_notes text`)
       .then(() => sql`CREATE INDEX IF NOT EXISTS leads_created_at_idx ON leads (created_at)`)
       .then(() => sql`CREATE INDEX IF NOT EXISTS leads_status_idx ON leads (status)`)
       .then(() => sql`CREATE INDEX IF NOT EXISTS leads_email_idx ON leads (email)`)

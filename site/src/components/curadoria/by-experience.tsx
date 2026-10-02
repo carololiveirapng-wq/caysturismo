@@ -4,16 +4,11 @@ import { EditorialHeading } from "@/components/ui/editorial-heading";
 import { ImageReveal } from "@/components/ui/image-reveal";
 import { Reveal } from "@/components/ui/reveal";
 import { experienceHref } from "@/lib/links";
-import { unsplash } from "@/data/home/shared";
+import type { HubSpotlightItem } from "@/types";
 
-const items = [
-  { slug: "lua-de-mel", name: "Lua de Mel", image: { src: unsplash("1519307212971-dd9561667ffb", 900), alt: "Casal em silhueta observando o pôr do sol na praia" } },
-  { slug: "cruzeiros", name: "Cruzeiros", image: { src: unsplash("1548574505-5e239809ee19", 900), alt: "Navio de cruzeiro ancorado em um porto, visto do alto" } },
-  { slug: "familia", name: "Família", image: { src: unsplash("1475503572774-15a45e5d60b9", 900), alt: "Família de mãos dadas caminhando à beira-mar" } },
-  { slug: "grandes-eventos", name: "Grandes Eventos", image: { src: unsplash("1580657274234-7339717f4541", 900), alt: "Taças de espumante sendo servidas em uma celebração" } },
-];
+export function ByExperience({ experiences }: { experiences: HubSpotlightItem[] }) {
+  if (experiences.length === 0) return null;
 
-export function ByExperience() {
   return (
     <section className="bg-ivory py-14 md:py-20">
       <Container>
@@ -24,7 +19,7 @@ export function ByExperience() {
         </Reveal>
 
         <div className="mt-9 grid grid-cols-2 gap-4 sm:grid-cols-4">
-          {items.map((item) => (
+          {experiences.map((item) => (
             <Link key={item.slug} href={experienceHref(item.slug)} className="group/card relative block">
               <div className="relative aspect-[4/5] overflow-hidden">
                 <ImageReveal

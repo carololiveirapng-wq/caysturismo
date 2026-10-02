@@ -24,7 +24,12 @@ export async function generateMetadata(): Promise<Metadata> {
     title: { absolute: title },
     description,
     alternates: { canonical: "/curadoria" },
-    openGraph: { title, description, url: `${siteConfig.url}/curadoria` },
+    openGraph: {
+      title,
+      description,
+      url: `${siteConfig.url}/curadoria`,
+      ...(hub?.hero.image && { images: [{ url: hub.hero.image.src }] }),
+    },
   };
 }
 
@@ -47,8 +52,8 @@ export default async function CuradoriaHubPage() {
 
       <LatestSection articles={active} categories={curadoriaCategories} />
 
-      <ByDestination />
-      <ByExperience />
+      <ByDestination destinations={hub.spotlightDestinations ?? []} />
+      <ByExperience experiences={hub.spotlightExperiences ?? []} />
 
       <DestinationFinalCTA
         title="Gostou do que leu? Vamos transformar em roteiro."

@@ -1,42 +1,95 @@
 import type { Lead } from "./types";
+import { siteConfig } from "@/lib/site-config";
 
 export interface EmailNotifier {
   notifyNewLead(lead: Lead): Promise<void>;
 }
 
 function buildSubject(lead: Lead): string {
-  const context = lead.travelProduct ?? lead.experience ?? lead.destinations[0] ?? "sem contexto definido";
-  return `Novo lead Cays — ${lead.name} — ${context}`;
+  return `Novo pedido de planejamento — ${lead.name}`;
 }
 
-function buildBody(lead: Lead): string {
-  const lines = [
-    `Nome: ${lead.name}`,
-    `E-mail: ${lead.email}`,
-    `WhatsApp: ${lead.whatsapp}`,
-    lead.city && `Cidade: ${lead.city}`,
-    `Preferência de contato: ${lead.contactPreference}`,
-    "",
-    `Destino(s): ${lead.destinations.join(", ") || "não informado"}`,
-    lead.experience && `Experiência: ${lead.experience}`,
-    lead.travelProduct && `Viagem de origem: ${lead.travelProduct}`,
-    `Duração: ${lead.duration}`,
-    (lead.month || lead.year) && `Período: ${[lead.month, lead.year].filter(Boolean).join("/")}`,
-    lead.approximateDates && `Datas aproximadas: ${lead.approximateDates}`,
-    `Adultos: ${lead.adults} · Crianças: ${lead.children}${lead.childrenAges ? ` (${lead.childrenAges})` : ""}`,
-    `Faixa de investimento: ${lead.budgetTier}`,
-    lead.notes && `Observações: ${lead.notes}`,
-    "",
-    lead.acquisitionSource && `Como conheceu a Cays: ${lead.acquisitionSource}`,
-    lead.sourcePath && `Página de origem: ${lead.sourcePath}`,
-    (lead.utmSource || lead.utmMedium || lead.utmCampaign) &&
-      `UTM: source=${lead.utmSource ?? "-"} medium=${lead.utmMedium ?? "-"} campaign=${lead.utmCampaign ?? "-"} content=${lead.utmContent ?? "-"} term=${lead.utmTerm ?? "-"}`,
-    "",
-    `ID: ${lead.id}`,
-    `Recebido em: ${lead.createdAt}`,
-  ].filter((line): line is string => Boolean(line));
+/** Linhas visíveis no e-mail — só o que a equipe precisa pra decidir se abre o painel, nada a mais (o detalhe completo já está lá). */
+function buildFields(lead: Lead): { label: string; value: string }[] {
+  const fields: { label: string; value: string }[] = [
+    { label: "Nome", value: lead.name },
+    { label: "WhatsApp", value: lead.whatsapp },
+    { label: "E-mail", value: lead.email },
+    { label: "Destino(s)", value: lead.destinations.join(", ") || "não informado" },
+  ];
+  if (lead.experience) fields.push({ label: "Experiência", value: lead.experience });
+  if (lead.travelProduct) fields.push({ label: "Viagem relacionada", value: lead.travelProduct });
+  const period = [lead.month, lead.year].filter(Boolean).join("/") || lead.approximateDates;
+  if (period) fields.push({ label: "Data/período", value: period });
+  fields.push({ label: "Duração", value: lead.duration });
+  fields.push({ label: "Adultos", value: String(lead.adults) });
+  fields.push({
+    label: "Crianças",
+    value: lead.children > 0 ? `${lead.children}${lead.childrenAges ? ` (${lead.childrenAges})` : ""}` : "0",
+  });
+  fields.push({ label: "Investimento", value: lead.budgetTier });
+  if (lead.notes) fields.push({ label: "Observações", value: lead.notes });
+  if (lead.acquisitionSource) fields.push({ label: "Origem", value: lead.acquisitionSource });
+  const utm = [lead.utmSource && `source=${lead.utmSource}`, lead.utmCampaign && `campaign=${lead.utmCampaign}`]
+    .filter(Boolean)
+    .join(" · ");
+  if (utm) fields.push({ label: "UTM", value: utm });
+  return fields;
+}
 
+function buildText(lead: Lead, panelUrl: string): string {
+  const lines = buildFields(lead).map((f) => `${f.label}: ${f.value}`);
+  lines.push("", `Ver lead no painel: ${panelUrl}`);
   return lines.join("\n");
+}
+
+function escapeHtml(value: string): string {
+  return value.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]!);
+}
+
+/** Tabela com estilo inline — compatibilidade ampla entre clientes de e-mail, sem depender de CSS externo. */
+function buildHtml(lead: Lead, panelUrl: string): string {
+  const rows = buildFields(lead)
+    .map(
+      (f) => `
+      <tr>
+        <td style="padding:8px 0;color:#8a8077;font-size:13px;vertical-align:top;width:140px;">${escapeHtml(f.label)}</td>
+        <td style="padding:8px 0;color:#1a1714;font-size:14px;line-height:1.5;">${escapeHtml(f.value)}</td>
+      </tr>`,
+    )
+    .join("");
+
+  return `<!doctype html>
+<html lang="pt-BR">
+  <body style="margin:0;padding:0;background-color:#f5f1ea;font-family:Georgia,'Times New Roman',serif;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f5f1ea;padding:32px 16px;">
+      <tr>
+        <td align="center">
+          <table role="presentation" width="100%" style="max-width:560px;background-color:#ffffff;border:1px solid #e8e2d8;">
+            <tr>
+              <td style="padding:28px 32px 20px;border-bottom:1px solid #e8e2d8;">
+                <p style="margin:0;font-size:12px;letter-spacing:0.1em;text-transform:uppercase;color:#a6184f;">Cays Turismo</p>
+                <h1 style="margin:8px 0 0;font-size:20px;color:#1a1714;">Novo pedido de planejamento</h1>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:24px 32px;">
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                  ${rows}
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:0 32px 32px;">
+                <a href="${panelUrl}" style="display:inline-block;padding:12px 24px;background-color:#1a1714;color:#f5f1ea;font-size:13px;letter-spacing:0.05em;text-decoration:none;">Ver lead no painel</a>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>`;
 }
 
 /**
@@ -54,13 +107,15 @@ class ResendEmailNotifier implements EmailNotifier {
   ) {}
 
   async notifyNewLead(lead: Lead): Promise<void> {
+    const panelUrl = `${siteConfig.url}/admin/leads/${lead.id}`;
     const { Resend } = await import("resend");
     const resend = new Resend(this.apiKey);
     const { error } = await resend.emails.send({
       from: this.from,
       to: this.to,
       subject: buildSubject(lead),
-      text: buildBody(lead),
+      html: buildHtml(lead, panelUrl),
+      text: buildText(lead, panelUrl),
     });
     if (error) throw new Error(`Resend recusou o envio: ${error.message}`);
   }
@@ -69,9 +124,10 @@ class ResendEmailNotifier implements EmailNotifier {
 /** Fallback SÓ de desenvolvimento — nunca envia e-mail de verdade; loga o conteúdo completo pra facilitar depurar localmente. */
 class DevConsoleEmailNotifier implements EmailNotifier {
   async notifyNewLead(lead: Lead): Promise<void> {
+    const panelUrl = `${siteConfig.url}/admin/leads/${lead.id}`;
     console.warn(
       `[leads:email:dev] RESEND_API_KEY não configurado — e-mail não enviado. Conteúdo que seria enviado:\n` +
-        `Assunto: ${buildSubject(lead)}\n${buildBody(lead)}`,
+        `Assunto: ${buildSubject(lead)}\n${buildText(lead, panelUrl)}`,
     );
   }
 }

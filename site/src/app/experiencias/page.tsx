@@ -22,7 +22,12 @@ export async function generateMetadata(): Promise<Metadata> {
     title: { absolute: title },
     description,
     alternates: { canonical: "/experiencias" },
-    openGraph: { title, description, url: `${siteConfig.url}/experiencias` },
+    openGraph: {
+      title,
+      description,
+      url: `${siteConfig.url}/experiencias`,
+      ...(hub?.hero.image && { images: [{ url: hub.hero.image.src }] }),
+    },
   };
 }
 

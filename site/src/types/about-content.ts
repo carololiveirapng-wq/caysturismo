@@ -23,8 +23,22 @@ export interface AboutPageContent {
   seo?: { title?: string; description?: string };
 }
 
-/** As 4 páginas-hub (Destinos/Experiências/Viagens/Curadoria) compartilham este shape. */
+export interface HubSpotlightItem {
+  slug: string;
+  name: string;
+  image: DemoImage;
+}
+
+/**
+ * As 4 páginas-hub (Destinos/Experiências/Viagens/Curadoria) compartilham o
+ * hero+seo; `spotlightDestinations`/`spotlightExperiences` só existem em
+ * quem tem o bloco de destaque correspondente (Destinos/Curadoria) — vazio
+ * nos outros 2, nunca `undefined` (facilita checar `.length` sem optional
+ * chaining em todo lugar).
+ */
 export interface HubPageContent {
   hero: { eyebrow?: string; title: string; text?: string; image: DemoImage };
+  spotlightDestinations?: HubSpotlightItem[];
+  spotlightExperiences?: HubSpotlightItem[];
   seo?: { title?: string; description?: string };
 }

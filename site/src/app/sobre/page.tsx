@@ -26,7 +26,12 @@ export async function generateMetadata(): Promise<Metadata> {
     title: { absolute: title },
     description,
     alternates: { canonical: "/sobre" },
-    openGraph: { title, description, url: `${siteConfig.url}/sobre` },
+    openGraph: {
+      title,
+      description,
+      url: `${siteConfig.url}/sobre`,
+      ...(about?.hero.image && { images: [{ url: about.hero.image.src }] }),
+    },
   };
 }
 
@@ -74,7 +79,7 @@ export default async function SobrePage() {
 
       <Team people={people} fallbackRoles={aboutTeamRoles} />
 
-      <Credentials />
+      <Credentials settings={settings} />
 
       {testimonials.length > 0 && <Testimonials reviews={testimonials} />}
 

@@ -6,7 +6,10 @@ const personProjection = `{
   role,
   bio,
   "photo": photo${imageFragment},
-  specialties,
+  "specialties": coalesce(specialties, []),
+  "destinations": coalesce(destinations[]->{ "slug": slug.current, name }, []),
+  "experiences": coalesce(experiences[]->{ "slug": slug.current, name }, []),
+  whatsapp,
   active,
   order
 }`;

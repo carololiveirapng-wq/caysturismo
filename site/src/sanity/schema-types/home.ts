@@ -131,6 +131,8 @@ export const home = defineType({
           defineField({ name: "caption", title: "Legenda", type: "string", validation: (r) => r.required() }),
           defineField({ name: "clientName", title: "Nome do cliente (opcional)", type: "string" }),
           defineField({ name: "destination", title: "Destino (opcional)", type: "reference", to: [{ type: "destination" }] }),
+          defineField({ name: "active", title: "Ativo", type: "boolean", initialValue: true }),
+          defineField({ name: "order", title: "Ordem", type: "number" }),
         ],
         preview: { select: { title: "caption", media: "image" } },
       }],

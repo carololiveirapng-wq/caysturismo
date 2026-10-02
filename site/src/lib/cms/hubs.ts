@@ -24,6 +24,10 @@ async function getHubPage(query: string, fallback: () => HubPageContent): Promis
 export function getDestinationHub() {
   return getHubPage(DESTINATION_HUB_QUERY, () => ({
     hero: { eyebrow: "Destinos", title: "Para onde a Cays pode levar você.", image: heroImage },
+    spotlightExperiences: [
+      { slug: "lua-de-mel", name: "Lua de Mel", image: { src: unsplash("1519307212971-dd9561667ffb", 1000), alt: "Casal em silhueta observando o pôr do sol na praia" } },
+      { slug: "cruzeiros", name: "Cruzeiros", image: { src: unsplash("1548574505-5e239809ee19", 1000), alt: "Navio de cruzeiro ancorado em um porto, visto do alto" } },
+    ],
   }));
 }
 
@@ -56,5 +60,17 @@ export function getCuradoriaHub() {
       text: "Destinos, histórias e ideias para viajar melhor.",
       image: { src: unsplash("1476514525535-07fb3b4ae5f1", 2400), alt: "Barco de madeira em lago alpino cercado por montanhas nas Dolomitas" },
     },
+    spotlightDestinations: [
+      { slug: "japao", name: "Japão", image: { src: unsplash("1533105079780-92b9be482077", 900), alt: "Pagode tradicional com o Monte Fuji ao fundo" } },
+      { slug: "maldivas", name: "Maldivas", image: { src: unsplash("1540202404-a2f29016b523", 900), alt: "Bangalôs sobre a água em atol nas Maldivas" } },
+      { slug: "italia", name: "Itália", image: { src: unsplash("1523906834658-6e24ef2386f9", 900), alt: "Gôndola sob a Ponte Rialto em Veneza" } },
+      { slug: "egito", name: "Egito", image: { src: unsplash("1539768942893-daf53e448371", 900), alt: "Caravana de camelos junto às pirâmides de Gizé ao entardecer" } },
+    ],
+    spotlightExperiences: [
+      { slug: "lua-de-mel", name: "Lua de Mel", image: { src: unsplash("1519307212971-dd9561667ffb", 900), alt: "Casal em silhueta observando o pôr do sol na praia" } },
+      { slug: "cruzeiros", name: "Cruzeiros", image: { src: unsplash("1548574505-5e239809ee19", 900), alt: "Navio de cruzeiro ancorado em um porto, visto do alto" } },
+      { slug: "familia", name: "Família", image: { src: unsplash("1475503572774-15a45e5d60b9", 900), alt: "Família de mãos dadas caminhando à beira-mar" } },
+      { slug: "grandes-eventos", name: "Grandes Eventos", image: { src: unsplash("1580657274234-7339717f4541", 900), alt: "Taças de espumante sendo servidas em uma celebração" } },
+    ],
   }));
 }

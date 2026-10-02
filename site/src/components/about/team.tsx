@@ -42,6 +42,9 @@ export function Team({ people, fallbackRoles }: { people: Person[]; fallbackRole
                 </div>
                 <p className="mt-4 text-sm font-medium text-ink">{person.name}</p>
                 {person.role && <p className="mt-0.5 text-xs text-stone">{person.role}</p>}
+                {person.specialties && person.specialties.length > 0 && (
+                  <p className="mt-1 text-xs text-stone/70">{person.specialties.join(" · ")}</p>
+                )}
               </div>
             ))}
           </div>

@@ -82,6 +82,9 @@ export interface Person {
   bio?: string;
   photo?: DemoImage;
   specialties?: string[];
+  destinations?: { slug: string; name: string }[];
+  experiences?: { slug: string; name: string }[];
+  whatsapp?: string;
   active: boolean;
   order: number;
 }
