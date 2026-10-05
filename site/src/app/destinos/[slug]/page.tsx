@@ -17,6 +17,7 @@ import { InlineCtaStrip } from "@/components/destination/inline-cta-strip";
 import { StickySubnav } from "@/components/ui/sticky-subnav";
 import { PersistentMobileCTA } from "@/components/ui/persistent-mobile-cta";
 import { siteConfig } from "@/lib/site-config";
+import { jsonLdString } from "@/lib/json-ld";
 
 export async function generateStaticParams() {
   const slugs = await getDestinationSlugs();
@@ -86,7 +87,7 @@ export default async function DestinationPage({ params }: PageProps<"/destinos/[
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+        dangerouslySetInnerHTML={{ __html: jsonLdString(breadcrumbSchema) }}
       />
 
       <DestinationHero destination={destination} />

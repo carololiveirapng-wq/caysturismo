@@ -105,7 +105,7 @@ export function Experiences({ experiences }: { experiences: HomeFeaturedExperien
 
   return (
     <section className="overflow-hidden bg-ivory py-24 md:py-32">
-      <Carousel opts={{ align: "start", loop: true }} plugins={[autoplay]} setApi={setApi}>
+      <Carousel aria-label="Experiências em destaque" opts={{ align: "start", loop: true }} plugins={[autoplay]} setApi={setApi}>
         <Container>
           <div className="flex flex-col gap-10 lg:flex-row lg:items-center lg:gap-14">
             <div className="lg:w-[30%] lg:shrink-0">

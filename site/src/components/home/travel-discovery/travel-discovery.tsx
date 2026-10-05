@@ -75,7 +75,7 @@ export function TravelDiscovery({ content, regions, experiences }: TravelDiscove
         </div>
 
         <div ref={containerRef} className="relative mt-8 md:mt-10">
-          <div className="flex flex-col divide-y divide-ink/10 border border-ink/15 bg-ivory md:flex-row md:divide-x md:divide-y-0">
+          <div className="flex flex-col divide-y divide-ink/10 border border-ink/15 bg-ivory lg:flex-row lg:divide-x lg:divide-y-0">
             <DestinationSelector
               isOpen={activePanel === "destination"}
               onToggle={() => togglePanel("destination")}

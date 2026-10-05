@@ -45,7 +45,7 @@ export function ProductInclusions({
               <ul className="mt-4 space-y-3">
                 {exclusions!.map((item) => (
                   <li key={item} className="flex items-start gap-2.5 text-sm text-stone">
-                    <X aria-hidden className="mt-0.5 size-4 shrink-0 text-stone/50" />
+                    <X aria-hidden className="mt-0.5 size-4 shrink-0 text-stone" />
                     {item}
                   </li>
                 ))}

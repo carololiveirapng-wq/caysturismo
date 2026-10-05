@@ -85,7 +85,7 @@ export async function ArticleRelated({
                     containerClassName="aspect-[16/10]"
                   />
                   <div className="mt-3 border-t border-ink/10 pt-3">
-                    <p className="text-xs font-medium tracking-[0.15em] text-magenta uppercase">{article.category}</p>
+                    <p className="text-xs font-medium tracking-[0.15em] text-magenta-dark uppercase">{article.category}</p>
                     <h3 className="mt-1.5 font-serif text-lg leading-snug text-ink">{article.title}</h3>
                   </div>
                 </Link>

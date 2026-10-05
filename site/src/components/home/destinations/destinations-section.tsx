@@ -12,7 +12,7 @@ import type { HomeFeaturedDestination, HomeDestinationCollection } from "@/types
 function DestinationsList({ destinations }: { destinations: HomeFeaturedDestination[] }) {
   if (destinations.length > 3) {
     return (
-      <Carousel opts={{ align: "start", loop: false }}>
+      <Carousel aria-label="Destinos em destaque" opts={{ align: "start", loop: false }}>
         <CarouselContent className="-ml-4">
           {destinations.map((destination) => (
             <CarouselItem key={destination.slug} className="basis-[64%] pl-4 sm:basis-[42%] md:basis-[30%] lg:basis-[264px]">

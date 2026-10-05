@@ -72,13 +72,13 @@ export default async function AdminPipelinePage() {
                         </Link>
                         <p className="text-sm text-stone">{interestByLeadId.get(lead.id)}</p>
                         <dl className="grid grid-cols-2 gap-x-3 gap-y-1 text-xs text-stone">
-                          <dt className="text-stone/80">Origem</dt>
+                          <dt className="text-stone">Origem</dt>
                           <dd>{getLeadOrigin(lead)}</dd>
-                          <dt className="text-stone/80">Criado</dt>
+                          <dt className="text-stone">Criado</dt>
                           <dd>{formatBrDate(new Date(lead.createdAt))}</dd>
                           {lead.followUpAt && (
                             <>
-                              <dt className="text-stone/80">Retorno</dt>
+                              <dt className="text-stone">Retorno</dt>
                               <dd>{formatBrDateTimeCompact(new Date(lead.followUpAt))}</dd>
                             </>
                           )}

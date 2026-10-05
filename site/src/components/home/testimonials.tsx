@@ -98,7 +98,7 @@ export function Testimonials({ reviews }: { reviews: GoogleReview[] }) {
         )}
       </Container>
 
-      <Carousel opts={{ align: "start", loop: true }} plugins={[autoplay]} setApi={setApi}>
+      <Carousel aria-label="Depoimentos de clientes" opts={{ align: "start", loop: true }} plugins={[autoplay]} setApi={setApi}>
         <Container className="mt-10 md:mt-12">
           <div className="relative">
             <CarouselContent className="-ml-5">
@@ -145,7 +145,7 @@ export function Testimonials({ reviews }: { reviews: GoogleReview[] }) {
               </figcaption>
 
               <div className="mt-5 flex items-center justify-between gap-4 border-t border-ink/10 pt-5">
-                <span className="inline-flex items-center gap-1.5 text-xs text-stone/80">
+                <span className="inline-flex items-center gap-1.5 text-xs text-stone">
                   <GoogleIcon className="size-3.5" />
                   Google Reviews
                 </span>

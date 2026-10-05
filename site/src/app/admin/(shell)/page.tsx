@@ -235,7 +235,7 @@ export default async function AdminDashboardPage() {
                       </div>
                       <p className="text-sm text-stone">{interestByLeadId.get(lead.id)}</p>
                       {lead.nextAction && <p className="text-sm text-ink">Próxima ação: {lead.nextAction}</p>}
-                      <div className="flex items-center justify-between text-xs text-stone/80">
+                      <div className="flex items-center justify-between text-xs text-stone">
                         <span>{getLeadOrigin(lead)}</span>
                         <span>{formatBrDate(new Date(lead.createdAt))}</span>
                       </div>

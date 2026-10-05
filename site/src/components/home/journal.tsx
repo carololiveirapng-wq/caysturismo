@@ -41,7 +41,7 @@ export function Journal({ articles }: { articles: HomeFeaturedArticle[] }) {
               containerClassName="aspect-[4/5] md:aspect-[16/11]"
             />
             <div className="mt-5 max-w-lg border-t border-ink/10 pt-5">
-              <p className="text-xs font-medium tracking-[0.15em] text-magenta uppercase">
+              <p className="text-xs font-medium tracking-[0.15em] text-magenta-dark uppercase">
                 {featured.category}
               </p>
               <h3 className="mt-3 font-serif text-2xl leading-snug text-ink md:text-3xl">
@@ -65,7 +65,7 @@ export function Journal({ articles }: { articles: HomeFeaturedArticle[] }) {
                   containerClassName="aspect-[16/10]"
                 />
                 <div className="mt-4 border-t border-ink/10 pt-4">
-                  <p className="text-xs font-medium tracking-[0.15em] text-magenta uppercase">
+                  <p className="text-xs font-medium tracking-[0.15em] text-magenta-dark uppercase">
                     {post.category}
                   </p>
                   <h3 className="mt-2 font-serif text-xl leading-snug text-ink">{post.title}</h3>

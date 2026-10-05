@@ -42,7 +42,7 @@ export function DestinationFinalCTA({
             {ctaLabel}
           </Link>
 
-          {note && <p className="mt-4 text-xs tracking-wide text-ivory/45">{note}</p>}
+          {note && <p className="mt-4 text-xs tracking-wide text-ivory/70">{note}</p>}
         </Reveal>
       </Container>
     </section>

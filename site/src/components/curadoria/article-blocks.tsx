@@ -18,7 +18,7 @@ const portableTextComponents: PortableTextComponents = {
   block: {
     normal: ({ children }) => <p className="text-base leading-relaxed text-stone">{children}</p>,
     h2: ({ children }) => <h3 className="mt-2 font-serif text-xl text-ink">{children}</h3>,
-    h3: ({ children }) => <h4 className="mt-2 font-serif text-lg text-ink">{children}</h4>,
+    h3: ({ children }) => <h3 className="mt-2 font-serif text-lg text-ink">{children}</h3>,
   },
   marks: {
     strong: ({ children }) => <strong className="font-medium text-ink">{children}</strong>,
@@ -67,7 +67,7 @@ function Block({ block }: { block: ArticleBlock }) {
             sizes="(min-width: 1024px) 700px, 90vw"
             containerClassName="aspect-[16/10]"
           />
-          {block.caption && <figcaption className="mt-2.5 text-xs text-stone/85">{block.caption}</figcaption>}
+          {block.caption && <figcaption className="mt-2.5 text-xs text-stone">{block.caption}</figcaption>}
         </figure>
       );
 
@@ -88,7 +88,7 @@ function Block({ block }: { block: ArticleBlock }) {
             containerClassName="aspect-[4/3]"
           />
           <div>
-            {block.heading && <h4 className="font-serif text-lg text-ink">{block.heading}</h4>}
+            {block.heading && <h3 className="font-serif text-lg text-ink">{block.heading}</h3>}
             <p className={cn("text-sm leading-relaxed text-stone", block.heading && "mt-2")}>{block.text}</p>
           </div>
         </div>
@@ -141,7 +141,7 @@ function Block({ block }: { block: ArticleBlock }) {
           </div>
           <div>
             <p className="text-xs tracking-wide text-stone uppercase">Viagem</p>
-            <h4 className="font-serif text-lg text-ink">{block.title}</h4>
+            <h3 className="font-serif text-lg text-ink">{block.title}</h3>
             {block.subtitle && <p className="text-sm text-stone">{block.subtitle}</p>}
           </div>
         </Link>
@@ -155,7 +155,7 @@ function Block({ block }: { block: ArticleBlock }) {
           </div>
           <div>
             <p className="text-xs tracking-wide text-stone uppercase">Destino</p>
-            <h4 className="font-serif text-lg text-ink">{block.name}</h4>
+            <h3 className="font-serif text-lg text-ink">{block.name}</h3>
             {block.region && <p className="text-sm text-stone">{block.region}</p>}
           </div>
         </Link>

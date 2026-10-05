@@ -23,7 +23,7 @@ export default function ContatoObrigadoPage() {
     <section className="flex min-h-[70svh] items-center bg-ivory pt-28 pb-16 md:pt-32">
       <Container narrow className="text-center">
         <Reveal className="mx-auto flex flex-col items-center">
-          <p className="text-xs font-medium tracking-[0.25em] text-magenta uppercase">Pedido enviado</p>
+          <p className="text-xs font-medium tracking-[0.25em] text-magenta-dark uppercase">Pedido enviado</p>
           <h1 className="mt-4 font-serif text-3xl leading-tight text-ink md:text-4xl">Recebemos seu pedido.</h1>
           <p className="mt-5 max-w-md text-base leading-relaxed text-stone">
             Alguém da equipe Cays vai analisar o que você nos contou e entrar em contato pela forma que você

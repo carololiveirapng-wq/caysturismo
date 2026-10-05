@@ -428,7 +428,7 @@ export default async function AdminLeadsPage({ searchParams }: PageProps<"/admin
                     <td className="px-4 py-3 text-stone">{lead.nextAction ?? "—"}</td>
                     <td className="px-4 py-3 text-stone">{formatBrDate(new Date(lead.createdAt))}</td>
                     <td className="px-4 py-3">
-                      <Link href={`/admin/leads/${lead.id}`} className="text-xs font-medium text-magenta hover:underline">
+                      <Link href={`/admin/leads/${lead.id}`} className="text-xs font-medium text-magenta-dark hover:underline">
                         Abrir lead
                       </Link>
                     </td>
@@ -457,7 +457,7 @@ export default async function AdminLeadsPage({ searchParams }: PageProps<"/admin
                 </div>
                 <p className="text-sm text-stone">{interestByLeadId.get(lead.id)}</p>
                 {lead.nextAction && <p className="text-sm text-ink">Próxima ação: {lead.nextAction}</p>}
-                <div className="flex items-center justify-between text-xs text-stone/80">
+                <div className="flex items-center justify-between text-xs text-stone">
                   <span>{getLeadOrigin(lead)}</span>
                   <span>{formatBrDate(new Date(lead.createdAt))}</span>
                 </div>

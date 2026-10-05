@@ -10,6 +10,7 @@ import { DestinationFaq } from "@/components/destination/destination-faq";
 import { DestinationFinalCTA } from "@/components/destination/destination-final-cta";
 import { PersistentMobileCTA } from "@/components/ui/persistent-mobile-cta";
 import { siteConfig } from "@/lib/site-config";
+import { jsonLdString } from "@/lib/json-ld";
 
 export async function generateStaticParams() {
   const slugs = await getArticleSlugs();
@@ -65,7 +66,7 @@ export default async function CuradoriaArticlePage({ params }: PageProps<"/curad
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdString(articleSchema) }} />
 
       <ArticleHero article={article} />
 

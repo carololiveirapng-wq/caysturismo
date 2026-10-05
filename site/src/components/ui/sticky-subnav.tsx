@@ -73,7 +73,7 @@ export function StickySubnav({ items, ctaLabel, ctaHref }: StickySubnavProps) {
         {ctaHref && ctaLabel && (
           <Link
             href={ctaHref}
-            className="hidden shrink-0 py-3 pl-6 text-xs font-medium tracking-[0.12em] text-magenta uppercase transition-colors duration-300 hover:text-magenta-dark md:inline-block"
+            className="hidden shrink-0 py-3 pl-6 text-xs font-medium tracking-[0.12em] text-magenta-dark uppercase transition-colors duration-300 hover:text-magenta-dark md:inline-block"
           >
             {ctaLabel}
           </Link>

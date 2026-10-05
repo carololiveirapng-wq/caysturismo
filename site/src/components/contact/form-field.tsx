@@ -22,11 +22,11 @@ export function FormField({
   return (
     <div className={className} data-field-error={error ? "" : undefined}>
       <label htmlFor={htmlFor} className="text-xs font-medium tracking-[0.1em] text-stone uppercase">
-        {label} {optional && <span className="text-stone/80 normal-case">(opcional)</span>}
+        {label} {optional && <span className="text-stone normal-case">(opcional)</span>}
       </label>
       <div className="mt-2.5">{children}</div>
       {error && (
-        <p id={errorId} role="alert" className="mt-1.5 text-xs text-magenta">
+        <p id={errorId} role="alert" className="mt-1.5 text-xs text-magenta-dark">
           {error}
         </p>
       )}
@@ -41,5 +41,5 @@ export function FormField({
 // tailwind-merge remove o `outline` "base" como redundante com `outline-2`,
 // deixando `--tw-outline-style` em `none` — sem contorno nenhum visível.)
 export const textInputClassName = cn(
-  "w-full border-0 border-b border-ink/20 bg-transparent px-0 py-2.5 text-base text-ink outline-none transition-colors duration-300 placeholder:text-stone/50 focus:border-ink focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-ink/30",
+  "w-full border-0 border-b border-ink/20 bg-transparent px-0 py-2.5 text-base text-ink outline-none transition-colors duration-300 placeholder:text-stone focus:border-ink focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-ink/30",
 );

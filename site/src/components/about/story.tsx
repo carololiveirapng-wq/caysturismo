@@ -28,7 +28,7 @@ export function Story({
           <div className="mt-9 grid grid-cols-1 gap-6 border-t border-ink/10 pt-7 sm:grid-cols-2">
             {timeline.map((entry, i) => (
               <div key={i}>
-                <p className="text-xs font-medium tracking-[0.15em] text-magenta uppercase">
+                <p className="text-xs font-medium tracking-[0.15em] text-magenta-dark uppercase">
                   {entry.year ?? entry.label ?? entry.title}
                 </p>
                 <p className="mt-2 text-sm leading-relaxed text-stone">

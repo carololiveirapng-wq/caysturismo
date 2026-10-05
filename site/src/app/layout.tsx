@@ -7,6 +7,7 @@ import { WhatsAppButton } from "@/components/layout/whatsapp-button";
 import { siteConfig } from "@/lib/site-config";
 import { getSettings, getHome } from "@/lib/cms";
 import "./globals.css";
+import { jsonLdString } from "@/lib/json-ld";
 
 const manrope = Manrope({
   variable: "--font-manrope",
@@ -87,7 +88,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
       >
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+          dangerouslySetInnerHTML={{ __html: jsonLdString(organizationJsonLd) }}
         />
         <PublicChrome
           header={<Header settings={settings} />}

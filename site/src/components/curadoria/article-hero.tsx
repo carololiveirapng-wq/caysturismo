@@ -21,13 +21,13 @@ export async function ArticleHero({ article }: { article: CuradoriaArticle }) {
         <Container narrow>
           {article.breadcrumb && <Breadcrumb items={article.breadcrumb} className="mb-6" />}
           <Reveal>
-            <p className="text-xs font-medium tracking-[0.15em] text-magenta uppercase">
+            <p className="text-xs font-medium tracking-[0.15em] text-magenta-dark uppercase">
               {article.category}
               {destinationName && <span className="text-stone"> · {destinationName}</span>}
             </p>
             <h1 className="mt-3 font-serif text-3xl leading-tight text-ink md:text-5xl">{article.title}</h1>
             <p className="mt-4 max-w-xl text-base leading-relaxed text-stone">{article.excerpt}</p>
-            <div className="mt-6 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs text-stone/80">
+            <div className="mt-6 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs text-stone">
               {article.author && <span>{article.author}</span>}
               {article.updatedAt && <span>Atualizado em {formatDate(article.updatedAt)}</span>}
               {article.readingTime && <span>{article.readingTime} min de leitura</span>}

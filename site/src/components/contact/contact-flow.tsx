@@ -243,7 +243,7 @@ export function ContactFlow({ planningLabel, initialTripValues, travelProduct, s
                   value={trip.observacoes}
                   onChange={(e) => setTrip1("observacoes", e.target.value)}
                   placeholder="Ocasião especial, preferências, algo que não pode faltar…"
-                  className="w-full resize-none border border-ink/20 bg-transparent px-3.5 py-3 text-base text-ink outline-none transition-colors duration-300 placeholder:text-stone/50 focus:border-ink"
+                  className="w-full resize-none border border-ink/20 bg-transparent px-3.5 py-3 text-base text-ink outline-none transition-colors duration-300 placeholder:text-stone focus:border-ink"
                 />
               </FormField>
             </div>
@@ -318,8 +318,9 @@ export function ContactFlow({ planningLabel, initialTripValues, travelProduct, s
                 </div>
               </FormField>
 
-              <FormField label="Como conheceu a Cays?" optional className="sm:w-2/3">
+              <FormField label="Como conheceu a Cays?" htmlFor="comoConheceu" optional className="sm:w-2/3">
                 <select
+                  id="comoConheceu"
                   value={about.comoConheceu}
                   onChange={(e) => setAbout1("comoConheceu", e.target.value)}
                   className={cn(textInputClassName, "cursor-pointer")}
@@ -347,7 +348,7 @@ export function ContactFlow({ planningLabel, initialTripValues, travelProduct, s
                     .
                   </span>
                 </label>
-                {errors.consentimento && <p className="mt-1.5 ml-7 text-xs text-magenta">{errors.consentimento}</p>}
+                {errors.consentimento && <p className="mt-1.5 ml-7 text-xs text-magenta-dark">{errors.consentimento}</p>}
               </div>
             </div>
           </section>

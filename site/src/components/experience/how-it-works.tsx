@@ -18,7 +18,7 @@ export function HowItWorks({ id, steps }: { id: string; steps: ExperienceStep[] 
         <div className="mt-9 grid grid-cols-1 gap-8 sm:grid-cols-3">
           {steps.map((step, i) => (
             <Reveal key={step.title} delay={i * 0.06} className="border-t border-ink/10 pt-5">
-              <span className="text-xs text-stone/85 tabular-nums">{String(i + 1).padStart(2, "0")}</span>
+              <span className="text-xs text-stone tabular-nums">{String(i + 1).padStart(2, "0")}</span>
               <h3 className="mt-1.5 font-serif text-lg text-ink md:text-xl">{step.title}</h3>
               <p className="mt-1.5 text-sm leading-relaxed text-stone">{step.text}</p>
             </Reveal>

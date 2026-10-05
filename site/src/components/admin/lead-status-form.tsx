@@ -85,7 +85,7 @@ export function LeadStatusForm({
           />
         </div>
       </div>
-      <p className="-mt-2 text-xs text-stone/85">Deixe a data vazia para remover o retorno marcado.</p>
+      <p className="-mt-2 text-xs text-stone">Deixe a data vazia para remover o retorno marcado.</p>
 
       <div>
         <label htmlFor="nextAction" className="block text-xs font-medium tracking-wide text-stone uppercase">

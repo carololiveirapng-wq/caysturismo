@@ -119,7 +119,7 @@ export function PeriodSelector({ isOpen, onToggle, onClose, value, onChange }: P
                         onClick={() => setSelectedYear(year)}
                         className={cn(
                           "px-2.5 py-1 font-serif text-base transition-colors",
-                          year === selectedYear ? "text-ink" : "text-stone/80 hover:text-ink",
+                          year === selectedYear ? "text-ink" : "text-stone hover:text-ink",
                         )}
                       >
                         {year}
@@ -172,7 +172,7 @@ export function PeriodSelector({ isOpen, onToggle, onClose, value, onChange }: P
                         className={cn(
                           "relative border border-ink/10 py-3 text-sm transition-colors",
                           month.disabled
-                            ? "cursor-not-allowed text-stone/30"
+                            ? "cursor-not-allowed text-stone"
                             : selected
                               ? "border-ink bg-ink text-ivory"
                               : "text-ink/80 hover:border-ink/30",
@@ -220,7 +220,7 @@ export function PeriodSelector({ isOpen, onToggle, onClose, value, onChange }: P
                   type="button"
                   onClick={applyDates}
                   disabled={!fromDraft && !toDraft}
-                  className="mt-7 text-xs font-medium tracking-[0.1em] text-ink uppercase underline underline-offset-4 disabled:pointer-events-none disabled:text-stone/50"
+                  className="mt-7 text-xs font-medium tracking-[0.1em] text-ink uppercase underline underline-offset-4 disabled:pointer-events-none disabled:text-stone"
                 >
                   Aplicar período
                 </button>

@@ -8,7 +8,7 @@ const STATUS_STYLES: Record<LeadStatus, string> = {
   qualified: "border-magenta/30 bg-magenta/10 text-magenta-dark",
   proposal: "border-ink/15 bg-sand text-ink/80",
   closed: "border-ink/15 bg-ink/5 text-stone",
-  lost: "border-ink/10 bg-ink/5 text-stone/60",
+  lost: "border-ink/10 bg-ink/5 text-stone",
 };
 
 export function AdminStatusBadge({ status, className }: { status: LeadStatus; className?: string }) {

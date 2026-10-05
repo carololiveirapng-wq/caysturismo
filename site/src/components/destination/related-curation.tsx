@@ -48,7 +48,7 @@ export function RelatedCuration({
             />
             <div className="mt-4 border-t border-ink/10 pt-4">
               {main.category && (
-                <p className="text-xs font-medium tracking-[0.15em] text-magenta uppercase">
+                <p className="text-xs font-medium tracking-[0.15em] text-magenta-dark uppercase">
                   {main.category}
                 </p>
               )}
@@ -70,7 +70,7 @@ export function RelatedCuration({
                   />
                   <div className="mt-3 border-t border-ink/10 pt-3">
                     {article.category && (
-                      <p className="text-xs font-medium tracking-[0.15em] text-magenta uppercase">
+                      <p className="text-xs font-medium tracking-[0.15em] text-magenta-dark uppercase">
                         {article.category}
                       </p>
                     )}

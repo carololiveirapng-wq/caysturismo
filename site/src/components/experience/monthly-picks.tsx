@@ -20,7 +20,7 @@ export function MonthlyPicks({ id, picks }: { id: string; picks: ExperienceMonth
         <div className="mt-9 grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2 lg:grid-cols-3">
           {picks.map((pick) => (
             <div key={pick.month} className="flex items-start gap-4 border-t border-ink/10 pt-4">
-              <span className="shrink-0 text-xs font-medium tracking-[0.1em] text-magenta">
+              <span className="shrink-0 text-xs font-medium tracking-[0.1em] text-magenta-dark">
                 {MONTH_LABELS[pick.month - 1]}
               </span>
               <div>

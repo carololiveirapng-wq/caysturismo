@@ -29,7 +29,7 @@ function LatestGrid({ articles }: { articles: CuradoriaArticle[] }) {
           containerClassName="aspect-[16/11]"
         />
         <div className="mt-4 border-t border-ink/10 pt-4">
-          <p className="text-xs font-medium tracking-[0.15em] text-magenta uppercase">{medium.category}</p>
+          <p className="text-xs font-medium tracking-[0.15em] text-magenta-dark uppercase">{medium.category}</p>
           <h3 className="mt-2 font-serif text-2xl leading-snug text-ink">{medium.title}</h3>
           {medium.readingTime && <p className="mt-2 text-xs text-stone">{medium.readingTime} min de leitura</p>}
         </div>
@@ -48,7 +48,7 @@ function LatestGrid({ articles }: { articles: CuradoriaArticle[] }) {
                 containerClassName="aspect-[16/10]"
               />
               <div className="mt-3 border-t border-ink/10 pt-3">
-                <p className="text-xs font-medium tracking-[0.15em] text-magenta uppercase">{article.category}</p>
+                <p className="text-xs font-medium tracking-[0.15em] text-magenta-dark uppercase">{article.category}</p>
                 <h3 className="mt-1.5 font-serif text-lg leading-snug text-ink">{article.title}</h3>
               </div>
             </Link>

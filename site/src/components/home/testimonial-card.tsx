@@ -71,7 +71,7 @@ export function TestimonialCard({ review, onReadMore }: TestimonialCardProps) {
         </figcaption>
 
         <div className="mt-4 flex items-center justify-between gap-4 border-t border-ink/10 pt-4">
-          <span className="inline-flex items-center gap-1.5 text-xs text-stone/80">
+          <span className="inline-flex items-center gap-1.5 text-xs text-stone">
             <GoogleIcon className="size-3.5" />
             Google Reviews
           </span>

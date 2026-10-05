@@ -32,7 +32,7 @@ export function TravelProductHero({
 
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-8">
           <Reveal className="lg:col-span-7">
-            <Carousel opts={{ align: "start", loop: product.gallery.length > 1 }}>
+            <Carousel aria-label="Galeria da viagem" opts={{ align: "start", loop: product.gallery.length > 1 }}>
               <div className="relative">
                 <CarouselContent className="-ml-0">
                   {product.gallery.map((image, i) => (

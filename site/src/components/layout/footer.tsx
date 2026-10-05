@@ -62,7 +62,7 @@ export function Footer({ settings }: { settings: SiteSettings }) {
 
           {columns.map((column) => (
             <div key={column.heading} className="md:col-span-2">
-              <h3 className="text-xs font-medium tracking-[0.2em] text-ivory/45 uppercase">
+              <h3 className="text-xs font-medium tracking-[0.2em] text-ivory/70 uppercase">
                 {column.heading}
               </h3>
               <ul className="mt-6 space-y-3.5">
@@ -81,7 +81,7 @@ export function Footer({ settings }: { settings: SiteSettings }) {
           ))}
 
           <div className="md:col-span-3">
-            <h3 className="text-xs font-medium tracking-[0.2em] text-ivory/45 uppercase">
+            <h3 className="text-xs font-medium tracking-[0.2em] text-ivory/70 uppercase">
               Contato
             </h3>
             <ul className="mt-6 space-y-3.5 text-sm text-ivory/75">
@@ -116,7 +116,7 @@ export function Footer({ settings }: { settings: SiteSettings }) {
           </div>
         </div>
 
-        <div className="mt-16 flex flex-col gap-4 border-t border-ivory/10 pt-8 text-xs text-ivory/45 md:flex-row md:items-center md:justify-between">
+        <div className="mt-16 flex flex-col gap-4 border-t border-ivory/10 pt-8 text-xs text-ivory/70 md:flex-row md:items-center md:justify-between">
           <div className="flex flex-wrap gap-x-4 gap-y-2">
             <span>© {new Date().getFullYear()} {siteConfig.name}.</span>
             {legalMeta.map((meta) => (

@@ -42,7 +42,7 @@ export function SelectorTrigger({
           <span className="text-[0.65rem] font-medium tracking-[0.18em] text-stone uppercase">
             {label}
           </span>
-          <span className={cn("truncate text-base", value ? "text-ink" : "text-stone/85")}>
+          <span className={cn("truncate text-base", value ? "text-ink" : "text-stone")}>
             {value || placeholder}
           </span>
         </span>

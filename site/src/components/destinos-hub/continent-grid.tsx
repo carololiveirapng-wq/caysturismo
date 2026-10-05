@@ -4,6 +4,7 @@ import { continents } from "@/data/destinations-hub";
 export function ContinentGrid({ onSelect }: { onSelect: (slug: string) => void }) {
   return (
     <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:gap-5">
+      <h2 className="sr-only">Escolha um continente</h2>
       {continents.map((continent) => (
         <button
           key={continent.slug}

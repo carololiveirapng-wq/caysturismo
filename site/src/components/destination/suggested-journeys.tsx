@@ -23,7 +23,7 @@ function JourneyCard({ journey }: { journey: DestinationJourney }) {
         <h3 className="font-serif text-2xl text-ink">{journey.title}</h3>
         {journey.subtitle && <p className="mt-1 text-sm text-stone">{journey.subtitle}</p>}
         {(journey.typeLabel || journey.durationLabel) && (
-          <p className="mt-2.5 text-xs tracking-wide text-stone/80 uppercase">
+          <p className="mt-2.5 text-xs tracking-wide text-stone uppercase">
             {[journey.typeLabel, journey.durationLabel].filter(Boolean).join(" · ")}
           </p>
         )}

@@ -67,7 +67,7 @@ export function MonthGuide({
               onClick={() => setActiveMonth(m.month)}
               className={cn(
                 "flex flex-col items-center gap-2.5 border-none px-1 py-2.5 text-xs font-medium tracking-[0.1em] transition-colors duration-300",
-                activeMonth === m.month ? "bg-ivory text-ink" : "bg-transparent text-stone/85 hover:bg-ivory/60 hover:text-ink",
+                activeMonth === m.month ? "bg-ivory text-ink" : "bg-transparent text-stone hover:bg-ivory/60 hover:text-ink",
               )}
             >
               {MONTH_LABELS[m.month - 1]}

@@ -32,7 +32,7 @@ export function ContactSidebar({ settings, reviews }: { settings: SiteSettings; 
           <blockquote className="mt-3 font-serif text-base leading-snug text-ink">&ldquo;{review.text}&rdquo;</blockquote>
           <div className="mt-4 flex items-center justify-between gap-3 border-t border-ink/10 pt-4">
             <span className="text-sm font-medium text-ink">{review.authorName}</span>
-            <span className="inline-flex items-center gap-1.5 text-xs text-stone/80">
+            <span className="inline-flex items-center gap-1.5 text-xs text-stone">
               <GoogleIcon className="size-3.5" />
               Google Reviews
             </span>
@@ -45,7 +45,7 @@ export function ContactSidebar({ settings, reviews }: { settings: SiteSettings; 
         <ol className="mt-5 space-y-4">
           {NEXT_STEPS.map((step) => (
             <li key={step.number} className="flex items-start gap-3">
-              <span className="pt-px text-xs font-medium text-magenta">{step.number}</span>
+              <span className="pt-px text-xs font-medium text-magenta-dark">{step.number}</span>
               <span className="text-sm leading-relaxed text-ink">{step.title}</span>
             </li>
           ))}
