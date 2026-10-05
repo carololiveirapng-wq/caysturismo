@@ -42,12 +42,13 @@ const navLinks = [
 // dessas páginas antes do scroll passar de 64px, então força o estado
 // sólido desde o início nelas.
 const NO_HERO_PATHS = ["/contato", "/contato/obrigado"];
+const NO_HERO_PREFIXES = ["/curadoria/"];
 
 export function Header({ settings }: { settings: SiteSettings }) {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
-  const pathname = usePathname();
+  const pathname = usePathname() ?? "";
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 64);
@@ -56,7 +57,9 @@ export function Header({ settings }: { settings: SiteSettings }) {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const solid = scrolled || menuOpen || NO_HERO_PATHS.includes(pathname ?? "");
+  const noHero =
+    NO_HERO_PATHS.includes(pathname) || NO_HERO_PREFIXES.some((prefix) => pathname.startsWith(prefix));
+  const solid = scrolled || menuOpen || noHero;
 
   return (
     <>
