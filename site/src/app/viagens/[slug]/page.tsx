@@ -16,6 +16,8 @@ import { InlineCtaStrip } from "@/components/destination/inline-cta-strip";
 import { StickySubnav } from "@/components/ui/sticky-subnav";
 import { PersistentMobileCTA } from "@/components/ui/persistent-mobile-cta";
 import { siteConfig } from "@/lib/site-config";
+import { breadcrumbJsonLd } from "@/lib/seo/structured-data";
+import { jsonLdString } from "@/lib/json-ld";
 
 export async function generateStaticParams() {
   const slugs = await getTravelProductSlugs();
@@ -82,6 +84,12 @@ export default async function TravelProductPage({ params }: PageProps<"/viagens/
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: jsonLdString(breadcrumbJsonLd([{ name: "Viagens", href: "/viagens" }, { name: product.title, href: `/viagens/${product.slug}` }])),
+        }}
+      />
       <TravelProductHero
         product={product}
         contactHref={contactHref}

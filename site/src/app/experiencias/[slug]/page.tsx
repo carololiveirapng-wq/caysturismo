@@ -15,6 +15,8 @@ import { DestinationFinalCTA } from "@/components/destination/destination-final-
 import { StickySubnav } from "@/components/ui/sticky-subnav";
 import { PersistentMobileCTA } from "@/components/ui/persistent-mobile-cta";
 import { siteConfig } from "@/lib/site-config";
+import { breadcrumbJsonLd } from "@/lib/seo/structured-data";
+import { jsonLdString } from "@/lib/json-ld";
 
 export async function generateStaticParams() {
   const slugs = await getExperienceSlugs();
@@ -69,6 +71,12 @@ export default async function ExperiencePage({ params }: PageProps<"/experiencia
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: jsonLdString(breadcrumbJsonLd([{ name: "Experiências", href: "/experiencias" }, { name: experience.name, href: `/experiencias/${experience.slug}` }])),
+        }}
+      />
       <ExperienceHero experience={experience} contactHref={contactHref} />
 
       <StickySubnav items={subnavItems} ctaLabel="Planejar viagem" ctaHref={contactHref} />

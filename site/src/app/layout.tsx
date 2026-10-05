@@ -8,6 +8,7 @@ import { siteConfig } from "@/lib/site-config";
 import { getSettings, getHome } from "@/lib/cms";
 import "./globals.css";
 import { jsonLdString } from "@/lib/json-ld";
+import { organizationJsonLd } from "@/lib/seo/structured-data";
 
 const manrope = Manrope({
   variable: "--font-manrope",
@@ -69,13 +70,6 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function RootLayout({ children }: LayoutProps<"/">) {
   const settings = await getSettings();
 
-  const organizationJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "TravelAgency",
-    name: siteConfig.name,
-    url: siteConfig.url,
-    sameAs: [settings.instagram].filter(Boolean),
-  };
 
   return (
     <html
@@ -88,7 +82,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
       >
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: jsonLdString(organizationJsonLd) }}
+          dangerouslySetInnerHTML={{ __html: jsonLdString(organizationJsonLd(settings)) }}
         />
         <PublicChrome
           header={<Header settings={settings} />}

@@ -11,6 +11,7 @@ import { DestinationFinalCTA } from "@/components/destination/destination-final-
 import { PersistentMobileCTA } from "@/components/ui/persistent-mobile-cta";
 import { siteConfig } from "@/lib/site-config";
 import { jsonLdString } from "@/lib/json-ld";
+import { breadcrumbJsonLd } from "@/lib/seo/structured-data";
 
 export async function generateStaticParams() {
   const slugs = await getArticleSlugs();
@@ -60,6 +61,7 @@ export default async function CuradoriaArticlePage({ params }: PageProps<"/curad
     description: article.excerpt,
     image: article.heroImage.src,
     ...(article.author && { author: { "@type": "Organization", name: article.author } }),
+    publisher: { "@type": "Organization", name: siteConfig.name, logo: { "@type": "ImageObject", url: `${siteConfig.url}/icon.png` } },
     ...(article.publishedAt && { datePublished: article.publishedAt }),
     ...(article.updatedAt && { dateModified: article.updatedAt }),
   };
@@ -67,6 +69,12 @@ export default async function CuradoriaArticlePage({ params }: PageProps<"/curad
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdString(articleSchema) }} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: jsonLdString(breadcrumbJsonLd([{ name: "Curadoria", href: "/curadoria" }, { name: article.title, href: `/curadoria/${article.slug}` }])),
+        }}
+      />
 
       <ArticleHero article={article} />
 

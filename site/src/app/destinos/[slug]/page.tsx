@@ -18,6 +18,7 @@ import { StickySubnav } from "@/components/ui/sticky-subnav";
 import { PersistentMobileCTA } from "@/components/ui/persistent-mobile-cta";
 import { siteConfig } from "@/lib/site-config";
 import { jsonLdString } from "@/lib/json-ld";
+import { faqJsonLd } from "@/lib/seo/structured-data";
 
 export async function generateStaticParams() {
   const slugs = await getDestinationSlugs();
@@ -89,6 +90,12 @@ export default async function DestinationPage({ params }: PageProps<"/destinos/[
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: jsonLdString(breadcrumbSchema) }}
       />
+      {destination.faq?.length ? (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: jsonLdString(faqJsonLd(destination.faq)) }}
+        />
+      ) : null}
 
       <DestinationHero destination={destination} />
 

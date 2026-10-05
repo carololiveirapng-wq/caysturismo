@@ -4,6 +4,7 @@
  */
 export const siteConfig = {
   name: "Cays Turismo",
+  legalName: "CAYS VIAGENS E TURISMO LTDA",
   shortName: "Cays",
   tagline: "Curadoria de viagens personalizadas",
   // NEXT_PUBLIC_SITE_URL define o domínio real (ex.: *.vercel.app antes do
