@@ -15,6 +15,7 @@ import { DestinationFinalCTA } from "@/components/destination/destination-final-
 import { StickySubnav } from "@/components/ui/sticky-subnav";
 import { PersistentMobileCTA } from "@/components/ui/persistent-mobile-cta";
 import { siteConfig } from "@/lib/site-config";
+import { TravelerStories } from "@/components/experiencias/traveler-stories";
 import { breadcrumbJsonLd } from "@/lib/seo/structured-data";
 import { jsonLdString } from "@/lib/json-ld";
 
@@ -111,6 +112,8 @@ export default async function ExperiencePage({ params }: PageProps<"/experiencia
       {experience.journeys && experience.journeys.length > 0 && (
         <ExperienceJourneys id="viagens" items={experience.journeys} />
       )}
+
+      {experience.slug === "destination-wedding" && <TravelerStories />}
 
       {experience.articles && experience.articles.length > 0 && (
         <RelatedCuration
