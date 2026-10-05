@@ -1,13 +1,14 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
-import { Mail, MessageCircle } from "lucide-react";
+import { Mail, MessageCircle, Star } from "lucide-react";
 import { AdminPageHeader } from "@/components/admin/admin-page-header";
 import { AdminEmptyState } from "@/components/admin/admin-empty-state";
 import { LeadStatusForm } from "@/components/admin/lead-status-form";
-import { getLeadById } from "@/lib/admin/leads-queries";
+import { getLeadById, getLeadEvents } from "@/lib/admin/leads-queries";
 import { getLeadInterest, buildWhatsAppLink } from "@/lib/admin/display";
 import { getDestinationBySlug, getExperienceBySlug, getTravelProductBySlug } from "@/lib/cms";
+import { LEAD_EVENT_LABELS } from "@/lib/leads/types";
 
 export const metadata = { title: "Detalhe do lead | Admin Cays" };
 
@@ -38,7 +39,7 @@ export default async function AdminLeadDetailPage({ params }: PageProps<"/admin/
 
   if (!lead) notFound();
 
-  const [destinationNames, experienceDetail, productDetail, interest] = await Promise.all([
+  const [destinationNames, experienceDetail, productDetail, interest, events] = await Promise.all([
     Promise.all(
       lead.destinations
         .filter((slug) => slug !== "nao-sei")
@@ -47,6 +48,7 @@ export default async function AdminLeadDetailPage({ params }: PageProps<"/admin/
     lead.experience && lead.experience !== "nao-sei" ? getExperienceBySlug(lead.experience) : undefined,
     lead.travelProduct ? getTravelProductBySlug(lead.travelProduct) : undefined,
     getLeadInterest(lead),
+    getLeadEvents(lead.id).catch(() => []),
   ]);
   const destinationsLabel = lead.destinations.includes("nao-sei")
     ? [...destinationNames, "Ainda não sabe"].join(", ")
@@ -66,6 +68,12 @@ export default async function AdminLeadDetailPage({ params }: PageProps<"/admin/
         description={`${interest} · Recebido em ${new Date(lead.createdAt).toLocaleString("pt-BR")}`}
         actions={
           <>
+            {lead.priority && (
+              <span className="inline-flex items-center gap-1.5 border border-magenta/30 bg-magenta/10 px-3 py-2 text-xs font-medium text-magenta-dark uppercase">
+                <Star className="size-3.5" aria-hidden fill="currentColor" />
+                Prioritário
+              </span>
+            )}
             <a
               href={buildWhatsAppLink(lead.whatsapp, lead.name)}
               target="_blank"
@@ -152,6 +160,24 @@ export default async function AdminLeadDetailPage({ params }: PageProps<"/admin/
               <Field label="UTM Term" value={lead.utmTerm} />
             </div>
           </section>
+
+          <section className="border border-ink/10 bg-ivory p-6">
+            <h2 className="font-serif text-lg text-ink">Histórico</h2>
+            {events.length === 0 ? (
+              <p className="mt-3 text-sm text-stone">Sem registros ainda.</p>
+            ) : (
+              <ol className="mt-4 flex flex-col gap-3 border-l border-ink/10 pl-4">
+                {events.map((event) => (
+                  <li key={event.id} className="relative">
+                    <span aria-hidden className="absolute top-1.5 -left-[18.5px] size-2 rounded-full bg-ink/20" />
+                    <p className="text-sm text-ink">{LEAD_EVENT_LABELS[event.type]}</p>
+                    {event.detail && <p className="text-sm text-stone">{event.detail}</p>}
+                    <p className="text-xs text-stone/85">{new Date(event.createdAt).toLocaleString("pt-BR")}</p>
+                  </li>
+                ))}
+              </ol>
+            )}
+          </section>
         </div>
 
         <div className="lg:col-span-1">
@@ -161,7 +187,14 @@ export default async function AdminLeadDetailPage({ params }: PageProps<"/admin/
               Atualizado em {new Date(lead.updatedAt).toLocaleString("pt-BR")}
             </p>
             <div className="mt-4">
-              <LeadStatusForm leadId={lead.id} currentStatus={lead.status} currentInternalNotes={lead.internalNotes} />
+              <LeadStatusForm
+                leadId={lead.id}
+                currentStatus={lead.status}
+                currentInternalNotes={lead.internalNotes}
+                currentFollowUpAt={lead.followUpAt}
+                currentNextAction={lead.nextAction}
+                currentPriority={lead.priority}
+              />
             </div>
           </section>
         </div>

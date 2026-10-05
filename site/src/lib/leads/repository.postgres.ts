@@ -50,9 +50,41 @@ function getClient(connectionString: string): Sql {
   return client;
 }
 
-function ensureSchema(sql: Sql): Promise<void> {
-  if (!schemaReady) {
-    schemaReady = sql`
+/**
+ * Sequencial com `await` de propósito — uma versão anterior encadeava tudo
+ * via `.then()` numa única promise e, sob `prepare: false` + conexão
+ * única, isso disparava um erro intermitente e reproduzível do driver
+ * ("column ... does not exist" num CREATE INDEX cuja coluna existia de
+ * verdade — confirmado isolando a mesma query sozinha, que funcionava).
+ * `await` em sequência não tem esse problema.
+ */
+/**
+ * Tenta uma vez, espera um instante e tenta de novo antes de desistir.
+ * Observado em produção: a mesma sequência de DDL `IF NOT EXISTS`
+ * (idempotente por natureza) às vezes falha de forma intermitente contra o
+ * pooler do Postgres com um erro enganoso ("column ... does not exist" num
+ * CREATE INDEX cuja coluna existe de verdade, confirmado isolando a mesma
+ * query sozinha — não é um erro de sintaxe nem de ordem). Como toda
+ * statement aqui é segura de repetir, uma segunda tentativa resolve.
+ */
+async function runWithRetry(run: () => Promise<unknown>): Promise<void> {
+  try {
+    await run();
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    // Sob concorrência (vários cold starts ao mesmo tempo), duas instâncias
+    // podem tentar criar a mesma tabela/índice no mesmo instante — Postgres
+    // normalmente resolve isso sozinho com `IF NOT EXISTS`, mas em condição
+    // de corrida rara pode devolver um erro de "já existe" mesmo assim.
+    if (message.includes("already exists")) return;
+    await new Promise((resolve) => setTimeout(resolve, 200));
+    await run();
+  }
+}
+
+async function runSchemaMigration(sql: Sql): Promise<void> {
+  const statements: (() => Promise<unknown>)[] = [
+    () => sql`
       CREATE TABLE IF NOT EXISTS leads (
         id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
         name text NOT NULL,
@@ -84,27 +116,42 @@ function ensureSchema(sql: Sql): Promise<void> {
         created_at timestamptz NOT NULL DEFAULT now(),
         updated_at timestamptz NOT NULL DEFAULT now()
       )
-    `
-      // Tabela criada antes de `internal_notes` existir no schema não ganha
-      // a coluna só com `CREATE TABLE IF NOT EXISTS` — sem isto,
-      // `updateLeadStatus` (`src/lib/admin/leads-queries.ts`) falha ao
-      // salvar observação interna contra um banco mais antigo.
-      .then(() => sql`ALTER TABLE leads ADD COLUMN IF NOT EXISTS internal_notes text`)
-      .then(() => sql`CREATE INDEX IF NOT EXISTS leads_created_at_idx ON leads (created_at)`)
-      .then(() => sql`CREATE INDEX IF NOT EXISTS leads_status_idx ON leads (status)`)
-      .then(() => sql`CREATE INDEX IF NOT EXISTS leads_email_idx ON leads (email)`)
-      .then(() => sql`CREATE INDEX IF NOT EXISTS leads_whatsapp_idx ON leads (whatsapp)`)
-      .then(() => undefined)
-      .catch((error: unknown) => {
-        // Sob concorrência (vários cold starts ao mesmo tempo), duas
-        // instâncias podem tentar criar a mesma tabela/índice no mesmo
-        // instante — Postgres normalmente resolve isso sozinho com
-        // `IF NOT EXISTS`, mas em condição de corrida rara pode devolver um
-        // erro de "já existe". Nesse caso específico, seguimos em frente;
-        // qualquer outro erro de schema deve realmente falhar o request.
-        const message = error instanceof Error ? error.message : String(error);
-        if (!message.includes("already exists")) throw error;
-      });
+    `,
+    // Colunas adicionadas depois da criação original da tabela — `ADD
+    // COLUMN IF NOT EXISTS` cobre tanto o banco já migrado quanto um banco
+    // novo (onde a coluna também não existe ainda nesse ponto).
+    () => sql`ALTER TABLE leads ADD COLUMN IF NOT EXISTS internal_notes text`,
+    () => sql`ALTER TABLE leads ADD COLUMN IF NOT EXISTS follow_up_at timestamptz`,
+    () => sql`ALTER TABLE leads ADD COLUMN IF NOT EXISTS next_action text`,
+    () => sql`ALTER TABLE leads ADD COLUMN IF NOT EXISTS priority boolean NOT NULL DEFAULT false`,
+    () => sql`CREATE INDEX IF NOT EXISTS leads_created_at_idx ON leads (created_at)`,
+    () => sql`CREATE INDEX IF NOT EXISTS leads_status_idx ON leads (status)`,
+    () => sql`CREATE INDEX IF NOT EXISTS leads_email_idx ON leads (email)`,
+    () => sql`CREATE INDEX IF NOT EXISTS leads_whatsapp_idx ON leads (whatsapp)`,
+    () => sql`CREATE INDEX IF NOT EXISTS leads_follow_up_at_idx ON leads (follow_up_at)`,
+    () => sql`CREATE INDEX IF NOT EXISTS leads_priority_idx ON leads (priority)`,
+    // Timeline mínima — só "o que mudou e quando", sem guardar o valor
+    // antigo/novo completo (isso já fica no próprio registro do lead).
+    () => sql`
+      CREATE TABLE IF NOT EXISTS lead_events (
+        id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+        lead_id uuid NOT NULL REFERENCES leads(id) ON DELETE CASCADE,
+        type text NOT NULL,
+        detail text,
+        created_at timestamptz NOT NULL DEFAULT now()
+      )
+    `,
+    () => sql`CREATE INDEX IF NOT EXISTS lead_events_lead_id_idx ON lead_events (lead_id)`,
+  ];
+
+  for (const statement of statements) {
+    await runWithRetry(statement);
+  }
+}
+
+function ensureSchema(sql: Sql): Promise<void> {
+  if (!schemaReady) {
+    schemaReady = runSchemaMigration(sql);
   }
   return schemaReady;
 }
@@ -136,12 +183,15 @@ export class PostgresLeadRepository implements LeadRepository {
       RETURNING id, created_at, updated_at
     `;
 
+    await this.sql`INSERT INTO lead_events (lead_id, type) VALUES (${row.id}, 'created')`;
+
     return {
       ...lead,
       id: row.id,
       createdAt: row.created_at.toISOString(),
       updatedAt: row.updated_at.toISOString(),
       status: "new",
+      priority: false,
     };
   }
 }

@@ -12,15 +12,21 @@ export const metadata = { title: "Dashboard | Admin Cays" };
 export default async function AdminDashboardPage() {
   let stats;
   let recentLeads;
+  let followUpsToday;
   let loadError: string | null = null;
 
   let interestByLeadId = new Map<string, string>();
+  let followUpInterestByLeadId = new Map<string, string>();
 
   try {
     stats = await getLeadStats();
     recentLeads = (await getLeads({ perPage: 8, sort: "newest" })).items;
+    followUpsToday = (await getLeads({ followUp: "today", perPage: 20, sort: "oldest" })).items;
     interestByLeadId = new Map(
       await Promise.all(recentLeads.map(async (lead) => [lead.id, await getLeadInterest(lead)] as const)),
+    );
+    followUpInterestByLeadId = new Map(
+      await Promise.all(followUpsToday.map(async (lead) => [lead.id, await getLeadInterest(lead)] as const)),
     );
   } catch (error) {
     loadError =
@@ -41,12 +47,13 @@ export default async function AdminDashboardPage() {
         />
       ) : (
         <>
-          <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
-            <AdminStatCard label="Leads novos" value={stats!.new} />
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-6">
+            <AdminStatCard label="Novos hoje" value={stats!.newToday} />
             <AdminStatCard label="Esta semana" value={stats!.thisWeek} />
-            <AdminStatCard label="Em contato" value={stats!.contacted} />
-            <AdminStatCard label="Propostas" value={stats!.proposal} />
-            <AdminStatCard label="Fechados" value={stats!.closed} />
+            <AdminStatCard label="Sem resposta 3+ dias" value={stats!.stale} />
+            <AdminStatCard label="Propostas em aberto" value={stats!.proposal} />
+            <AdminStatCard label="Fechados no mês" value={stats!.closedThisMonth} />
+            <AdminStatCard label="Conversão" value={`${stats!.conversionRate}%`} />
           </div>
 
           <div className="flex flex-wrap gap-3">
@@ -72,7 +79,7 @@ export default async function AdminDashboardPage() {
               rel="noreferrer"
               className="inline-flex items-center gap-1.5 border border-ink/15 bg-ivory px-4 py-2.5 text-xs font-medium tracking-wide text-ink uppercase transition-colors duration-200 hover:border-ink/30"
             >
-              Novo destino
+              Criar/editar destino
               <ArrowUpRight className="size-3.5" aria-hidden />
             </Link>
             <Link
@@ -81,7 +88,7 @@ export default async function AdminDashboardPage() {
               rel="noreferrer"
               className="inline-flex items-center gap-1.5 border border-ink/15 bg-ivory px-4 py-2.5 text-xs font-medium tracking-wide text-ink uppercase transition-colors duration-200 hover:border-ink/30"
             >
-              Nova viagem
+              Criar/editar viagem
               <ArrowUpRight className="size-3.5" aria-hidden />
             </Link>
             <Link
@@ -90,7 +97,7 @@ export default async function AdminDashboardPage() {
               rel="noreferrer"
               className="inline-flex items-center gap-1.5 border border-ink/15 bg-ivory px-4 py-2.5 text-xs font-medium tracking-wide text-ink uppercase transition-colors duration-200 hover:border-ink/30"
             >
-              Novo artigo
+              Ver Curadoria
               <ArrowUpRight className="size-3.5" aria-hidden />
             </Link>
             <Link
@@ -103,6 +110,27 @@ export default async function AdminDashboardPage() {
               <ArrowUpRight className="size-3.5" aria-hidden />
             </Link>
           </div>
+
+          {followUpsToday!.length > 0 && (
+            <div>
+              <h2 className="font-serif text-lg text-ink">Retornos de hoje</h2>
+              <div className="mt-4 flex flex-col gap-3">
+                {followUpsToday!.map((lead) => (
+                  <Link
+                    key={lead.id}
+                    href={`/admin/leads/${lead.id}`}
+                    className="flex flex-col gap-1 border border-magenta/20 bg-magenta/5 p-4 sm:flex-row sm:items-center sm:justify-between"
+                  >
+                    <div>
+                      <span className="font-medium text-ink">{lead.name}</span>
+                      <span className="ml-2 text-sm text-stone">{followUpInterestByLeadId.get(lead.id)}</span>
+                    </div>
+                    {lead.nextAction && <span className="text-sm text-stone">{lead.nextAction}</span>}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
 
           <div>
             <h2 className="font-serif text-lg text-ink">Últimos leads</h2>

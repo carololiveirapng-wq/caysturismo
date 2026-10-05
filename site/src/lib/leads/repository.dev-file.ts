@@ -16,7 +16,7 @@ const FILE_PATH = path.join(DATA_DIR, "leads.dev.ndjson");
 export class DevFileLeadRepository implements LeadRepository {
   async save(lead: NewLead): Promise<Lead> {
     const now = new Date().toISOString();
-    const record: Lead = { ...lead, id: randomUUID(), createdAt: now, updatedAt: now, status: "new" };
+    const record: Lead = { ...lead, id: randomUUID(), createdAt: now, updatedAt: now, status: "new", priority: false };
 
     await mkdir(DATA_DIR, { recursive: true });
     await appendFile(FILE_PATH, `${JSON.stringify(record)}\n`, "utf-8");

@@ -6,14 +6,32 @@ import { LEAD_STATUSES, LEAD_STATUS_LABELS, type LeadStatus } from "@/lib/leads/
 
 const initialState: UpdateLeadStatusState = {};
 
+function toDateInputValue(iso?: string): string {
+  if (!iso) return "";
+  return iso.slice(0, 10);
+}
+
+function toTimeInputValue(iso?: string): string {
+  if (!iso) return "";
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return "";
+  return d.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit", hour12: false });
+}
+
 export function LeadStatusForm({
   leadId,
   currentStatus,
   currentInternalNotes,
+  currentFollowUpAt,
+  currentNextAction,
+  currentPriority,
 }: {
   leadId: string;
   currentStatus: LeadStatus;
   currentInternalNotes?: string;
+  currentFollowUpAt?: string;
+  currentNextAction?: string;
+  currentPriority: boolean;
 }) {
   const [state, formAction, pending] = useActionState(updateLeadStatusAction, initialState);
 
@@ -38,6 +56,59 @@ export function LeadStatusForm({
           ))}
         </select>
       </div>
+
+      <div className="grid grid-cols-2 gap-3">
+        <div>
+          <label htmlFor="followUpDate" className="block text-xs font-medium tracking-wide text-stone uppercase">
+            Retornar em
+          </label>
+          <input
+            id="followUpDate"
+            name="followUpDate"
+            type="date"
+            defaultValue={toDateInputValue(currentFollowUpAt)}
+            className="mt-1.5 w-full border border-ink/15 bg-ivory px-3.5 py-2.5 text-sm text-ink outline-none focus:border-magenta"
+          />
+        </div>
+        <div>
+          <label htmlFor="followUpTime" className="block text-xs font-medium tracking-wide text-stone uppercase">
+            Hora (opcional)
+          </label>
+          <input
+            id="followUpTime"
+            name="followUpTime"
+            type="time"
+            defaultValue={toTimeInputValue(currentFollowUpAt)}
+            className="mt-1.5 w-full border border-ink/15 bg-ivory px-3.5 py-2.5 text-sm text-ink outline-none focus:border-magenta"
+          />
+        </div>
+      </div>
+      <p className="-mt-2 text-xs text-stone/85">Deixe a data vazia para remover o retorno marcado.</p>
+
+      <div>
+        <label htmlFor="nextAction" className="block text-xs font-medium tracking-wide text-stone uppercase">
+          Próxima ação
+        </label>
+        <input
+          id="nextAction"
+          name="nextAction"
+          type="text"
+          maxLength={200}
+          defaultValue={currentNextAction ?? ""}
+          placeholder="Ex.: Enviar proposta"
+          className="mt-1.5 w-full border border-ink/15 bg-ivory px-3.5 py-2.5 text-sm text-ink outline-none focus:border-magenta"
+        />
+      </div>
+
+      <label className="flex items-center gap-2.5 text-sm text-ink">
+        <input
+          type="checkbox"
+          name="priority"
+          defaultChecked={currentPriority}
+          className="size-4 border border-ink/30 accent-magenta-dark"
+        />
+        Marcar como prioritário
+      </label>
 
       <div>
         <label htmlFor="internalNotes" className="block text-xs font-medium tracking-wide text-stone uppercase">
