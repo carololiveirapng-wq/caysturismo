@@ -24,6 +24,7 @@ import { settings } from "./settings";
 import { home } from "./home";
 import { aboutPage } from "./about-page";
 import { destinationHub, experienceHub, travelHub, curadoriaHub } from "./hub-pages";
+import { travelerStory } from "./traveler-story";
 
 export const schemaTypes: SchemaTypeDefinition[] = [
   // documentos
@@ -41,6 +42,7 @@ export const schemaTypes: SchemaTypeDefinition[] = [
   testimonial,
   hotel,
   settings,
+  travelerStory,
   // objects compartilhados
   imageWithAlt,
   seoObject,
