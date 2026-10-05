@@ -30,7 +30,7 @@ const columns = [
 
 const legalLinks = [
   { label: "Política de Privacidade", href: "/privacidade" },
-  { label: "Termos", href: "/termos" },
+  { label: "Termos de Uso", href: "/termos" },
 ];
 
 export function Footer({ settings }: { settings: SiteSettings }) {

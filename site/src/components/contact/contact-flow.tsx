@@ -341,11 +341,11 @@ export function ContactFlow({ planningLabel, initialTripValues, travelProduct, s
                     className={cn("mt-0.5 size-4 shrink-0 accent-ink", errors.consentimento && "outline outline-magenta")}
                   />
                   <span className="text-sm text-stone">
-                    Autorizo a Cays Turismo a entrar em contato comigo sobre esta solicitação, conforme a{" "}
+                    Li a{" "}
                     <Link href="/privacidade" className="text-ink underline underline-offset-2">
                       Política de Privacidade
-                    </Link>
-                    .
+                    </Link>{" "}
+                    e concordo com o uso dos meus dados para responder este pedido.
                   </span>
                 </label>
                 {errors.consentimento && <p className="mt-1.5 ml-7 text-xs text-magenta-dark">{errors.consentimento}</p>}

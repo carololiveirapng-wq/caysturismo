@@ -41,7 +41,7 @@ const navLinks = [
 // ivory sobre bg-transparent) fica ilegível contra o fundo ivory/sand
 // dessas páginas antes do scroll passar de 64px, então força o estado
 // sólido desde o início nelas.
-const NO_HERO_PATHS = ["/contato", "/contato/obrigado"];
+const NO_HERO_PATHS = ["/contato", "/contato/obrigado", "/privacidade", "/termos"];
 const NO_HERO_PREFIXES = ["/curadoria/"];
 
 export function Header({ settings }: { settings: SiteSettings }) {
