@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { LegalDocument } from "@/components/legal/legal-document";
-import { LEGAL_DRAFT, termsSections } from "@/lib/legal/content";
+import { termsSections } from "@/lib/legal/content";
 import { siteConfig } from "@/lib/site-config";
 
 const title = "Termos de Uso | Cays Turismo";
@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   description,
   alternates: { canonical: "/termos" },
   openGraph: { title, description, url: `${siteConfig.url}/termos` },
-  robots: LEGAL_DRAFT ? { index: false, follow: false } : { index: true, follow: true },
+  robots: { index: true, follow: true },
 };
 
 export default function TermosPage() {

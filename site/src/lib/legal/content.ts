@@ -1,19 +1,17 @@
 /**
- * Conteúdo jurídico da Cays Turismo — RASCUNHO PARA REVISÃO.
+ * Textos públicos de Política de Privacidade e Termos de Uso da Cays Turismo.
  *
- * Não é versão final: nada aqui foi validado por advogado ou pelo cliente.
- * Tudo que ainda depende de decisão ou dado do cliente está entre colchetes
- * e em maiúsculas (ex.: [PRAZO DE RETENÇÃO A VALIDAR).
- *
- * Mantido em código (e não no Sanity) de propósito: cláusulas legais devem
- * mudar por revisão versionada no Git, não por edição de conteúdo — assim
- * nenhuma alteração entra no ar sem deixar rastro.
- *
- * `LEGAL_DRAFT` controla o estado de publicação: enquanto for `true`, as
- * páginas mostram o aviso "versão em revisão" e saem do índice do Google.
- * Só mude para `false` depois da validação jurídica e do cliente.
+ * NOTA INTERNA (não exibir na página): texto informativo, escrito para
+ * transparência e proteção básica. Não substitui revisão jurídica e não
+ * afirma conformidade absoluta com a LGPD. Revisar quando:
+ * - o canal de privacidade for confirmado pelo cliente (hoje aponta para a
+ *   página de contato, porque há divergência entre contato@ e gerlane@);
+ * - houver fornecedor novo que trate dados (ex.: Resend, se for ativado —
+ *   hoje não está configurado em produção);
+ * - o prazo de retenção for definido pelo cliente.
  */
-export const LEGAL_DRAFT = true;
+
+export const LAST_UPDATED = "2026-10-05";
 
 export const controller = {
   legalName: "CAYS VIAGENS E TURISMO LTDA",
@@ -22,16 +20,6 @@ export const controller = {
   city: "Brasília",
   state: "DF",
   website: "caysturismo.com.br",
-};
-
-/**
- * Canal de privacidade. Sem encarregado (DPO) confirmado, o texto usa só
- * "Canal de Privacidade" e nenhum nome é inventado.
- */
-export const privacyChannel = {
-  contactName: null as string | null,
-  email: null as string | null,
-  phone: null as string | null,
 };
 
 export interface LegalSection {
@@ -46,203 +34,167 @@ export const privacySections: LegalSection[] = [
     id: "quem-somos",
     title: "Quem somos",
     paragraphs: [
-      `Esta política descreve como a ${controller.legalName}, que atua como ${controller.tradeName} (CNPJ ${controller.cnpj}, ${controller.city}/${controller.state}), trata dados pessoais quando você usa o site ${controller.website} e solicita um planejamento de viagem.`,
+      `Esta política explica como a ${controller.legalName}, que atua como ${controller.tradeName} (CNPJ ${controller.cnpj}, ${controller.city}/${controller.state}), trata seus dados pessoais quando você usa o site e pede um planejamento de viagem.`,
     ],
   },
   {
     id: "dados",
     title: "Quais dados coletamos",
     paragraphs: [
-      "Quando você envia o formulário de planejamento, coletamos somente os campos abaixo. Campos não preenchidos não são armazenados.",
+      "Quando você envia o formulário de planejamento, coletamos apenas o que está nele. Campos que você não preencher não são guardados.",
     ],
     list: [
-      "Identificação e contato: nome, e-mail, WhatsApp e cidade (opcional).",
-      "Preferência de contato (WhatsApp ou e-mail).",
-      "Sobre a viagem: destinos de interesse, tipo de experiência, produto de viagem relacionado (quando você chega a partir de uma página específica), mês, ano ou datas aproximadas, duração, número de adultos e crianças, idade das crianças (quando informada), faixa de investimento (escolha ou texto livre) e observações.",
-      "Origem do pedido: como você conheceu a Cays (opcional) e os dados de campanha descritos na seção de cookies.",
-      "Página de entrada do formulário.",
+      "Contato: nome, e-mail, WhatsApp e cidade (quando informada).",
+      "Preferência de contato: WhatsApp ou e-mail.",
+      "Sobre a viagem: destinos de interesse, tipo de experiência, viagem relacionada (quando você chega por uma página específica), mês, ano ou período aproximado, duração, número de adultos e crianças, idade das crianças (quando informada), faixa de investimento e observações.",
+      "Origem do contato: como você conheceu a Cays (quando informado), parâmetros de campanha (UTM) e a página pela qual você entrou no site.",
     ],
   },
   {
-    id: "coleta",
-    title: "Como os dados são coletados",
+    id: "uso",
+    title: "Como usamos seus dados",
     paragraphs: [
-      "Os dados são informados por você diretamente no formulário do site.",
-      "Além disso, o site registra os parâmetros de campanha (UTM) da primeira visita, em um cookie descrito na seção Cookies e UTMs.",
-      "Não utilizamos, neste rascunho, ferramentas de análise de comportamento de terceiros. [CONFIRMAR: nenhuma ferramenta de mensuração ou pixel de anúncio está instalada]",
-    ],
-  },
-  {
-    id: "finalidades",
-    title: "Para que usamos os dados",
-    paragraphs: [
-      "Cada finalidade abaixo tem uma base legal que ainda precisa ser confirmada pelo jurídico. A base legal aparece como marcação até essa validação.",
-    ],
-    list: [
-      "Responder seu pedido de planejamento de viagem. [BASE LEGAL A VALIDAR]",
-      "Entrar em contato pelo canal que você escolheu. [BASE LEGAL A VALIDAR]",
-      "Elaborar proposta e conduzir o atendimento comercial, se você quiser seguir. [BASE LEGAL A VALIDAR]",
-      "Operar o site e o painel interno da equipe. [BASE LEGAL A VALIDAR]",
-      "Segurança e prevenção de abuso, como limitar envios repetidos e bloquear robôs. [BASE LEGAL A VALIDAR]",
-      "Medir de qual campanha ou canal vieram os pedidos. [BASE LEGAL A VALIDAR]",
+      "Usamos seus dados para responder ao seu pedido de planejamento, entrar em contato pelo canal que você escolheu, entender melhor a viagem que você imagina e dar o atendimento necessário.",
+      "Também usamos os dados para operar o site, manter a segurança, prevenir abusos (como envios automáticos repetidos) e organizar nosso atendimento comercial. Os parâmetros de campanha servem para entender de onde vêm os contatos.",
     ],
   },
   {
     id: "compartilhamento",
-    title: "Com quem podemos compartilhar",
+    title: "Compartilhamento com fornecedores",
     paragraphs: [
-      "Não vendemos seus dados. Compartilhamos apenas com fornecedores que nos ajudam a operar o site, nas finalidades acima:",
+      "Não vendemos seus dados. Eles podem ser tratados por fornecedores de tecnologia que usamos para operar o site:",
     ],
     list: [
-      "Supabase: armazenamento do banco de dados dos pedidos e autenticação do painel interno.",
+      "Supabase: armazenamento dos pedidos de planejamento e autenticação da equipe no painel interno.",
       "Vercel: hospedagem e execução do site.",
-      "Sanity: gerenciamento do conteúdo do site. Os pedidos de viagem não são armazenados no Sanity.",
+      "Sanity: gerenciamento do conteúdo do site. Os pedidos de planejamento não são armazenados no Sanity.",
     ],
   },
   {
     id: "cookies",
-    title: "Cookies e UTMs",
+    title: "Cookies e origem de acesso",
     paragraphs: [
-      "Cookie de origem (cays_attribution): quando você chega ao site por um link com parâmetros de campanha (utm_source, utm_medium, utm_campaign, utm_content, utm_term), guardamos esses valores e a página de entrada para identificar de onde veio o pedido.",
-      "Duração: 30 dias. O cookie não é renovado a cada visita: a primeira origem registrada é mantida até o prazo acabar.",
-      "Características: é técnico, do próprio site (primeira parte), não guarda senha nem dado sensível e não é lido por ferramentas de terceiros.",
-      "Membros da equipe que entram no painel interno usam um cookie de sessão de autenticação, necessário para o acesso. Visitantes que não entram no painel não recebem esse cookie.",
-      "Você pode apagar os cookies pelo próprio navegador a qualquer momento. [VALIDAR SE É NECESSÁRIO UM AVISO DE COOKIES NO SITE]",
+      "O site grava um cookie chamado cays_attribution. Ele é do próprio site (primeira parte), não é publicitário e não é lido por ferramentas de terceiros.",
+      "Quando você chega por um link com parâmetros de campanha (utm_source, utm_medium, utm_campaign, utm_content e utm_term), o cookie guarda esses valores e a página de entrada, para que possamos registrar a origem do seu contato. Ele não guarda senha nem dado sensível.",
+      "O cookie dura 30 dias e não é renovado a cada visita: vale a primeira origem registrada até o prazo acabar.",
+      "Quem entra no painel interno da equipe usa também um cookie de sessão, necessário para manter o acesso.",
+      "Você pode apagar os cookies pelo próprio navegador a qualquer momento.",
     ],
   },
   {
-    id: "armazenamento",
+    id: "seguranca",
     title: "Armazenamento e segurança",
     paragraphs: [
-      "Adotamos medidas técnicas e administrativas razoáveis para proteger os dados, como conexão criptografada (HTTPS), acesso ao painel restrito à equipe autenticada e limitação de envios repetidos no formulário. [VALIDAR DESCRIÇÃO DAS MEDIDAS COM O CLIENTE]",
-      "Nenhum sistema é totalmente imune a incidentes. Se ocorrer um incidente que possa causar risco relevante a você, avisaremos nos termos da lei.",
+      "Adotamos medidas técnicas e organizacionais razoáveis para proteger os dados contra acesso não autorizado, perda, alteração ou divulgação indevida. Entre elas estão a conexão criptografada (HTTPS), o acesso restrito ao painel interno e a limitação de envios repetidos no formulário.",
+      "Nenhum sistema é totalmente imune a incidentes. Se algo acontecer que possa afetar você de forma relevante, faremos o que a lei exigir para informar.",
     ],
   },
   {
     id: "retencao",
     title: "Retenção",
     paragraphs: [
-      "Mantemos os dados pelo tempo necessário para as finalidades acima e para cumprir obrigações legais ou contratuais.",
-      "[PRAZO DE RETENÇÃO A VALIDAR — o cliente ainda não definiu prazos. Não preencher sem decisão formal.]",
+      "Os dados são mantidos pelo tempo necessário para o atendimento, a continuidade do relacionamento, o cumprimento de obrigações legais e a proteção de direitos. Quando deixarem de ser necessários, podem ser eliminados, salvo quando houver obrigação legítima de conservação.",
     ],
   },
   {
     id: "direitos",
     title: "Seus direitos",
-    paragraphs: ["Nos termos da Lei Geral de Proteção de Dados (LGPD), você pode pedir:"],
+    paragraphs: ["Você pode nos pedir, a qualquer momento:"],
     list: [
       "Confirmação de que tratamos seus dados.",
       "Acesso aos dados que temos sobre você.",
-      "Correção de dados incompletos, inexatos ou desatualizados.",
-      "Anonimização, bloqueio ou eliminação de dados desnecessários ou tratados em desconformidade.",
-      "Informação sobre com quais entidades compartilhamos seus dados.",
+      "Correção ou atualização de dados incompletos ou desatualizados.",
+      "Exclusão dos seus dados, quando aplicável.",
       "Revogação do consentimento, quando o tratamento depender dele.",
-      "Oposição a tratamentos realizados em outra hipótese, quando cabível.",
-      "Eliminação dos dados tratados com base no seu consentimento, observadas as exceções legais.",
-    ],
-  },
-  {
-    id: "solicitar",
-    title: "Como solicitar acesso, correção ou exclusão",
-    paragraphs: [
-      "Envie sua solicitação para o canal de privacidade indicado no fim desta página. Podemos pedir informações para confirmar sua identidade antes de atender.",
-      "[PROCEDIMENTO INTERNO DE EXCLUSÃO A VALIDAR PELO CLIENTE]",
+      "Informações sobre com quais fornecedores seus dados são compartilhados.",
     ],
   },
   {
     id: "transferencias",
     title: "Transferências internacionais",
     paragraphs: [
-      "Alguns fornecedores listados acima podem processar dados fora do Brasil, dependendo da região onde seus serviços estão hospedados. [CONFIRMAR REGIÕES DE HOSPEDAGEM E BASE PARA TRANSFERÊNCIA]",
+      "Alguns fornecedores de tecnologia podem processar ou armazenar dados em infraestrutura localizada fora do Brasil. Nesses casos, buscamos fornecedores reconhecidos e medidas adequadas de proteção.",
     ],
   },
   {
     id: "alteracoes",
-    title: "Alterações nesta política",
+    title: "Alterações desta política",
     paragraphs: [
-      "Podemos atualizar esta política para refletir mudanças no site ou na legislação. A data de atualização fica no topo da página.",
+      "Esta política pode ser atualizada para refletir mudanças no site ou na legislação. A data da última atualização fica no topo da página.",
     ],
   },
   {
     id: "canal",
     title: "Canal de privacidade",
     paragraphs: [
-      privacyChannel.contactName
-        ? `Encarregado: ${privacyChannel.contactName}.`
-        : "Canal de Privacidade. [ENCARREGADO (DPO) NÃO DEFINIDO — usar apenas este canal até validação]",
-      privacyChannel.email
-        ? `E-mail: ${privacyChannel.email}.`
-        : "E-mail: [E-MAIL DO CANAL DE PRIVACIDADE A VALIDAR]",
-      "Você também pode apresentar reclamações à Autoridade Nacional de Proteção de Dados (ANPD).",
+      "Para pedidos sobre seus dados (acesso, correção, exclusão ou outras dúvidas sobre privacidade), use a página de Contato do site e escreva no campo de observações que o assunto é privacidade. Você também pode nos chamar pelo WhatsApp indicado na página de contato.",
     ],
   },
 ];
 
 export const termsSections: LegalSection[] = [
   {
-    id: "natureza",
-    title: "Natureza informativa do site",
+    id: "uso-do-site",
+    title: "Uso do site",
     paragraphs: [
-      "O site da Cays Turismo apresenta destinos, experiências, viagens e artigos de curadoria para inspirar e orientar o planejamento. Os conteúdos têm caráter informativo.",
+      "O site da Cays Turismo apresenta destinos, experiências, viagens e artigos de curadoria. Ao usá-lo, você concorda em fazê-lo de forma lícita e respeitosa, sem tentar acessar áreas restritas, sobrecarregar o serviço ou enviar informações falsas.",
+    ],
+  },
+  {
+    id: "caracter",
+    title: "Caráter informativo",
+    paragraphs: [
+      "Os conteúdos do site têm caráter informativo e servem para inspirar e orientar o planejamento. Eles podem mudar sem aviso prévio e não substituem uma proposta personalizada.",
     ],
   },
   {
     id: "pedido",
     title: "Pedido de planejamento não é contratação",
     paragraphs: [
-      "Enviar o formulário de planejamento é apenas um pedido de contato. Ele não gera reserva, compra nem contratação automática de nenhum serviço.",
+      "Enviar o formulário de planejamento é um pedido de contato. Ele não gera reserva, compra nem contratação de nenhum serviço.",
     ],
   },
   {
     id: "condicoes",
-    title: "Condições comerciais",
+    title: "Valores e condições",
     paragraphs: [
-      "Preços, disponibilidade, condições de pagamento, cancelamento e demais termos comerciais dependem de proposta e de contrato específicos, feitos depois do atendimento.",
-      "[CONDIÇÕES COMERCIAIS GERAIS A DEFINIR PELO CLIENTE — não preencher sem confirmação]",
+      "Valores, disponibilidade e condições de cada viagem são apresentados em proposta específica, depois do atendimento. Só existe contratação quando há proposta aceita por escrito.",
     ],
   },
   {
     id: "propriedade",
     title: "Propriedade intelectual",
     paragraphs: [
-      "Textos, imagens, marcas, layout e demais conteúdos do site pertencem à Cays Turismo ou são usados com autorização. Não é permitido reproduzi-los sem autorização prévia por escrito.",
-    ],
-  },
-  {
-    id: "uso",
-    title: "Uso adequado do site",
-    paragraphs: [
-      "Você se compromete a usar o site de forma lícita, sem tentar acessar áreas restritas, sobrecarregar o serviço, enviar dados falsos ou usar o formulário para spam.",
+      "Textos, imagens, marcas e o layout do site pertencem à Cays Turismo ou são usados com autorização. Não é permitido reproduzi-los sem autorização prévia por escrito.",
     ],
   },
   {
     id: "terceiros",
     title: "Links e serviços de terceiros",
     paragraphs: [
-      "O site pode conter links para redes sociais, plataformas de mensagem e outros sites. Não somos responsáveis pelo conteúdo nem pelas práticas desses terceiros.",
+      "O site pode trazer links para redes sociais, aplicativos de mensagem e outros sites. Esses serviços têm regras próprias, e não somos responsáveis pelo conteúdo nem pelas práticas deles.",
     ],
   },
   {
-    id: "responsabilidade",
-    title: "Limitação de responsabilidade",
+    id: "disponibilidade",
+    title: "Disponibilidade e erros",
     paragraphs: [
-      "Empregamos cuidado razoável com as informações do site, mas elas podem ficar desatualizadas ou conter imprecisões. Não nos responsabilizamos por decisões tomadas apenas com base nos conteúdos informativos.",
-      "[LIMITAÇÃO DE RESPONSABILIDADE A VALIDAR PELO JURÍDICO]",
+      "Fazemos o possível para manter o site disponível e as informações corretas, mas podem ocorrer interrupções ou imprecisões. Quando identificarmos um erro relevante, faremos a correção assim que possível.",
     ],
   },
   {
     id: "alteracoes",
-    title: "Alterações destes termos",
-    paragraphs: ["Podemos atualizar estes termos. A versão vigente é sempre a publicada nesta página."],
+    title: "Atualizações dos termos",
+    paragraphs: [
+      "Estes termos podem ser atualizados. A versão vigente é sempre a publicada nesta página, com a data da última atualização.",
+    ],
   },
   {
     id: "contato",
     title: "Contato",
     paragraphs: [
       `${controller.legalName} (${controller.tradeName}), CNPJ ${controller.cnpj}, ${controller.city}/${controller.state}.`,
-      "Para dúvidas sobre estes termos, use o canal indicado em nossa Política de Privacidade. [E-MAIL DE CONTATO GERAL A VALIDAR]",
+      "Para dúvidas sobre estes termos, use a página de Contato do site.",
     ],
   },
 ];
-
-export const dataProcessors = ["Supabase", "Vercel", "Sanity"] as const;
