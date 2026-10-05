@@ -31,9 +31,6 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-const OCCASION_SPANS = ["md:col-span-4", "md:col-span-2", "md:col-span-3", "md:col-span-3"];
-const STYLE_SPANS = ["md:col-span-4", "md:col-span-2", "md:col-span-2", "md:col-span-2", "md:col-span-2", "md:col-span-6"];
-
 export default async function ExperienciasHubPage() {
   const [experiences, hub] = await Promise.all([getExperiences(), getExperienceHub()]);
   if (!hub) notFound();
@@ -48,8 +45,8 @@ export default async function ExperienciasHubPage() {
   return (
     <>
       <ExperienciasHero hero={hub.hero} />
-      <ExperienceCategoryGrid heading="Ocasiões" items={occasions} tileSpans={OCCASION_SPANS} />
-      <ExperienceCategoryGrid heading="Estilos" items={styles} tileSpans={STYLE_SPANS} />
+      <ExperienceCategoryGrid heading="Ocasiões" items={occasions} columnsClass="grid-cols-2 lg:grid-cols-4" />
+      <ExperienceCategoryGrid heading="Estilos" items={styles} columnsClass="grid-cols-2 lg:grid-cols-3" />
       <FeaturedJourneys />
       <DestinationFinalCTA
         title="Qual é a viagem que só vocês vão viver?"

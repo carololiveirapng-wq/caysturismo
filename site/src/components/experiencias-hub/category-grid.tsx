@@ -5,17 +5,21 @@ import { ImageReveal } from "@/components/ui/image-reveal";
 import { Reveal } from "@/components/ui/reveal";
 import type { ExperienceHubCard } from "@/data/experiences-hub";
 import { experienceHref } from "@/lib/links";
-import { cn } from "@/lib/utils";
 
+/**
+ * Grade uniforme: todos os cards têm a mesma largura e a mesma proporção
+ * (3/4). Antes, spans variáveis combinados com proporção fixa faziam o card
+ * de 6 colunas ficar com o dobro da altura dos demais.
+ */
 export function ExperienceCategoryGrid({
   heading,
   items,
-  tileSpans,
+  columnsClass,
 }: {
   heading: string;
   items: ExperienceHubCard[];
-  /** Padrão de largura (em colunas de 6) por item — cria o ritmo assimétrico. */
-  tileSpans: string[];
+  /** Colunas por breakpoint (classes Tailwind completas, ex.: "grid-cols-2 lg:grid-cols-4"). */
+  columnsClass: string;
 }) {
   if (items.length === 0) return null;
 
@@ -28,27 +32,23 @@ export function ExperienceCategoryGrid({
           </EditorialHeading>
         </Reveal>
 
-        <div className="mt-9 grid grid-cols-2 gap-4 md:grid-cols-6 md:gap-5">
+        <div className={`mt-9 grid gap-4 md:gap-5 ${columnsClass}`}>
           {items.map((item, i) => (
-            <Reveal
-              key={item.slug}
-              delay={(i % 3) * 0.05}
-              className={cn("col-span-2", tileSpans[i % tileSpans.length])}
-            >
+            <Reveal key={item.slug} delay={(i % 3) * 0.05}>
               <Link href={experienceHref(item.slug)} className="group/card relative block aspect-[3/4] overflow-hidden">
                 <ImageReveal
                   src={item.image.src}
                   alt={item.image.alt}
                   fill
-                  sizes="(min-width: 768px) 40vw, 90vw"
+                  sizes="(min-width: 1024px) 25vw, 45vw"
                   containerClassName="absolute inset-0"
                 />
-                <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-ink/70 via-ink/5 to-transparent" />
+                <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-ink/75 via-ink/10 to-transparent" />
                 <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-3 p-4 md:p-5">
-                  <h3 className="font-serif text-lg text-ivory md:text-xl">{item.name}</h3>
+                  <h3 className="font-serif text-lg leading-tight text-ivory md:text-xl">{item.name}</h3>
                   <span
                     aria-hidden
-                    className="flex size-8 shrink-0 items-center justify-center rounded-full border border-ivory/50 text-ivory transition-all duration-500 ease-[var(--ease-editorial)] group-hover/card:translate-x-0.5 group-hover/card:border-ivory group-hover/card:bg-ivory group-hover/card:text-ink"
+                    className="flex size-8 shrink-0 items-center justify-center rounded-full border border-ivory/50 text-ivory transition-all duration-500 ease-[var(--ease-editorial)] motion-safe:group-hover/card:translate-x-0.5 group-hover/card:border-ivory group-hover/card:bg-ivory group-hover/card:text-ink"
                   >
                     ↗
                   </span>
