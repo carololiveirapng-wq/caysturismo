@@ -5,8 +5,7 @@ import { getDestinationWeddingStories, type TravelerStoryCard } from "@/lib/cms/
 
 function StoryMeta({ story }: { story: TravelerStoryCard }) {
   const parts = [story.destinationName, story.travelYear?.toString()].filter(Boolean);
-  if (parts.length === 0) return null;
-  return <p className="text-xs tracking-[0.15em] text-stone uppercase">{parts.join(" · ")}</p>;
+  return <p className="min-h-4 text-xs tracking-[0.15em] text-stone uppercase">{parts.join(" · ")}</p>;
 }
 
 function StoryCard({ story, featured }: { story: TravelerStoryCard; featured: boolean }) {
