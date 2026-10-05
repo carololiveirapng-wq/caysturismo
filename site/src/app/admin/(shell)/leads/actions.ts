@@ -49,7 +49,7 @@ export async function updateLeadStatusAction(
     followUpAt = null;
   } else {
     const time = parsed.data.followUpTime || "09:00";
-    const candidate = new Date(`${parsed.data.followUpDate}T${time}:00`);
+    const candidate = new Date(`${parsed.data.followUpDate}T${time}:00-03:00`);
     followUpAt = Number.isNaN(candidate.getTime()) ? undefined : candidate;
   }
 

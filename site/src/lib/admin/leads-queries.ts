@@ -2,6 +2,7 @@ import type { Sql } from "postgres";
 import { withAdminDb } from "./db";
 import type { Lead, LeadStatus, LeadEvent, LeadEventType } from "@/lib/leads/types";
 import { LEAD_STATUSES } from "@/lib/leads/types";
+import { BR_OFFSET_MS } from "./display";
 
 /** Linha crua da tabela `leads` (snake_case), antes de mapear pro shape camelCase usado no app. */
 interface LeadRow {
@@ -81,13 +82,19 @@ export function daysAgo(days: number): Date {
   return new Date(Date.now() - days * 24 * 60 * 60 * 1000);
 }
 
-/** Início e fim do dia local de hoje, em UTC — usado pros filtros "retorno hoje"/"novos hoje". */
+/** Meia-noite de Brasília, `dayOffset` dias a partir de hoje (em Brasília, não no fuso do servidor). */
+function brDayStart(dayOffset = 0): Date {
+  const shifted = new Date(Date.now() - BR_OFFSET_MS);
+  return new Date(Date.UTC(shifted.getUTCFullYear(), shifted.getUTCMonth(), shifted.getUTCDate() + dayOffset) + BR_OFFSET_MS);
+}
+
 function todayRange(): { start: Date; end: Date } {
-  const start = new Date();
-  start.setHours(0, 0, 0, 0);
-  const end = new Date(start);
-  end.setDate(end.getDate() + 1);
-  return { start, end };
+  return { start: brDayStart(0), end: brDayStart(1) };
+}
+
+function brMonthStart(): Date {
+  const shifted = new Date(Date.now() - BR_OFFSET_MS);
+  return new Date(Date.UTC(shifted.getUTCFullYear(), shifted.getUTCMonth(), 1) + BR_OFFSET_MS);
 }
 
 const OPEN_STATUSES: LeadStatus[] = ["new", "contacted", "qualified", "proposal"];
@@ -206,9 +213,7 @@ export interface LeadStats {
 export async function getLeadStats(): Promise<LeadStats> {
   return withAdminDb(async (sql) => {
     const { start: todayStart, end: todayEnd } = todayRange();
-    const monthStart = new Date();
-    monthStart.setDate(1);
-    monthStart.setHours(0, 0, 0, 0);
+    const monthStart = brMonthStart();
 
     const byStatusRows = await sql<{ status: string; count: string }[]>`SELECT status, count(*)::text FROM leads GROUP BY status`;
     const [{ week }] = await sql<{ week: string }[]>`SELECT count(*)::text AS week FROM leads WHERE created_at >= now() - interval '7 days'`;
@@ -334,5 +339,157 @@ export async function getLeadEvents(leadId: string): Promise<LeadEvent[]> {
       detail: row.detail ?? undefined,
       createdAt: row.created_at.toISOString(),
     }));
+  });
+}
+
+export interface AdminCounts {
+  newLeads: number;
+  followUpsToday: number;
+  overdueFollowUps: number;
+  priority: number;
+}
+
+export async function getAdminCounts(): Promise<AdminCounts> {
+  return withAdminDb(async (sql) => {
+    const { start, end } = todayRange();
+    const [row] = await sql<{ new_leads: string; today: string; overdue: string; priority: string }[]>`
+      SELECT
+        count(*) FILTER (WHERE status = 'new')::text AS new_leads,
+        count(*) FILTER (WHERE follow_up_at >= ${start} AND follow_up_at < ${end} AND status = ANY(${OPEN_STATUSES}))::text AS today,
+        count(*) FILTER (WHERE follow_up_at < ${start} AND status = ANY(${OPEN_STATUSES}))::text AS overdue,
+        count(*) FILTER (WHERE priority = TRUE AND status = ANY(${OPEN_STATUSES}))::text AS priority
+      FROM leads
+    `;
+    return {
+      newLeads: Number(row.new_leads),
+      followUpsToday: Number(row.today),
+      overdueFollowUps: Number(row.overdue),
+      priority: Number(row.priority),
+    };
+  });
+}
+
+export interface FollowUpBuckets {
+  overdue: Lead[];
+  today: Lead[];
+  tomorrow: Lead[];
+  next7Days: Lead[];
+  later: Lead[];
+  noDate: Lead[];
+}
+
+/** Leads abertos agrupados pela data do retorno. Limite de 500 leads abertos — bem acima do volume real da operação. */
+export async function getFollowUpBuckets(): Promise<FollowUpBuckets> {
+  return withAdminDb(async (sql) => {
+    const { start, end } = todayRange();
+    const tomorrowEnd = brDayStart(2);
+    const weekEnd = brDayStart(8);
+
+    const rows = await sql<LeadRow[]>`
+      SELECT * FROM leads
+      WHERE status = ANY(${OPEN_STATUSES})
+      ORDER BY follow_up_at ASC NULLS LAST, created_at DESC
+      LIMIT 500
+    `;
+
+    const buckets: FollowUpBuckets = { overdue: [], today: [], tomorrow: [], next7Days: [], later: [], noDate: [] };
+    for (const row of rows) {
+      const lead = toLead(row);
+      if (!row.follow_up_at) buckets.noDate.push(lead);
+      else if (row.follow_up_at < start) buckets.overdue.push(lead);
+      else if (row.follow_up_at < end) buckets.today.push(lead);
+      else if (row.follow_up_at < tomorrowEnd) buckets.tomorrow.push(lead);
+      else if (row.follow_up_at < weekEnd) buckets.next7Days.push(lead);
+      else buckets.later.push(lead);
+    }
+    return buckets;
+  });
+}
+
+/** Todos os leads agrupados por status, pro quadro do pipeline. Limite de 300 cards — volume atual é bem menor. */
+export async function getPipelineLeads(): Promise<Record<LeadStatus, Lead[]>> {
+  return withAdminDb(async (sql) => {
+    const rows = await sql<LeadRow[]>`SELECT * FROM leads ORDER BY updated_at DESC LIMIT 300`;
+    const byStatus = Object.fromEntries(LEAD_STATUSES.map((s) => [s, [] as Lead[]])) as Record<LeadStatus, Lead[]>;
+    for (const row of rows) {
+      const lead = toLead(row);
+      byStatus[lead.status].push(lead);
+    }
+    return byStatus;
+  });
+}
+
+export interface ReportData {
+  totalAllTime: number;
+  closedAllTime: number;
+  newInPeriod: number;
+  closedInPeriod: number;
+  conversionRate: number;
+  avgDaysToFirstStatusChange: number | null;
+  origins: { source: string | null; count: number }[];
+  destinations: { slug: string; count: number }[];
+  experiences: { slug: string; count: number }[];
+}
+
+/** `sinceDays = null` significa todo o período. */
+export async function getReportData(sinceDays: number | null): Promise<ReportData> {
+  return withAdminDb(async (sql) => {
+    const since = sinceDays === null ? null : daysAgo(sinceDays);
+    const periodLeads = since ? sql`created_at >= ${since}` : sql`TRUE`;
+    const periodLeadsAliased = since ? sql`l.created_at >= ${since}` : sql`TRUE`;
+
+    const [totals] = await sql<{ total_all: string; closed_all: string; new_period: string; closed_period: string }[]>`
+      SELECT
+        count(*)::text AS total_all,
+        count(*) FILTER (WHERE status = 'closed')::text AS closed_all,
+        count(*) FILTER (WHERE ${periodLeads})::text AS new_period,
+        count(*) FILTER (WHERE status = 'closed' AND ${periodLeads})::text AS closed_period
+      FROM leads
+    `;
+
+    const [avg] = await sql<{ days: string | null }[]>`
+      SELECT avg(EXTRACT(EPOCH FROM (f.first_change - l.created_at)) / 86400)::text AS days
+      FROM leads l
+      JOIN LATERAL (
+        SELECT min(e.created_at) AS first_change
+        FROM lead_events e
+        WHERE e.lead_id = l.id AND e.type = 'status_changed'
+      ) f ON f.first_change IS NOT NULL
+      WHERE ${periodLeadsAliased}
+    `;
+
+    const origins = await sql<{ source: string | null; count: string }[]>`
+      SELECT coalesce(utm_source, acquisition_source) AS source, count(*)::text AS count
+      FROM leads WHERE ${periodLeads}
+      GROUP BY 1 ORDER BY count(*) DESC LIMIT 10
+    `;
+
+    const destinations = await sql<{ slug: string; count: string }[]>`
+      SELECT slug, count(*)::text AS count
+      FROM leads, unnest(destinations) AS slug
+      WHERE ${periodLeads} AND slug <> 'nao-sei'
+      GROUP BY slug ORDER BY count(*) DESC LIMIT 8
+    `;
+
+    const experiences = await sql<{ slug: string; count: string }[]>`
+      SELECT experience AS slug, count(*)::text AS count
+      FROM leads
+      WHERE ${periodLeads} AND experience IS NOT NULL AND experience <> 'nao-sei'
+      GROUP BY experience ORDER BY count(*) DESC LIMIT 8
+    `;
+
+    const totalAllTime = Number(totals.total_all);
+    const closedAllTime = Number(totals.closed_all);
+    return {
+      totalAllTime,
+      closedAllTime,
+      newInPeriod: Number(totals.new_period),
+      closedInPeriod: Number(totals.closed_period),
+      conversionRate: totalAllTime > 0 ? Math.round((closedAllTime / totalAllTime) * 1000) / 10 : 0,
+      avgDaysToFirstStatusChange: avg.days === null ? null : Math.round(Number(avg.days) * 10) / 10,
+      origins: origins.map((o) => ({ source: o.source, count: Number(o.count) })),
+      destinations: destinations.map((d) => ({ slug: d.slug, count: Number(d.count) })),
+      experiences: experiences.map((e) => ({ slug: e.slug, count: Number(e.count) })),
+    };
   });
 }

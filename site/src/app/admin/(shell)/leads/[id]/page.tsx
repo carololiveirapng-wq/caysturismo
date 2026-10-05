@@ -6,11 +6,20 @@ import { AdminPageHeader } from "@/components/admin/admin-page-header";
 import { AdminEmptyState } from "@/components/admin/admin-empty-state";
 import { LeadStatusForm } from "@/components/admin/lead-status-form";
 import { getLeadById, getLeadEvents } from "@/lib/admin/leads-queries";
-import { getLeadInterest, buildWhatsAppLink } from "@/lib/admin/display";
+import {
+  buildWhatsAppLink,
+  formatBrDate,
+  formatBrDateTimeCompact,
+  formatBrTime,
+  getLeadInterest,
+} from "@/lib/admin/display";
 import { getDestinationBySlug, getExperienceBySlug, getTravelProductBySlug } from "@/lib/cms";
 import { LEAD_EVENT_LABELS } from "@/lib/leads/types";
 
 export const metadata = { title: "Detalhe do lead | Admin Cays" };
+
+const sectionClass = "border border-ink/10 bg-ivory p-6";
+const sectionTitleClass = "font-serif text-lg text-ink";
 
 function Field({ label, value }: { label: string; value?: ReactNode }) {
   if (value === undefined || value === null || value === "") return null;
@@ -60,12 +69,13 @@ export default async function AdminLeadDetailPage({ params }: PageProps<"/admin/
         ? "Ainda não sabe"
         : undefined;
   const productName = lead.travelProduct ? (productDetail?.title ?? lead.travelProduct) : undefined;
+  const createdAt = new Date(lead.createdAt);
 
   return (
     <div className="flex flex-col gap-8">
       <AdminPageHeader
         title={lead.name}
-        description={`${interest} · Recebido em ${new Date(lead.createdAt).toLocaleString("pt-BR")}`}
+        description={`${interest} · Recebido em ${formatBrDate(createdAt)} às ${formatBrTime(createdAt)}`}
         actions={
           <>
             {lead.priority && (
@@ -100,8 +110,8 @@ export default async function AdminLeadDetailPage({ params }: PageProps<"/admin/
 
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
         <div className="flex flex-col gap-8 lg:col-span-2">
-          <section className="border border-ink/10 bg-ivory p-6">
-            <h2 className="font-serif text-lg text-ink">Contato</h2>
+          <section aria-labelledby="cliente" className={sectionClass}>
+            <h2 id="cliente" className={sectionTitleClass}>Cliente</h2>
             <div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3">
               <Field label="Nome" value={lead.name} />
               <Field
@@ -125,12 +135,12 @@ export default async function AdminLeadDetailPage({ params }: PageProps<"/admin/
             </div>
           </section>
 
-          <section className="border border-ink/10 bg-ivory p-6">
-            <h2 className="font-serif text-lg text-ink">Viagem</h2>
+          <section aria-labelledby="viagem" className={sectionClass}>
+            <h2 id="viagem" className={sectionTitleClass}>Viagem</h2>
             <div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3">
               <Field label="Destinos" value={destinationsLabel || undefined} />
               <Field label="Experiência" value={experienceName} />
-              <Field label="Produto" value={productName} />
+              <Field label="Viagem relacionada" value={productName} />
               <Field label="Mês" value={lead.month} />
               <Field label="Ano" value={lead.year} />
               <Field label="Datas aproximadas" value={lead.approximateDates} />
@@ -138,7 +148,7 @@ export default async function AdminLeadDetailPage({ params }: PageProps<"/admin/
               <Field label="Adultos" value={lead.adults} />
               <Field label="Crianças" value={lead.children} />
               <Field label="Idade das crianças" value={lead.childrenAges} />
-              <Field label="Faixa de investimento" value={lead.budgetTier} />
+              <Field label="Investimento" value={lead.budgetTier} />
             </div>
             {lead.notes && (
               <div className="mt-4 border-t border-ink/10 pt-4">
@@ -148,31 +158,18 @@ export default async function AdminLeadDetailPage({ params }: PageProps<"/admin/
             )}
           </section>
 
-          <section className="border border-ink/10 bg-ivory p-6">
-            <h2 className="font-serif text-lg text-ink">Aquisição</h2>
-            <div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3">
-              <Field label="Origem" value={lead.acquisitionSource} />
-              <Field label="Página de origem" value={lead.sourcePath} />
-              <Field label="UTM Source" value={lead.utmSource} />
-              <Field label="UTM Medium" value={lead.utmMedium} />
-              <Field label="UTM Campaign" value={lead.utmCampaign} />
-              <Field label="UTM Content" value={lead.utmContent} />
-              <Field label="UTM Term" value={lead.utmTerm} />
-            </div>
-          </section>
-
-          <section className="border border-ink/10 bg-ivory p-6">
-            <h2 className="font-serif text-lg text-ink">Histórico</h2>
+          <section aria-labelledby="historico" className={sectionClass}>
+            <h2 id="historico" className={sectionTitleClass}>Histórico</h2>
             {events.length === 0 ? (
               <p className="mt-3 text-sm text-stone">Sem registros ainda.</p>
             ) : (
-              <ol className="mt-4 flex flex-col gap-3 border-l border-ink/10 pl-4">
+              <ol className="mt-4 flex flex-col gap-4 border-l border-ink/10 pl-4">
                 {events.map((event) => (
                   <li key={event.id} className="relative">
                     <span aria-hidden className="absolute top-1.5 -left-[18.5px] size-2 rounded-full bg-ink/20" />
+                    <p className="text-xs text-stone">{formatBrDateTimeCompact(new Date(event.createdAt))}</p>
                     <p className="text-sm text-ink">{LEAD_EVENT_LABELS[event.type]}</p>
                     {event.detail && <p className="text-sm text-stone">{event.detail}</p>}
-                    <p className="text-xs text-stone/85">{new Date(event.createdAt).toLocaleString("pt-BR")}</p>
                   </li>
                 ))}
               </ol>
@@ -180,11 +177,11 @@ export default async function AdminLeadDetailPage({ params }: PageProps<"/admin/
           </section>
         </div>
 
-        <div className="lg:col-span-1">
-          <section className="border border-ink/10 bg-ivory p-6">
-            <h2 className="font-serif text-lg text-ink">Status</h2>
+        <div className="flex flex-col gap-8 lg:col-span-1">
+          <section aria-labelledby="comercial" className={sectionClass}>
+            <h2 id="comercial" className={sectionTitleClass}>Comercial</h2>
             <p className="mt-1 text-xs text-stone">
-              Atualizado em {new Date(lead.updatedAt).toLocaleString("pt-BR")}
+              Atualizado em {formatBrDate(new Date(lead.updatedAt))} às {formatBrTime(new Date(lead.updatedAt))}
             </p>
             <div className="mt-4">
               <LeadStatusForm
@@ -195,6 +192,19 @@ export default async function AdminLeadDetailPage({ params }: PageProps<"/admin/
                 currentNextAction={lead.nextAction}
                 currentPriority={lead.priority}
               />
+            </div>
+          </section>
+
+          <section aria-labelledby="origem" className={sectionClass}>
+            <h2 id="origem" className={sectionTitleClass}>Origem</h2>
+            <div className="mt-4 grid grid-cols-2 gap-4">
+              <Field label="Origem" value={lead.acquisitionSource} />
+              <Field label="Página de entrada" value={lead.sourcePath} />
+              <Field label="UTM Source" value={lead.utmSource} />
+              <Field label="UTM Medium" value={lead.utmMedium} />
+              <Field label="UTM Campaign" value={lead.utmCampaign} />
+              <Field label="UTM Content" value={lead.utmContent} />
+              <Field label="UTM Term" value={lead.utmTerm} />
             </div>
           </section>
         </div>

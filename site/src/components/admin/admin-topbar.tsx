@@ -1,8 +1,6 @@
 "use client";
 
-import { Menu, LogOut, ExternalLink } from "lucide-react";
-import Link from "next/link";
-import { signOutAction } from "@/app/admin/(shell)/actions";
+import { Menu } from "lucide-react";
 
 export function AdminTopbar({
   pageTitle,
@@ -27,29 +25,7 @@ export function AdminTopbar({
         <p className="text-sm font-medium text-ink">{pageTitle}</p>
       </div>
 
-      <div className="flex items-center gap-4">
-        <Link
-          href="/"
-          target="_blank"
-          rel="noreferrer"
-          className="hidden items-center gap-1.5 text-xs font-medium tracking-wide text-stone uppercase transition-colors duration-200 hover:text-ink md:inline-flex"
-        >
-          Ver site
-          <ExternalLink className="size-3.5" aria-hidden />
-        </Link>
-
-        {userEmail && <span className="hidden text-xs text-stone md:inline">{userEmail}</span>}
-
-        <form action={signOutAction}>
-          <button
-            type="submit"
-            className="flex items-center gap-1.5 text-xs font-medium tracking-wide text-stone uppercase transition-colors duration-200 hover:text-ink"
-          >
-            <LogOut className="size-3.5" aria-hidden />
-            Sair
-          </button>
-        </form>
-      </div>
+      {userEmail && <span className="hidden text-xs text-stone md:inline">{userEmail}</span>}
     </header>
   );
 }

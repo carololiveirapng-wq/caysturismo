@@ -3,7 +3,7 @@ import { requireAdminUser } from "@/lib/admin/auth";
 import { getAllFilteredLeads, daysAgo } from "@/lib/admin/leads-queries";
 import { getDestinations, getExperiences } from "@/lib/cms";
 import { LEAD_STATUS_LABELS, LEAD_STATUSES, type LeadStatus } from "@/lib/leads/types";
-import { getLeadOrigin } from "@/lib/admin/display";
+import { formatBrDate, getLeadOrigin } from "@/lib/admin/display";
 
 function isLeadStatus(value: string | null): value is LeadStatus {
   return !!value && (LEAD_STATUSES as readonly string[]).includes(value);
@@ -67,8 +67,8 @@ export async function GET(request: NextRequest) {
       experiencia,
       LEAD_STATUS_LABELS[lead.status],
       getLeadOrigin(lead),
-      new Date(lead.createdAt).toLocaleDateString("pt-BR"),
-      lead.followUpAt ? new Date(lead.followUpAt).toLocaleDateString("pt-BR") : "",
+      formatBrDate(new Date(lead.createdAt)),
+      lead.followUpAt ? formatBrDate(new Date(lead.followUpAt)) : "",
       lead.notes ?? "",
     ];
   });

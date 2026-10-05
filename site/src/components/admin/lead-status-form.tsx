@@ -8,14 +8,16 @@ const initialState: UpdateLeadStatusState = {};
 
 function toDateInputValue(iso?: string): string {
   if (!iso) return "";
-  return iso.slice(0, 10);
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return "";
+  return new Intl.DateTimeFormat("sv-SE", { timeZone: "America/Sao_Paulo" }).format(d);
 }
 
 function toTimeInputValue(iso?: string): string {
   if (!iso) return "";
   const d = new Date(iso);
   if (Number.isNaN(d.getTime())) return "";
-  return d.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit", hour12: false });
+  return d.toLocaleTimeString("pt-BR", { timeZone: "America/Sao_Paulo", hour: "2-digit", minute: "2-digit", hour12: false });
 }
 
 export function LeadStatusForm({

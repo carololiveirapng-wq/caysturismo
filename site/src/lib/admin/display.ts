@@ -48,6 +48,23 @@ export function getLeadOrigin(lead: Pick<Lead, "utmSource" | "acquisitionSource"
   return "Direto";
 }
 
+/** Fuso fixo de Brasília (UTC-3, sem horário de verão desde 2019) — o servidor da Vercel roda em UTC. */
+export const BR_TIMEZONE = "America/Sao_Paulo";
+export const BR_OFFSET_MS = 3 * 60 * 60 * 1000;
+
+export function formatBrDate(date: Date): string {
+  return date.toLocaleDateString("pt-BR", { timeZone: BR_TIMEZONE });
+}
+
+export function formatBrTime(date: Date): string {
+  return date.toLocaleTimeString("pt-BR", { timeZone: BR_TIMEZONE, hour: "2-digit", minute: "2-digit" });
+}
+
+/** Formato da timeline: "05/10 · 14:32". */
+export function formatBrDateTimeCompact(date: Date): string {
+  return `${date.toLocaleDateString("pt-BR", { timeZone: BR_TIMEZONE, day: "2-digit", month: "2-digit" })} · ${formatBrTime(date)}`;
+}
+
 /** Link "wa.me" com número higienizado (só dígitos) e mensagem inicial pré-preenchida — nunca envia nada sozinho, só abre o WhatsApp com o texto pronto. */
 export function buildWhatsAppLink(whatsapp: string, name: string): string {
   const digits = whatsapp.replace(/\D/g, "");

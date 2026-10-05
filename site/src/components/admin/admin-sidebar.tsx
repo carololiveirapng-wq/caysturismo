@@ -5,68 +5,89 @@ import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
   Users,
-  MapPin,
-  Compass,
-  Plane,
-  Newspaper,
-  UserRound,
-  MessageSquareQuote,
+  Columns3,
+  CalendarClock,
+  BarChart3,
+  Download,
+  PenLine,
   Settings,
   ArrowUpRight,
+  LogOut,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { signOutAction } from "@/app/admin/(shell)/actions";
 
 const STUDIO_URL = "/studio";
 
-const mainLinks = [
-  { label: "Dashboard", href: "/admin", icon: LayoutDashboard },
-  { label: "Leads", href: "/admin/leads", icon: Users },
-];
+export interface SidebarCounts {
+  newLeads: number;
+  returnsAttention: number;
+}
 
-// Deep-links pro pane específico de cada tipo no Studio (ver IDs em
-// src/sanity/structure.ts) — abrir "Destinos" já cai direto na lista de
-// destinos, não na raiz do Studio.
-const contentLinks = [
-  { label: "Destinos", href: "/studio/structure/destination", icon: MapPin },
-  { label: "Experiências", href: "/studio/structure/experience", icon: Compass },
-  { label: "Viagens", href: "/studio/structure/travelProduct", icon: Plane },
-  { label: "Curadoria", href: "/studio/structure/curadoriaArticle", icon: Newspaper },
-];
+type NavItem = {
+  label: string;
+  href: string;
+  icon: typeof LayoutDashboard;
+  badge?: keyof SidebarCounts;
+};
 
-const managementLinks = [
-  { label: "Equipe", href: "/studio/structure/person", icon: UserRound },
-  { label: "Depoimentos", href: "/studio/structure/testimonial", icon: MessageSquareQuote },
-  { label: "Configurações", href: "/studio/structure/settings", icon: Settings },
+const NAV_GROUPS: { heading: string; items: NavItem[] }[] = [
+  {
+    heading: "Operação",
+    items: [
+      { label: "Dashboard", href: "/admin", icon: LayoutDashboard },
+      { label: "Leads", href: "/admin/leads", icon: Users, badge: "newLeads" },
+      { label: "Pipeline", href: "/admin/pipeline", icon: Columns3 },
+      { label: "Retornos", href: "/admin/retornos", icon: CalendarClock, badge: "returnsAttention" },
+    ],
+  },
+  {
+    heading: "Gestão",
+    items: [
+      { label: "Relatórios", href: "/admin/relatorios", icon: BarChart3 },
+      { label: "Exportações", href: "/admin/exportacoes", icon: Download },
+    ],
+  },
+  {
+    heading: "Conteúdo",
+    items: [{ label: "Editor do site", href: STUDIO_URL, icon: PenLine }],
+  },
+  {
+    heading: "Sistema",
+    items: [{ label: "Configurações", href: "/admin/configuracoes", icon: Settings }],
+  },
 ];
 
 function NavGroup({
   heading,
-  links,
+  items,
   pathname,
+  counts,
   onNavigate,
 }: {
-  heading?: string;
-  links: { label: string; href: string; icon: typeof LayoutDashboard }[];
+  heading: string;
+  items: NavItem[];
   pathname: string;
-  onNavigate?: () => void;
+  counts: SidebarCounts | null;
+  onNavigate: () => void;
 }) {
   return (
     <div>
-      {heading && (
-        <p className="px-3 text-[0.65rem] font-medium tracking-[0.15em] text-ivory/40 uppercase">{heading}</p>
-      )}
-      <nav className={cn("flex flex-col gap-0.5", heading && "mt-2.5")}>
-        {links.map((link) => {
-          const external = link.href.startsWith(STUDIO_URL);
-          const active = !external && pathname === link.href;
-          const Icon = link.icon;
+      <p className="px-3 text-[0.65rem] font-medium tracking-[0.15em] text-ivory/40 uppercase">{heading}</p>
+      <nav aria-label={heading} className="mt-2.5 flex flex-col gap-0.5">
+        {items.map((item) => {
+          const external = item.href.startsWith(STUDIO_URL);
+          const active = !external && (item.href === "/admin" ? pathname === "/admin" : pathname.startsWith(item.href));
+          const Icon = item.icon;
+          const badgeValue = item.badge && counts ? counts[item.badge] : 0;
           return (
             <Link
-              key={link.label}
-              href={link.href}
+              key={item.label}
+              href={item.href}
               onClick={onNavigate}
               target={external ? "_blank" : undefined}
               rel={external ? "noreferrer" : undefined}
+              aria-current={active ? "page" : undefined}
               className={cn(
                 "flex items-center justify-between gap-2 px-3 py-2 text-sm transition-colors duration-200",
                 active ? "bg-ivory/10 text-ivory" : "text-ivory/65 hover:bg-ivory/5 hover:text-ivory",
@@ -74,9 +95,17 @@ function NavGroup({
             >
               <span className="flex items-center gap-2.5">
                 <Icon className="size-4 shrink-0" aria-hidden />
-                {link.label}
+                {item.label}
               </span>
               {external && <ArrowUpRight className="size-3.5 shrink-0 text-ivory/30" aria-hidden />}
+              {badgeValue > 0 && (
+                <span
+                  aria-label={`${badgeValue} pendentes`}
+                  className="min-w-5 bg-magenta px-1.5 text-center text-[0.65rem] leading-5 font-medium text-ivory"
+                >
+                  {badgeValue}
+                </span>
+              )}
             </Link>
           );
         })}
@@ -85,20 +114,23 @@ function NavGroup({
   );
 }
 
-export function AdminSidebar({ mobileOpen, onClose }: { mobileOpen: boolean; onClose: () => void }) {
+export function AdminSidebar({
+  mobileOpen,
+  onClose,
+  counts,
+}: {
+  mobileOpen: boolean;
+  onClose: () => void;
+  counts: SidebarCounts | null;
+}) {
   const pathname = usePathname();
 
   return (
     <>
-      {mobileOpen && (
-        <div
-          aria-hidden
-          onClick={onClose}
-          className="fixed inset-0 z-40 bg-ink/40 lg:hidden"
-        />
-      )}
+      {mobileOpen && <div aria-hidden onClick={onClose} className="fixed inset-0 z-40 bg-ink/40 lg:hidden" />}
 
       <aside
+        aria-label="Navegação do painel"
         className={cn(
           "fixed inset-y-0 left-0 z-50 flex w-64 flex-col gap-8 overflow-y-auto bg-graphite px-4 py-6 transition-transform duration-300 ease-[var(--ease-editorial)] lg:translate-x-0",
           mobileOpen ? "translate-x-0" : "-translate-x-full",
@@ -110,9 +142,16 @@ export function AdminSidebar({ mobileOpen, onClose }: { mobileOpen: boolean; onC
         </div>
 
         <div className="flex flex-1 flex-col gap-7">
-          <NavGroup links={mainLinks} pathname={pathname} onNavigate={onClose} />
-          <NavGroup heading="Conteúdo" links={contentLinks} pathname={pathname} onNavigate={onClose} />
-          <NavGroup heading="Gestão" links={managementLinks} pathname={pathname} onNavigate={onClose} />
+          {NAV_GROUPS.map((group) => (
+            <NavGroup
+              key={group.heading}
+              heading={group.heading}
+              items={group.items}
+              pathname={pathname}
+              counts={counts}
+              onNavigate={onClose}
+            />
+          ))}
         </div>
 
         <div className="flex flex-col gap-0.5 border-t border-ivory/10 px-3 pt-5">
@@ -134,6 +173,15 @@ export function AdminSidebar({ mobileOpen, onClose }: { mobileOpen: boolean; onC
             <ArrowUpRight className="size-4" aria-hidden />
             Abrir Studio
           </Link>
+          <form action={signOutAction}>
+            <button
+              type="submit"
+              className="flex w-full items-center gap-2.5 py-1.5 text-left text-sm text-ivory/65 transition-colors duration-200 hover:text-ivory"
+            >
+              <LogOut className="size-4" aria-hidden />
+              Sair
+            </button>
+          </form>
         </div>
       </aside>
     </>
