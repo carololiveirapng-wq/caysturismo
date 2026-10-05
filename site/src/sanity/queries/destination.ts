@@ -1,4 +1,5 @@
 import { imageFragment } from "./fragments";
+import { CONTINENT_LABEL_GROQ } from "./continent";
 
 /**
  * Reshapa o documento Sanity pro formato exato de `DestinationDetail`
@@ -69,7 +70,7 @@ const destinationProjection = `{
   "relatedDestinations": relatedDestinations[]->{
     "slug": slug.current,
     name,
-    "region": type,
+    "region": ${CONTINENT_LABEL_GROQ},
     "image": hero.image${imageFragment}
   },
   seo

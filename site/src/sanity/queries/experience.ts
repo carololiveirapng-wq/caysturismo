@@ -1,4 +1,5 @@
 import { imageFragment } from "./fragments";
+import { CONTINENT_LABEL_GROQ } from "./continent";
 
 /** Espelha `ExperienceDetail` (`src/types/experience-detail.ts`). Não testado contra dataset real — ver nota em `destination.ts`. */
 const experienceProjection = `{
@@ -21,7 +22,7 @@ const experienceProjection = `{
   "featuredDestinations": destinations[]->{
     "slug": slug.current,
     name,
-    "region": type,
+    "region": ${CONTINENT_LABEL_GROQ},
     "image": hero.image${imageFragment}
   },
   "subtypes": subtypes[]{

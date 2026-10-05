@@ -1,4 +1,5 @@
 import { imageFragment } from "./fragments";
+import { CONTINENT_LABEL_GROQ } from "./continent";
 
 /**
  * `home` é singleton — sempre um único documento. Os arrays `featured*`
@@ -30,7 +31,7 @@ export const HOME_QUERY = `*[_type == "home"][0]{
     "slug": slug.current,
     name,
     "image": hero.image${imageFragment},
-    "region": type,
+    "region": ${CONTINENT_LABEL_GROQ},
     "shortDescription": hero.subtitle
   }, []),
   "destinationCollections": coalesce(destinationCollections[]{
@@ -39,7 +40,7 @@ export const HOME_QUERY = `*[_type == "home"][0]{
       "slug": slug.current,
       name,
       "image": hero.image${imageFragment},
-      "region": type,
+      "region": ${CONTINENT_LABEL_GROQ},
       "shortDescription": hero.subtitle
     }, [])
   }, []),
