@@ -21,3 +21,9 @@ export function trackLeadGenerated(event: LeadConversionEvent) {
   if (typeof window === "undefined" || !window.dataLayer) return;
   window.dataLayer.push({ event: "generate_lead", ...event });
 }
+
+/** Evento genérico pro dataLayer — mesmo mecanismo de `trackLeadGenerated`, sem payload fixo. */
+export function trackEvent(event: string) {
+  if (typeof window === "undefined" || !window.dataLayer) return;
+  window.dataLayer.push({ event });
+}

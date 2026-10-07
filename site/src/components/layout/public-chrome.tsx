@@ -5,7 +5,10 @@ import type { ReactNode } from "react";
 
 /**
  * Decide se o Header/Footer/WhatsApp do site público entram no DOM — em
- * /admin não devem (o painel tem sidebar/topbar próprios). Feito com
+ * /admin não devem (o painel tem sidebar/topbar próprios), e em /linkbio
+ * também não (página autocontida pensada pra abrir rápido a partir do
+ * Instagram, com seu próprio CTA de WhatsApp — duplicar o botão flutuante
+ * ali só adicionaria peso e um segundo WhatsApp na tela). Feito com
  * usePathname() (resolvido no client, a partir do router) em vez de
  * headers()/cookies() no layout raiz de propósito: essas APIs de servidor
  * tirariam TODAS as páginas do modo estático (inclusive as 40+ páginas de
@@ -31,9 +34,9 @@ export function PublicChrome({
   children: ReactNode;
 }) {
   const pathname = usePathname();
-  const isAdmin = pathname.startsWith("/admin");
+  const hasOwnChrome = pathname.startsWith("/admin") || pathname.startsWith("/linkbio");
 
-  if (isAdmin) {
+  if (hasOwnChrome) {
     return <main className="flex-1">{children}</main>;
   }
 
