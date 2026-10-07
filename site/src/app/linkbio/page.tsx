@@ -34,7 +34,7 @@ export default async function LinkbioPage() {
 
   const foundedYear = settings.foundedDate ? new Date(settings.foundedDate).getFullYear() : undefined;
   const featured = home?.featuredTravelProducts?.[0];
-  const domainLabel = siteConfig.url.replace(/^https?:\/\//, "");
+  const domainLabel = siteConfig.url.replace(/^https?:\/\/(www\.)?/, "");
   const topMeta = [foundedYear && `Desde ${foundedYear}`, settings.slogan].filter(Boolean).join(" — ");
 
   return (
