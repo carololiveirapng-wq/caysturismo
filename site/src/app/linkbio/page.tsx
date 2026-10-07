@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import { MessageCircle, AtSign, ArrowRight, ArrowUpRight } from "lucide-react";
+import { MessageCircle, AtSign, ArrowRight, ArrowUpRight, Plane, Globe } from "lucide-react";
 import { TrackedLink, TrackedAnchor } from "@/components/linkbio/tracked-link";
 import { getSettings, getHome } from "@/lib/cms";
 import { getDestinationWeddingStories } from "@/lib/cms/traveler-stories";
@@ -52,15 +52,19 @@ export default async function LinkbioPage() {
   return (
     <div className="flex min-h-dvh items-center justify-center bg-mauve p-3 sm:p-6 md:p-10">
       <div className="w-full max-w-[460px] overflow-hidden rounded-[28px] bg-ivory shadow-[0_40px_90px_-45px_rgba(47,47,47,0.35)]">
-        <div className="relative bg-gradient-to-br from-magenta to-magenta-dark pt-10 pb-14">
-          <div className="absolute inset-x-0 bottom-0 z-10 flex translate-y-1/2 justify-center">
-            <div className="relative size-20 overflow-hidden rounded-full ring-4 ring-ivory md:size-24">
-              <Image src="/icon.png" alt="Cays Turismo" fill sizes="96px" priority className="object-cover" />
-            </div>
-          </div>
+        <div className="relative bg-magenta px-8 pt-10 pb-8">
+          <Image
+            src="/cays-turismo-logo-header-menu.png"
+            alt="Cays Turismo"
+            width={280}
+            height={100}
+            priority
+            className="mx-auto h-auto w-full max-w-[220px]"
+          />
+          <div aria-hidden className="absolute inset-x-0 bottom-0 h-6 bg-gradient-to-b from-transparent to-ivory" />
         </div>
 
-        <div className="px-6 pt-14 pb-7 md:px-8 md:pt-16">
+        <div className="px-6 pt-5 pb-7 md:px-8">
           <header className="text-center">
             <h1 className="font-serif text-[1.65rem] text-ink md:text-3xl">Cays Turismo</h1>
             <p className="mt-2 text-sm leading-relaxed text-ink/70">{siteConfig.tagline}</p>
@@ -73,9 +77,12 @@ export default async function LinkbioPage() {
             <TrackedLink
               href="/contato"
               event="linkbio_plan_trip"
-              className="flex items-center justify-between gap-3 rounded-full bg-magenta-dark px-6 py-4 text-sm font-semibold tracking-wide text-ivory uppercase transition-colors duration-300 hover:bg-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-magenta-dark"
+              className="flex items-center gap-3 rounded-full bg-magenta-dark py-2 pr-5 pl-2 text-sm font-semibold tracking-wide text-ivory uppercase transition-colors duration-300 hover:bg-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-magenta-dark"
             >
-              Planejar minha viagem
+              <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-ivory text-magenta-dark">
+                <Plane className="size-4" aria-hidden />
+              </span>
+              <span className="flex-1 text-center">Planejar minha viagem</span>
               <ArrowRight className="size-4 shrink-0" aria-hidden />
             </TrackedLink>
 
@@ -85,12 +92,12 @@ export default async function LinkbioPage() {
                 target="_blank"
                 rel="noreferrer"
                 event="linkbio_whatsapp"
-                className="flex items-center justify-between gap-3 rounded-full bg-ink px-6 py-4 text-sm font-semibold tracking-wide text-ivory uppercase transition-colors duration-300 hover:bg-magenta-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-magenta-dark"
+                className="flex items-center gap-3 rounded-full bg-ink py-2 pr-5 pl-2 text-sm font-semibold tracking-wide text-ivory uppercase transition-colors duration-300 hover:bg-magenta-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-magenta-dark"
               >
-                <span className="flex items-center gap-2">
-                  <MessageCircle className="size-4 shrink-0" aria-hidden />
-                  Falar no WhatsApp
+                <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-ivory text-ink">
+                  <MessageCircle className="size-4" aria-hidden />
                 </span>
+                <span className="flex-1 text-center">Falar no WhatsApp</span>
                 <ArrowUpRight className="size-4 shrink-0" aria-hidden />
               </TrackedAnchor>
             )}
@@ -98,9 +105,12 @@ export default async function LinkbioPage() {
             <TrackedLink
               href="/"
               event="linkbio_site"
-              className="flex items-center justify-between gap-3 rounded-full bg-sand px-6 py-4 text-sm font-semibold tracking-wide text-ink uppercase transition-colors duration-300 hover:bg-magenta/10 hover:text-magenta-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-magenta-dark"
+              className="flex items-center gap-3 rounded-full bg-sand py-2 pr-5 pl-2 text-sm font-semibold tracking-wide text-ink uppercase transition-colors duration-300 hover:bg-magenta/10 hover:text-magenta-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-magenta-dark"
             >
-              Acessar site completo
+              <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-magenta-dark text-ivory">
+                <Globe className="size-4" aria-hidden />
+              </span>
+              <span className="flex-1 text-center">Acessar site completo</span>
               <ArrowRight className="size-4 shrink-0" aria-hidden />
             </TrackedLink>
           </div>
