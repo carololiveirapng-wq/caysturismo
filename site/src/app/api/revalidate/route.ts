@@ -9,7 +9,7 @@ import { sanityClient } from "@/sanity/client";
  *   URL: https://<domínio>/api/revalidate?secret=<SANITY_REVALIDATE_SECRET>
  *   Dataset: production
  *   Trigger on: Create, Update, Delete
- *   Filter: _type in ["destination", "experience", "travelProduct", "curadoriaArticle", "settings", "hotel", "home", "testimonial", "person", "aboutPage", "destinationHub", "experienceHub", "travelHub", "curadoriaHub"]
+ *   Filter: _type in ["destination", "experience", "travelProduct", "curadoriaArticle", "settings", "hotel", "home", "testimonial", "person", "travelerStory", "aboutPage", "destinationHub", "experienceHub", "travelHub", "curadoriaHub"]
  *   Projection: { "type": _type, "id": _id, "slug": slug.current }
  *
  * O secret vai na query string (não só num header) porque o painel de
@@ -91,6 +91,10 @@ export async function POST(request: NextRequest) {
     // Equipe só aparece em /sobre.
     revalidatePath("/sobre");
     revalidated.push("/sobre");
+  } else if (type === "travelerStory") {
+    // Sem página própria ainda — hoje só aparece dentro de Destination Wedding.
+    revalidatePath("/experiencias/destination-wedding");
+    revalidated.push("/experiencias/destination-wedding");
   } else if (type in SINGLETON_TYPE_TO_PATH) {
     const path = SINGLETON_TYPE_TO_PATH[type];
     revalidatePath(path);
