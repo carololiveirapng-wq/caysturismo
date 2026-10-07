@@ -143,6 +143,17 @@
   }
 }
 
+/** Carrossel "Inspire-se" da /linkbio — a trilha tem a lista de imagens duplicada
+ * uma vez, então a volta de 0% a -50% é um loop perfeito sem salto visível. */
+@keyframes linkbioMarquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
 @keyframes scrollLine {
   0% {
     transform: translateY(-100%);
