@@ -37,12 +37,18 @@ const navLinks = [
   { label: "A Cays", href: "/sobre" },
 ];
 
-// Páginas sem hero escuro no topo — o header transparente (logo/texto
-// ivory sobre bg-transparent) fica ilegível contra o fundo ivory/sand
-// dessas páginas antes do scroll passar de 64px, então força o estado
-// sólido desde o início nelas.
-const NO_HERO_PATHS = ["/contato", "/contato/obrigado", "/privacidade", "/termos"];
-const NO_HERO_PREFIXES = ["/curadoria/"];
+// Rotas com hero de foto full-bleed e fundo escuro no topo — só nelas o
+// cabeçalho pode nascer transparente (texto ivory sobre bg-transparent).
+// Qualquer rota fora desta lista nasce com o fundo sólido, legível desde o
+// primeiro frame. É uma lista positiva de propósito: a versão anterior era
+// negativa (rotas SEM hero) e quebrava silenciosamente a cada página nova
+// que não se encaixava no padrão assumido — foi assim que Curadoria,
+// Privacidade, Termos e as viagens (/viagens/[slug], hero claro) ficaram
+// com o cabeçalho ilegível no topo até serem encontradas uma por vez.
+// Adicionar uma rota aqui exige confirmar que ela realmente tem hero de
+// foto com fundo escuro (`bg-ink` + imagem) — não assumir.
+const DARK_HERO_PATHS = ["/", "/sobre", "/destinos", "/experiencias", "/viagens", "/curadoria"];
+const DARK_HERO_PREFIXES = ["/destinos/", "/experiencias/"];
 
 export function Header({ settings }: { settings: SiteSettings }) {
   const [scrolled, setScrolled] = useState(false);
@@ -57,9 +63,9 @@ export function Header({ settings }: { settings: SiteSettings }) {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const noHero =
-    NO_HERO_PATHS.includes(pathname) || NO_HERO_PREFIXES.some((prefix) => pathname.startsWith(prefix));
-  const solid = scrolled || menuOpen || noHero;
+  const hasDarkHero =
+    DARK_HERO_PATHS.includes(pathname) || DARK_HERO_PREFIXES.some((prefix) => pathname.startsWith(prefix));
+  const solid = scrolled || menuOpen || !hasDarkHero;
 
   return (
     <>
