@@ -1,6 +1,5 @@
 import { defineConfig } from "sanity";
 import { structureTool } from "sanity/structure";
-import { visionTool } from "@sanity/vision";
 import { ptBRLocale } from "@sanity/locale-pt-br";
 import { schemaTypes } from "./src/sanity/schema-types";
 import { structure } from "./src/sanity/structure";
@@ -24,7 +23,12 @@ export default defineConfig({
   // ptBRLocale() deixa Português (Brasil) disponível no menu de idioma do
   // Studio (ícone da conta → idioma) — a interface nativa do Sanity não
   // tem como forçar um idioma padrão sem passar pela escolha do usuário.
-  plugins: [structureTool({ structure }), visionTool(), ptBRLocale()],
+  //
+  // Sem visionTool() de propósito: é um console de GROQ (consulta técnica
+  // direto no banco), não serve pro cliente editar nada e só confundia a
+  // barra de ferramentas do Studio. Pra debug de query, usar o Vision do
+  // sanity.io/manage ou rodar a query localmente.
+  plugins: [structureTool({ structure }), ptBRLocale()],
 
   schema: {
     types: schemaTypes,

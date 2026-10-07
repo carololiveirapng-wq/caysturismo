@@ -1,12 +1,23 @@
 import type { StructureResolver } from "sanity/structure";
+import { DocumentTextIcon } from "@sanity/icons/DocumentText";
+import { EarthGlobeIcon } from "@sanity/icons/EarthGlobe";
+import { HeartIcon } from "@sanity/icons/Heart";
+import { PackageIcon } from "@sanity/icons/Package";
+import { UsersIcon } from "@sanity/icons/Users";
+import { DoubleQuoteIcon } from "@sanity/icons/DoubleQuote";
+import { CogIcon } from "@sanity/icons/Cog";
+import { ThLargeIcon } from "@sanity/icons/ThLarge";
+import { HomeIcon } from "@sanity/icons/Home";
 
 /**
- * Menu do Studio agrupado por área (Páginas / Conteúdo / Pessoas / Prova
- * social / Configurações) em vez da lista plana padrão do Sanity — mais
- * fácil de navegar pra quem não conhece o schema de cor. Toda entrada em
- * "Páginas" é singleton (documentId fixo), por isso aponta direto pro único
- * documento daquele tipo, sem sublista de criação — a prevenção de
- * duplicata em si está em `sanity.config.ts` (`newDocumentOptions`).
+ * Menu do Studio pensado pra quem edita o site no dia a dia, não pra quem
+ * conhece o schema de cor — atalhos diretos na primeira coluna pros 7 tipos
+ * de conteúdo que o cliente mexe com frequência (Blog, Destinos,
+ * Experiências, Viagens, Equipe, Depoimentos, Configurações), sem pasta
+ * intermediária. O que sobra (as páginas-singleton de introdução de cada
+ * hub e Hotéis, que só existem como referência dentro de destino/viagem)
+ * fica num grupo "Páginas do site" mais discreto, depois de um divisor —
+ * ainda acessível, só não brigando por atenção com o que é usado toda hora.
  */
 const singletonPage = (S: Parameters<StructureResolver>[0], id: string, title: string, schemaType: string) =>
   S.listItem()
@@ -18,51 +29,31 @@ export const structure: StructureResolver = (S) =>
   S.list()
     .title("Conteúdo")
     .items([
+      S.documentTypeListItem("curadoriaArticle").title("Blog / Curadoria").icon(DocumentTextIcon),
+      S.documentTypeListItem("destination").title("Destinos").icon(EarthGlobeIcon),
+      S.documentTypeListItem("experience").title("Experiências").icon(HeartIcon),
+      S.documentTypeListItem("travelProduct").title("Viagens").icon(PackageIcon),
+      S.documentTypeListItem("person").title("Equipe").icon(UsersIcon),
+      S.documentTypeListItem("testimonial").title("Depoimentos").icon(DoubleQuoteIcon),
+      S.divider(),
+      singletonPage(S, "settings", "Configurações do site", "settings").icon(CogIcon),
+      S.divider(),
       S.listItem()
-        .id("paginas")
-        .title("Páginas")
+        .id("paginas-do-site")
+        .title("Páginas do site")
+        .icon(ThLargeIcon)
         .child(
           S.list()
-            .title("Páginas")
+            .title("Páginas do site")
             .items([
               singletonPage(S, "home", "Home", "home"),
               singletonPage(S, "aboutPage", "Sobre", "aboutPage"),
-              singletonPage(S, "destinationHub", "Destinos", "destinationHub"),
-              singletonPage(S, "experienceHub", "Experiências", "experienceHub"),
-              singletonPage(S, "travelHub", "Viagens", "travelHub"),
-              singletonPage(S, "curadoriaHub", "Curadoria", "curadoriaHub"),
+              singletonPage(S, "destinationHub", "Introdução — Destinos", "destinationHub"),
+              singletonPage(S, "experienceHub", "Introdução — Experiências", "experienceHub"),
+              singletonPage(S, "travelHub", "Introdução — Viagens", "travelHub"),
+              singletonPage(S, "curadoriaHub", "Introdução — Blog / Curadoria", "curadoriaHub"),
+              S.divider(),
+              S.documentTypeListItem("hotel").title("Hotéis").icon(HomeIcon),
             ]),
         ),
-      S.listItem()
-        .id("conteudo")
-        .title("Conteúdo")
-        .child(
-          S.list()
-            .title("Conteúdo")
-            .items([
-              S.documentTypeListItem("destination").title("Destinos"),
-              S.documentTypeListItem("experience").title("Experiências"),
-              S.documentTypeListItem("travelProduct").title("Viagens"),
-              S.documentTypeListItem("curadoriaArticle").title("Curadoria"),
-              S.documentTypeListItem("hotel").title("Hotéis"),
-            ]),
-        ),
-      S.listItem()
-        .id("pessoas")
-        .title("Pessoas")
-        .child(
-          S.list()
-            .title("Pessoas")
-            .items([S.documentTypeListItem("person").title("Equipe")]),
-        ),
-      S.listItem()
-        .id("prova-social")
-        .title("Prova social")
-        .child(
-          S.list()
-            .title("Prova social")
-            .items([S.documentTypeListItem("testimonial").title("Depoimentos")]),
-        ),
-      S.divider(),
-      singletonPage(S, "settings", "Configurações do site", "settings"),
     ]);
