@@ -25,6 +25,8 @@
   --sand: #f4f3f1;
   --ivory: #faf9f5;
   --line: #e3e5e6;
+  /** Magenta extremamente dessaturado/claro — só para o fundo externo da /linkbio (painel ivory se destacando), nunca cor de fundo de página normal. */
+  --mauve: #e3d3db;
 
   --background: var(--ivory);
   --foreground: var(--ink);
@@ -98,6 +100,7 @@
   --color-line: var(--line);
   --color-magenta: var(--cays-magenta);
   --color-magenta-dark: var(--cays-magenta-dark);
+  --color-mauve: var(--mauve);
 
   --font-sans: var(--font-manrope);
   --font-serif: var(--font-cormorant);
