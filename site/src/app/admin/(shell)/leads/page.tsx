@@ -215,6 +215,7 @@ export default async function AdminLeadsPage({ searchParams }: PageProps<"/admin
   const staleParam = first(params.stale);
   const followUpParam = first(params.followUp);
   const priorityParam = first(params.priority);
+  const noNextActionParam = first(params.noNextAction);
   const sort = first(params.sort) === "oldest" ? "oldest" : "newest";
   const page = Number(first(params.page)) || 1;
 
@@ -234,6 +235,7 @@ export default async function AdminLeadsPage({ searchParams }: PageProps<"/admin
       staleDays: staleParam ? Number(staleParam) : undefined,
       followUp: isFollowUp(followUpParam) ? followUpParam : undefined,
       priority,
+      noNextAction: noNextActionParam === "1" ? true : undefined,
       sort,
       page,
       perPage: 20,
@@ -260,6 +262,7 @@ export default async function AdminLeadsPage({ searchParams }: PageProps<"/admin
     staleParam,
     followUpParam,
     priority ? "1" : undefined,
+    noNextActionParam === "1" ? "1" : undefined,
   ].filter(Boolean).length;
   const hasActiveFilters = activeFilterCount > 0;
 
@@ -275,6 +278,7 @@ export default async function AdminLeadsPage({ searchParams }: PageProps<"/admin
       stale: staleParam,
       followUp: followUpParam,
       priority: priorityParam,
+      noNextAction: noNextActionParam,
       sort: sort !== "newest" ? sort : undefined,
       ...overrides,
     };

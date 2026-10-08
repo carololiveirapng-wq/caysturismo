@@ -2,74 +2,51 @@
 
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { requireAdminUser } from "@/lib/admin/auth";
-import { updateLead } from "@/lib/admin/leads-queries";
-import { LEAD_STATUSES } from "@/lib/leads/types";
+import { deleteLead } from "@/lib/admin/leads-queries";
 
-const schema = z.object({
-  id: z.uuid(),
-  status: z.enum(LEAD_STATUSES),
-  internalNotes: z.string().max(4000),
-  nextAction: z.string().max(200),
-  priority: z.boolean(),
-  followUpDate: z.string().optional(),
-  followUpTime: z.string().optional(),
-});
+/**
+ * A edição comercial do lead (status, retorno, próxima ação, prioridade,
+ * observação interna) é um Route Handler comum em `leads/[id]/update/
+ * route.ts`, não uma Server Action — mesmo padrão já usado em
+ * `leads/export/route.ts`. Só o delete (abaixo) continua Server Action.
+ */
 
-export interface UpdateLeadStatusState {
-  success?: boolean;
+const deleteSchema = z.object({ id: z.uuid() });
+
+export interface DeleteLeadState {
   error?: string;
 }
 
-export async function updateLeadStatusAction(
-  _prevState: UpdateLeadStatusState | undefined,
-  formData: FormData,
-): Promise<UpdateLeadStatusState> {
+/**
+ * Soft delete — nunca físico. Dupla confirmação já acontece na UI (botão na
+ * zona de perigo do detalhe + modal de confirmação); aqui só valida e
+ * redireciona pra lista ao concluir, já que a página do lead deixa de
+ * existir (toda leitura filtra `deleted_at IS NULL`).
+ */
+export async function deleteLeadAction(_prevState: DeleteLeadState | undefined, formData: FormData): Promise<DeleteLeadState> {
   await requireAdminUser();
 
-  const rawFollowUpDate = formData.get("followUpDate");
-  const parsed = schema.safeParse({
-    id: formData.get("id"),
-    status: formData.get("status"),
-    internalNotes: formData.get("internalNotes") ?? "",
-    nextAction: formData.get("nextAction") ?? "",
-    priority: formData.get("priority") === "on",
-    followUpDate: typeof rawFollowUpDate === "string" ? rawFollowUpDate : undefined,
-    followUpTime: formData.get("followUpTime") || undefined,
-  });
-
+  const parsed = deleteSchema.safeParse({ id: formData.get("id") });
   if (!parsed.success) {
-    return { error: "Não foi possível salvar — confira os dados e tente de novo." };
+    return { error: "Lead inválido." };
   }
 
-  // Data vazia = remover o retorno (null). Data preenchida sem hora cai pra
-  // 09h — "opcionalmente horário" no pedido, nunca obrigatório.
-  let followUpAt: Date | null | undefined;
-  if (!parsed.data.followUpDate) {
-    followUpAt = null;
-  } else {
-    const time = parsed.data.followUpTime || "09:00";
-    const candidate = new Date(`${parsed.data.followUpDate}T${time}:00-03:00`);
-    followUpAt = Number.isNaN(candidate.getTime()) ? undefined : candidate;
-  }
-
+  let ok: boolean;
   try {
-    const updated = await updateLead(parsed.data.id, {
-      status: parsed.data.status,
-      internalNotes: parsed.data.internalNotes,
-      nextAction: parsed.data.nextAction,
-      priority: parsed.data.priority,
-      followUpAt,
-    });
-    if (!updated) {
-      return { error: "Lead não encontrado." };
-    }
+    ok = await deleteLead(parsed.data.id);
   } catch {
-    return { error: "Erro ao salvar no banco — tente novamente." };
+    return { error: "Erro ao excluir — tente novamente." };
   }
 
-  revalidatePath(`/admin/leads/${parsed.data.id}`);
+  if (!ok) {
+    return { error: "Lead não encontrado ou já excluído." };
+  }
+
   revalidatePath("/admin/leads");
   revalidatePath("/admin");
-  return { success: true };
+  revalidatePath("/admin/pipeline");
+  revalidatePath("/admin/retornos");
+  redirect("/admin/leads");
 }

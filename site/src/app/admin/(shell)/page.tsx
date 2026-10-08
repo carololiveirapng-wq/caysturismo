@@ -78,18 +78,24 @@ export default async function AdminDashboardPage() {
             <h2 id="atencao" className="font-serif text-lg text-ink">
               Precisam de atenção
             </h2>
-            {counts!.overdueFollowUps + counts!.followUpsToday + counts!.priority + stats!.stale === 0 ? (
+            {counts!.overdueFollowUps + counts!.followUpsToday + counts!.priority + counts!.newLeads + counts!.noNextAction + stats!.stale === 0 ? (
               <p className="text-sm text-stone">Nada urgente agora.</p>
             ) : (
               <ul className="grid grid-cols-1 gap-3 md:grid-cols-2">
-                {stats!.stale > 0 && (
-                  <AttentionItem href="/admin/leads?stale=3" count={stats!.stale} text="leads sem resposta há mais de 3 dias" />
+                {counts!.newLeads > 0 && (
+                  <AttentionItem href="/admin/leads?status=new" count={counts!.newLeads} text="leads novos aguardando primeiro contato" />
+                )}
+                {counts!.overdueFollowUps > 0 && (
+                  <AttentionItem href="/admin/retornos" count={counts!.overdueFollowUps} text="retornos atrasados" />
                 )}
                 {counts!.followUpsToday > 0 && (
                   <AttentionItem href="/admin/retornos" count={counts!.followUpsToday} text="retornos para hoje" />
                 )}
-                {counts!.overdueFollowUps > 0 && (
-                  <AttentionItem href="/admin/retornos" count={counts!.overdueFollowUps} text="retornos atrasados" />
+                {counts!.noNextAction > 0 && (
+                  <AttentionItem href="/admin/leads?noNextAction=1" count={counts!.noNextAction} text="leads abertos sem próxima ação definida" />
+                )}
+                {stats!.stale > 0 && (
+                  <AttentionItem href="/admin/leads?stale=3" count={stats!.stale} text="leads sem resposta há mais de 3 dias" />
                 )}
                 {counts!.priority > 0 && (
                   <AttentionItem href="/admin/leads?priority=1" count={counts!.priority} text="leads prioritários em aberto" />

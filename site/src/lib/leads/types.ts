@@ -43,6 +43,8 @@ export interface Lead {
   nextAction?: string;
   /** Marcação simples pra destacar na lista — nunca um score calculado. */
   priority: boolean;
+  /** Só preenchido quando `status === "lost"` — opcional, nunca obrigatório. */
+  lostReason?: LeadLostReason;
   createdAt: string;
   updatedAt: string;
 }
@@ -59,6 +61,18 @@ export const LEAD_STATUS_LABELS: Record<LeadStatus, string> = {
   lost: "Perdido",
 };
 
+/** Motivo estruturado e opcional de um lead perdido — texto livre nunca obrigatório. */
+export const LEAD_LOST_REASONS = ["sem_resposta", "orcamento", "adiou_viagem", "fechou_outro", "outro"] as const;
+export type LeadLostReason = (typeof LEAD_LOST_REASONS)[number];
+
+export const LEAD_LOST_REASON_LABELS: Record<LeadLostReason, string> = {
+  sem_resposta: "Sem resposta",
+  orcamento: "Orçamento",
+  adiou_viagem: "Adiou a viagem",
+  fechou_outro: "Fechou com outro",
+  outro: "Outro",
+};
+
 /** O que a action recebe pra montar um Lead — sem os campos que o repository/admin decidem ou que só existem pra uso interno da equipe. */
 export type NewLead = Omit<
   Lead,
@@ -73,6 +87,7 @@ export const LEAD_EVENT_TYPES = [
   "next_action_changed",
   "priority_changed",
   "note_updated",
+  "deleted",
 ] as const;
 export type LeadEventType = (typeof LEAD_EVENT_TYPES)[number];
 
@@ -83,6 +98,7 @@ export const LEAD_EVENT_LABELS: Record<LeadEventType, string> = {
   next_action_changed: "Próxima ação alterada",
   priority_changed: "Prioridade alterada",
   note_updated: "Observação interna atualizada",
+  deleted: "Lead excluído",
 };
 
 export interface LeadEvent {

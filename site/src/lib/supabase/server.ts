@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { cookies } from "next/headers";
 import { createServerClient } from "@supabase/ssr";
 
@@ -6,8 +7,13 @@ import { createServerClient } from "@supabase/ssr";
  * autenticação do /admin (login/logout/checar usuário). Nunca usado pra
  * dados de leads: isso continua indo direto no Postgres via `postgres`
  * (ver src/lib/admin/leads-queries.ts), sem depender do client do Supabase.
+ *
+ * `cache()` memoiza por requisição — o layout e a página chamam
+ * `getAdminUser()`/`requireAdminUser()` de forma independente, e sem isso
+ * cada chamada criaria um client novo e validaria a sessão de novo. Simples
+ * economia de uma validação redundante, sem efeito funcional observado.
  */
-export async function createSupabaseServerClient() {
+export const createSupabaseServerClient = cache(async () => {
   const cookieStore = await cookies();
 
   return createServerClient(
@@ -32,4 +38,4 @@ export async function createSupabaseServerClient() {
       },
     },
   );
-}
+});

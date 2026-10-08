@@ -4,7 +4,8 @@ import type { ReactNode } from "react";
 import { Mail, MessageCircle, Star } from "lucide-react";
 import { AdminPageHeader } from "@/components/admin/admin-page-header";
 import { AdminEmptyState } from "@/components/admin/admin-empty-state";
-import { LeadStatusForm } from "@/components/admin/lead-status-form";
+import { DeleteLeadDialog } from "@/components/admin/delete-lead-dialog";
+import { LeadUpdatePanel } from "@/components/admin/lead-update-panel";
 import { getLeadById, getLeadEvents } from "@/lib/admin/leads-queries";
 import {
   buildWhatsAppLink,
@@ -184,13 +185,14 @@ export default async function AdminLeadDetailPage({ params }: PageProps<"/admin/
               Atualizado em {formatBrDate(new Date(lead.updatedAt))} às {formatBrTime(new Date(lead.updatedAt))}
             </p>
             <div className="mt-4">
-              <LeadStatusForm
+              <LeadUpdatePanel
                 leadId={lead.id}
                 currentStatus={lead.status}
                 currentInternalNotes={lead.internalNotes}
                 currentFollowUpAt={lead.followUpAt}
                 currentNextAction={lead.nextAction}
                 currentPriority={lead.priority}
+                currentLostReason={lead.lostReason}
               />
             </div>
           </section>
@@ -205,6 +207,17 @@ export default async function AdminLeadDetailPage({ params }: PageProps<"/admin/
               <Field label="UTM Campaign" value={lead.utmCampaign} />
               <Field label="UTM Content" value={lead.utmContent} />
               <Field label="UTM Term" value={lead.utmTerm} />
+            </div>
+          </section>
+
+          <section aria-labelledby="perigo" className="border border-rose-200 bg-rose-50/40 p-6">
+            <h2 id="perigo" className="font-serif text-lg text-rose-900">Zona de perigo</h2>
+            <p className="mt-1 text-sm text-rose-700/80">
+              Excluir remove este lead de todo o painel — dashboard, pipeline, retornos, relatórios e
+              exportações. O histórico fica preservado no banco, mas não há tela pra recuperar o lead hoje.
+            </p>
+            <div className="mt-4">
+              <DeleteLeadDialog leadId={lead.id} leadName={lead.name} />
             </div>
           </section>
         </div>

@@ -1,10 +1,8 @@
 "use client";
 
-import { useActionState } from "react";
-import { updateLeadStatusAction, type UpdateLeadStatusState } from "@/app/admin/(shell)/leads/actions";
-import { LEAD_STATUSES, LEAD_STATUS_LABELS, type LeadStatus } from "@/lib/leads/types";
-
-const initialState: UpdateLeadStatusState = {};
+import { useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { LEAD_STATUSES, LEAD_STATUS_LABELS, LEAD_LOST_REASONS, LEAD_LOST_REASON_LABELS, type LeadStatus, type LeadLostReason } from "@/lib/leads/types";
 
 function toDateInputValue(iso?: string): string {
   if (!iso) return "";
@@ -20,13 +18,18 @@ function toTimeInputValue(iso?: string): string {
   return d.toLocaleTimeString("pt-BR", { timeZone: "America/Sao_Paulo", hour: "2-digit", minute: "2-digit", hour12: false });
 }
 
-export function LeadStatusForm({
+/**
+ * Painel de edição comercial do lead. Submete via `<form method="post">`
+ * comum pro Route Handler `leads/[id]/update` — não uma Server Action.
+ */
+export function LeadUpdatePanel({
   leadId,
   currentStatus,
   currentInternalNotes,
   currentFollowUpAt,
   currentNextAction,
   currentPriority,
+  currentLostReason,
 }: {
   leadId: string;
   currentStatus: LeadStatus;
@@ -34,21 +37,24 @@ export function LeadStatusForm({
   currentFollowUpAt?: string;
   currentNextAction?: string;
   currentPriority: boolean;
+  currentLostReason?: LeadLostReason;
 }) {
-  const [state, formAction, pending] = useActionState(updateLeadStatusAction, initialState);
+  const [status, setStatus] = useState<LeadStatus>(currentStatus);
+  const searchParams = useSearchParams();
+  const justSaved = searchParams.get("saved") === leadId;
+  const error = searchParams.get("error");
 
   return (
-    <form action={formAction} className="flex flex-col gap-4">
-      <input type="hidden" name="id" value={leadId} />
-
+    <form method="post" action={`/admin/leads/${leadId}/update`} className="flex flex-col gap-4">
       <div>
-        <label htmlFor="status" className="block text-xs font-medium tracking-wide text-stone uppercase">
+        <label htmlFor="leadStatus" className="block text-xs font-medium tracking-wide text-stone uppercase">
           Status
         </label>
         <select
-          id="status"
+          id="leadStatus"
           name="status"
           defaultValue={currentStatus}
+          onChange={(e) => setStatus(e.target.value as LeadStatus)}
           className="mt-1.5 w-full border border-ink/15 bg-ivory px-3.5 py-2.5 text-sm text-ink outline-none focus:border-magenta"
         >
           {LEAD_STATUSES.map((s) => (
@@ -59,13 +65,34 @@ export function LeadStatusForm({
         </select>
       </div>
 
+      {status === "lost" && (
+        <div>
+          <label htmlFor="leadLostReason" className="block text-xs font-medium tracking-wide text-stone uppercase">
+            Motivo da perda (opcional)
+          </label>
+          <select
+            id="leadLostReason"
+            name="lostReason"
+            defaultValue={currentLostReason ?? ""}
+            className="mt-1.5 w-full border border-ink/15 bg-ivory px-3.5 py-2.5 text-sm text-ink outline-none focus:border-magenta"
+          >
+            <option value="">Não informado</option>
+            {LEAD_LOST_REASONS.map((r) => (
+              <option key={r} value={r}>
+                {LEAD_LOST_REASON_LABELS[r]}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
+
       <div className="grid grid-cols-2 gap-3">
         <div>
-          <label htmlFor="followUpDate" className="block text-xs font-medium tracking-wide text-stone uppercase">
+          <label htmlFor="leadFollowUpDate" className="block text-xs font-medium tracking-wide text-stone uppercase">
             Retornar em
           </label>
           <input
-            id="followUpDate"
+            id="leadFollowUpDate"
             name="followUpDate"
             type="date"
             defaultValue={toDateInputValue(currentFollowUpAt)}
@@ -73,11 +100,11 @@ export function LeadStatusForm({
           />
         </div>
         <div>
-          <label htmlFor="followUpTime" className="block text-xs font-medium tracking-wide text-stone uppercase">
+          <label htmlFor="leadFollowUpTime" className="block text-xs font-medium tracking-wide text-stone uppercase">
             Hora (opcional)
           </label>
           <input
-            id="followUpTime"
+            id="leadFollowUpTime"
             name="followUpTime"
             type="time"
             defaultValue={toTimeInputValue(currentFollowUpAt)}
@@ -88,11 +115,11 @@ export function LeadStatusForm({
       <p className="-mt-2 text-xs text-stone">Deixe a data vazia para remover o retorno marcado.</p>
 
       <div>
-        <label htmlFor="nextAction" className="block text-xs font-medium tracking-wide text-stone uppercase">
+        <label htmlFor="leadNextAction" className="block text-xs font-medium tracking-wide text-stone uppercase">
           Próxima ação
         </label>
         <input
-          id="nextAction"
+          id="leadNextAction"
           name="nextAction"
           type="text"
           maxLength={200}
@@ -113,11 +140,11 @@ export function LeadStatusForm({
       </label>
 
       <div>
-        <label htmlFor="internalNotes" className="block text-xs font-medium tracking-wide text-stone uppercase">
+        <label htmlFor="leadInternalNotes" className="block text-xs font-medium tracking-wide text-stone uppercase">
           Observação interna
         </label>
         <textarea
-          id="internalNotes"
+          id="leadInternalNotes"
           name="internalNotes"
           rows={4}
           defaultValue={currentInternalNotes ?? ""}
@@ -126,15 +153,22 @@ export function LeadStatusForm({
         />
       </div>
 
-      {state?.error && <p className="text-sm text-rose-600">{state.error}</p>}
-      {state?.success && <p className="text-sm text-emerald-700">Salvo.</p>}
+      {error && (
+        <p role="alert" className="text-sm text-rose-600">
+          {error}
+        </p>
+      )}
+      {justSaved && !error && (
+        <p role="status" className="text-sm text-emerald-700">
+          Salvo.
+        </p>
+      )}
 
       <button
         type="submit"
-        disabled={pending}
-        className="self-start bg-ink px-5 py-2.5 text-xs font-medium tracking-wide text-ivory uppercase transition-colors duration-200 hover:bg-magenta-dark disabled:opacity-60"
+        className="self-start bg-ink px-5 py-2.5 text-xs font-medium tracking-wide text-ivory uppercase transition-colors duration-200 hover:bg-magenta-dark"
       >
-        {pending ? "Salvando…" : "Salvar alterações"}
+        Salvar alterações
       </button>
     </form>
   );
