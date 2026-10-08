@@ -8,7 +8,7 @@ import { BR_OFFSET_MS } from "./display";
 interface LeadRow {
   id: string;
   name: string;
-  email: string;
+  email: string | null;
   whatsapp: string;
   city: string | null;
   destinations: string[];
@@ -17,14 +17,14 @@ interface LeadRow {
   month: string | null;
   year: string | null;
   approximate_dates: string | null;
-  duration: string;
-  adults: number;
+  duration: string | null;
+  adults: number | null;
   children: number;
   children_ages: string | null;
-  budget_tier: string;
+  budget_tier: string | null;
   notes: string | null;
   internal_notes: string | null;
-  contact_preference: string;
+  contact_preference: string | null;
   acquisition_source: string | null;
   utm_source: string | null;
   utm_medium: string | null;
@@ -49,7 +49,7 @@ function toLead(row: LeadRow): Lead {
   return {
     id: row.id,
     name: row.name,
-    email: row.email,
+    email: row.email ?? undefined,
     whatsapp: row.whatsapp,
     city: row.city ?? undefined,
     destinations: row.destinations ?? [],
@@ -58,14 +58,14 @@ function toLead(row: LeadRow): Lead {
     month: row.month ?? undefined,
     year: row.year ?? undefined,
     approximateDates: row.approximate_dates ?? undefined,
-    duration: row.duration,
-    adults: row.adults,
+    duration: row.duration ?? undefined,
+    adults: row.adults ?? undefined,
     children: row.children,
     childrenAges: row.children_ages ?? undefined,
-    budgetTier: row.budget_tier,
+    budgetTier: row.budget_tier ?? undefined,
     notes: row.notes ?? undefined,
     internalNotes: row.internal_notes ?? undefined,
-    contactPreference: row.contact_preference,
+    contactPreference: row.contact_preference ?? undefined,
     acquisitionSource: row.acquisition_source ?? undefined,
     utmSource: row.utm_source ?? undefined,
     utmMedium: row.utm_medium ?? undefined,
@@ -536,5 +536,86 @@ export async function deleteLead(id: string): Promise<boolean> {
 
     await sql`INSERT INTO lead_events (lead_id, type, detail) VALUES (${id}, 'deleted', NULL)`;
     return true;
+  });
+}
+
+/** Só dígitos — pra comparar números digitados em formatos diferentes ("(11) 99999-9999" vs "11999999999"). */
+export function normalizePhone(value: string): string {
+  return value.replace(/\D/g, "");
+}
+
+export interface DuplicateLeadMatch {
+  id: string;
+  name: string;
+  status: LeadStatus;
+}
+
+/**
+ * Mesmo WhatsApp (comparando só os dígitos) ou mesmo e-mail (case-insensitive)
+ * entre os leads não excluídos. Usado antes de criar um lead manualmente —
+ * nunca bloqueia, só avisa quem está criando.
+ */
+export async function findDuplicateLead(input: { whatsapp: string; email?: string }): Promise<DuplicateLeadMatch | null> {
+  const normalizedPhone = normalizePhone(input.whatsapp);
+  const email = input.email?.trim().toLowerCase() || null;
+
+  return withAdminDb(async (sql) => {
+    const rows = await sql<{ id: string; name: string; status: string }[]>`
+      SELECT id, name, status FROM leads
+      WHERE deleted_at IS NULL
+        AND (
+          regexp_replace(whatsapp, '\\D', '', 'g') = ${normalizedPhone}
+          OR (${email ? sql`lower(email) = ${email}` : sql`FALSE`})
+        )
+      LIMIT 1
+    `;
+    const row = rows[0];
+    if (!row) return null;
+    return {
+      id: row.id,
+      name: row.name,
+      status: (LEAD_STATUSES as readonly string[]).includes(row.status) ? (row.status as LeadStatus) : "new",
+    };
+  });
+}
+
+export interface NewManualLeadInput {
+  name: string;
+  whatsapp: string;
+  email?: string;
+  city?: string;
+  destination?: string;
+  acquisitionSource: string;
+  internalNotes?: string;
+  nextAction?: string;
+  priority: boolean;
+  followUpAt?: Date | null;
+}
+
+/**
+ * Lead criado manualmente pelo admin (WhatsApp, Instagram, indicação,
+ * ligação, presencial...) — mesma tabela e mesmo shape de `Lead`, só sem os
+ * campos específicos do formulário público (duration/adults/budgetTier/
+ * contactPreference ficam `null`, liberados pela migração que removeu o
+ * NOT NULL dessas colunas). Status sempre "new" e sempre gera o evento
+ * "created" na timeline, igual a um lead do site.
+ */
+export async function createLeadManual(input: NewManualLeadInput): Promise<Lead> {
+  return withAdminDb(async (sql) => {
+    const [row] = await sql<LeadRow[]>`
+      INSERT INTO leads (
+        name, email, whatsapp, city, destinations, duration, adults, children,
+        budget_tier, contact_preference, acquisition_source, internal_notes,
+        next_action, priority, follow_up_at, status
+      ) VALUES (
+        ${input.name}, ${input.email || null}, ${input.whatsapp}, ${input.city || null},
+        ${input.destination ? [input.destination] : []}, ${null}, ${null}, ${0},
+        ${null}, ${null}, ${input.acquisitionSource}, ${input.internalNotes || null},
+        ${input.nextAction || null}, ${input.priority}, ${input.followUpAt ?? null}, 'new'
+      )
+      RETURNING *
+    `;
+    await sql`INSERT INTO lead_events (lead_id, type, detail) VALUES (${row.id}, 'created', 'Criado manualmente pelo admin')`;
+    return toLead(row);
   });
 }

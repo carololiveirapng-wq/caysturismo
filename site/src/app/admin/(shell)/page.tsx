@@ -57,7 +57,18 @@ export default async function AdminDashboardPage() {
 
   return (
     <div className="flex flex-col gap-8">
-      <AdminPageHeader title="Dashboard" description="Visão geral da operação comercial de hoje." />
+      <AdminPageHeader
+        title="Dashboard"
+        description="Visão geral da operação comercial de hoje."
+        actions={
+          <Link
+            href="/admin/leads/novo"
+            className="inline-flex items-center gap-1.5 bg-ink px-4 py-2.5 text-xs font-medium tracking-wide text-ivory uppercase transition-colors duration-200 hover:bg-magenta-dark"
+          >
+            Novo lead
+          </Link>
+        }
+      />
 
       {loadError ? (
         <AdminEmptyState title="Não foi possível carregar os dados." supporting={loadError} />

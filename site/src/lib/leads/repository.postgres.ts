@@ -173,10 +173,10 @@ export class PostgresLeadRepository implements LeadRepository {
         budget_tier, notes, contact_preference, acquisition_source,
         utm_source, utm_medium, utm_campaign, utm_content, utm_term, source_path
       ) VALUES (
-        ${lead.name}, ${lead.email}, ${lead.whatsapp}, ${lead.city ?? null}, ${lead.destinations},
+        ${lead.name}, ${lead.email ?? null}, ${lead.whatsapp}, ${lead.city ?? null}, ${lead.destinations},
         ${lead.experience ?? null}, ${lead.travelProduct ?? null}, ${lead.month ?? null}, ${lead.year ?? null},
-        ${lead.approximateDates ?? null}, ${lead.duration}, ${lead.adults}, ${lead.children},
-        ${lead.childrenAges ?? null}, ${lead.budgetTier}, ${lead.notes ?? null}, ${lead.contactPreference},
+        ${lead.approximateDates ?? null}, ${lead.duration ?? null}, ${lead.adults ?? null}, ${lead.children},
+        ${lead.childrenAges ?? null}, ${lead.budgetTier ?? null}, ${lead.notes ?? null}, ${lead.contactPreference ?? null},
         ${lead.acquisitionSource ?? null}, ${lead.utmSource ?? null}, ${lead.utmMedium ?? null},
         ${lead.utmCampaign ?? null}, ${lead.utmContent ?? null}, ${lead.utmTerm ?? null}, ${lead.sourcePath ?? null}
       )

@@ -314,12 +314,20 @@ export default async function AdminLeadsPage({ searchParams }: PageProps<"/admin
         title="Leads"
         description="Todos os pedidos de planejamento recebidos pelo site."
         actions={
-          <a
-            href={exportHref}
-            className="inline-flex items-center gap-1.5 border border-ink/15 bg-ivory px-4 py-2.5 text-xs font-medium tracking-wide text-ink uppercase transition-colors duration-200 hover:border-ink/30"
-          >
-            Exportar CSV
-          </a>
+          <>
+            <a
+              href={exportHref}
+              className="inline-flex items-center gap-1.5 border border-ink/15 bg-ivory px-4 py-2.5 text-xs font-medium tracking-wide text-ink uppercase transition-colors duration-200 hover:border-ink/30"
+            >
+              Exportar CSV
+            </a>
+            <Link
+              href="/admin/leads/novo"
+              className="inline-flex items-center gap-1.5 bg-ink px-4 py-2.5 text-xs font-medium tracking-wide text-ivory uppercase transition-colors duration-200 hover:bg-magenta-dark"
+            >
+              Novo lead
+            </Link>
+          </>
         }
       />
 

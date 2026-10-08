@@ -14,20 +14,20 @@ function buildFields(lead: Lead): { label: string; value: string }[] {
   const fields: { label: string; value: string }[] = [
     { label: "Nome", value: lead.name },
     { label: "WhatsApp", value: lead.whatsapp },
-    { label: "E-mail", value: lead.email },
+    { label: "E-mail", value: lead.email ?? "" },
     { label: "Destino(s)", value: lead.destinations.join(", ") || "não informado" },
   ];
   if (lead.experience) fields.push({ label: "Experiência", value: lead.experience });
   if (lead.travelProduct) fields.push({ label: "Viagem relacionada", value: lead.travelProduct });
   const period = [lead.month, lead.year].filter(Boolean).join("/") || lead.approximateDates;
   if (period) fields.push({ label: "Data/período", value: period });
-  fields.push({ label: "Duração", value: lead.duration });
-  fields.push({ label: "Adultos", value: String(lead.adults) });
+  fields.push({ label: "Duração", value: lead.duration ?? "" });
+  fields.push({ label: "Adultos", value: String(lead.adults ?? "") });
   fields.push({
     label: "Crianças",
     value: lead.children > 0 ? `${lead.children}${lead.childrenAges ? ` (${lead.childrenAges})` : ""}` : "0",
   });
-  fields.push({ label: "Investimento", value: lead.budgetTier });
+  fields.push({ label: "Investimento", value: lead.budgetTier ?? "" });
   if (lead.notes) fields.push({ label: "Observações", value: lead.notes });
   if (lead.acquisitionSource) fields.push({ label: "Origem", value: lead.acquisitionSource });
   const utm = [lead.utmSource && `source=${lead.utmSource}`, lead.utmCampaign && `campaign=${lead.utmCampaign}`]

@@ -3,7 +3,8 @@ export interface Lead {
   id: string;
 
   name: string;
-  email: string;
+  /** Opcional só em leads criados manualmente pelo admin — o formulário público sempre exige. */
+  email?: string;
   whatsapp: string;
   city?: string;
 
@@ -14,16 +15,20 @@ export interface Lead {
   month?: string;
   year?: string;
   approximateDates?: string;
-  duration: string;
+  /** Ausente em leads criados manualmente — campo específico do formulário público. */
+  duration?: string;
 
-  adults: number;
+  /** Ausente em leads criados manualmente — campo específico do formulário público. */
+  adults?: number;
   children: number;
   childrenAges?: string;
 
-  budgetTier: string;
+  /** Ausente em leads criados manualmente — campo específico do formulário público. */
+  budgetTier?: string;
   notes?: string;
 
-  contactPreference: string;
+  /** Ausente em leads criados manualmente — campo específico do formulário público. */
+  contactPreference?: string;
   acquisitionSource?: string;
 
   utmSource?: string;
@@ -72,6 +77,10 @@ export const LEAD_LOST_REASON_LABELS: Record<LeadLostReason, string> = {
   fechou_outro: "Fechou com outro",
   outro: "Outro",
 };
+
+/** Opções de origem pra lead criado manualmente pelo admin — valor já é o rótulo exibido, sem mapeamento. */
+export const MANUAL_LEAD_ORIGINS = ["WhatsApp", "Instagram", "Indicação", "Ligação", "Site", "Outro"] as const;
+export type ManualLeadOrigin = (typeof MANUAL_LEAD_ORIGINS)[number];
 
 /** O que a action recebe pra montar um Lead — sem os campos que o repository/admin decidem ou que só existem pra uso interno da equipe. */
 export type NewLead = Omit<

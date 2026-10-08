@@ -61,7 +61,7 @@ export async function GET(request: NextRequest) {
 
     return [
       lead.name,
-      lead.email,
+      lead.email ?? "",
       lead.whatsapp,
       destino,
       experiencia,

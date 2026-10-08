@@ -32,8 +32,9 @@ function Field({ label, value }: { label: string; value?: ReactNode }) {
   );
 }
 
-export default async function AdminLeadDetailPage({ params }: PageProps<"/admin/leads/[id]">) {
+export default async function AdminLeadDetailPage({ params, searchParams }: PageProps<"/admin/leads/[id]">) {
   const { id } = await params;
+  const { created } = await searchParams;
 
   let lead;
   try {
@@ -94,13 +95,15 @@ export default async function AdminLeadDetailPage({ params }: PageProps<"/admin/
               <MessageCircle className="size-3.5" aria-hidden />
               WhatsApp
             </a>
-            <a
-              href={`mailto:${lead.email}`}
-              className="inline-flex items-center gap-1.5 border border-ink/15 bg-ivory px-4 py-2.5 text-xs font-medium tracking-wide text-ink uppercase transition-colors duration-200 hover:border-ink/30"
-            >
-              <Mail className="size-3.5" aria-hidden />
-              E-mail
-            </a>
+            {lead.email && (
+              <a
+                href={`mailto:${lead.email}`}
+                className="inline-flex items-center gap-1.5 border border-ink/15 bg-ivory px-4 py-2.5 text-xs font-medium tracking-wide text-ink uppercase transition-colors duration-200 hover:border-ink/30"
+              >
+                <Mail className="size-3.5" aria-hidden />
+                E-mail
+              </a>
+            )}
           </>
         }
       />
@@ -108,6 +111,12 @@ export default async function AdminLeadDetailPage({ params }: PageProps<"/admin/
       <Link href="/admin/leads" className="-mt-4 text-xs font-medium tracking-wide text-stone uppercase hover:text-ink">
         ← Voltar para leads
       </Link>
+
+      {created === "1" && (
+        <p role="status" className="border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
+          Lead criado.
+        </p>
+      )}
 
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
         <div className="flex flex-col gap-8 lg:col-span-2">
@@ -126,9 +135,11 @@ export default async function AdminLeadDetailPage({ params }: PageProps<"/admin/
               <Field
                 label="E-mail"
                 value={
-                  <a href={`mailto:${lead.email}`} className="text-magenta hover:underline">
-                    {lead.email}
-                  </a>
+                  lead.email ? (
+                    <a href={`mailto:${lead.email}`} className="text-magenta hover:underline">
+                      {lead.email}
+                    </a>
+                  ) : undefined
                 }
               />
               <Field label="Cidade" value={lead.city} />
