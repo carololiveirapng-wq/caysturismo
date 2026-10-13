@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getArticleBySlug, getArticleSlugs } from "@/lib/cms";
+import { getArticleBySlug, getArticleSlugs, getDestinationBySlug } from "@/lib/cms";
 import { Container } from "@/components/ui/container";
 import { ArticleHero } from "@/components/curadoria/article-hero";
 import { ArticleToc } from "@/components/curadoria/article-toc";
@@ -8,6 +8,7 @@ import { ArticleBlocks } from "@/components/curadoria/article-blocks";
 import { ArticleRelated } from "@/components/curadoria/article-related";
 import { DestinationFaq } from "@/components/destination/destination-faq";
 import { DestinationFinalCTA } from "@/components/destination/destination-final-cta";
+import { InlineCtaStrip } from "@/components/destination/inline-cta-strip";
 import { PersistentMobileCTA } from "@/components/ui/persistent-mobile-cta";
 import { siteConfig } from "@/lib/site-config";
 import { jsonLdString } from "@/lib/json-ld";
@@ -52,6 +53,7 @@ export default async function CuradoriaArticlePage({ params }: PageProps<"/curad
   const article = await getArticleBySlug(slug);
   if (!article) notFound();
 
+  const relatedDestination = article.relatedDestination ? await getDestinationBySlug(article.relatedDestination) : undefined;
   const contactHref = article.relatedDestination ? `/contato?destino=${article.relatedDestination}` : "/contato";
 
   const articleSchema = {
@@ -100,6 +102,15 @@ export default async function CuradoriaArticlePage({ params }: PageProps<"/curad
         </Container>
       </div>
 
+      {relatedDestination && (
+        <InlineCtaStrip
+          title={`Planejando conhecer ${relatedDestination.name}?`}
+          supporting="A Cays pode transformar essas referências em uma viagem desenhada para você."
+          ctaLabel="Planejar minha viagem"
+          ctaHref={contactHref}
+        />
+      )}
+
       {article.faq && article.faq.length > 0 && <DestinationFaq id="faq" items={article.faq} />}
 
       <ArticleRelated
@@ -109,7 +120,7 @@ export default async function CuradoriaArticlePage({ params }: PageProps<"/curad
       />
 
       <DestinationFinalCTA
-        title="Leu, gostou, quer viver isso de perto?"
+        title={relatedDestination ? `Pronto para planejar sua viagem para ${relatedDestination.name}?` : "Leu, gostou, quer viver isso de perto?"}
         supporting="Conte para a Cays o que você imagina viver. Nós cuidamos do caminho."
         ctaLabel="Planejar minha viagem"
         ctaHref={contactHref}

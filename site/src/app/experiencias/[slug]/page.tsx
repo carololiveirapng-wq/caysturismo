@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getExperienceBySlug, getExperienceSlugs } from "@/lib/cms";
+import { getExperienceBySlug, getExperienceSlugs, getSettings } from "@/lib/cms";
 import { ExperienceHero } from "@/components/experience/experience-hero";
+import { TravelPlanningPanel, type TravelPlanningItem } from "@/components/commercial/travel-planning-panel";
 import { ExperienceManifesto } from "@/components/experience/manifesto";
 import { HowItWorks } from "@/components/experience/how-it-works";
 import { MonthlyPicks } from "@/components/experience/monthly-picks";
@@ -51,12 +52,34 @@ export async function generateMetadata({
   };
 }
 
+/** Destination Wedding tem logística própria (convidados, cerimônia) — os outros estilos usam o mesmo conjunto genérico e honesto. */
+function planningItems(experience: { slug: string }): TravelPlanningItem[] {
+  if (experience.slug === "destination-wedding") {
+    return [
+      { label: "Destino", value: "Personalizado" },
+      { label: "Convidados", value: "Logística pensada para quem vai celebrar com vocês" },
+      { label: "Planejamento", value: "Cuidamos de cada detalhe, do início ao grande dia" },
+      { label: "Investimento", value: "Sob consulta" },
+    ];
+  }
+  return [
+    { label: "Destino", value: "Personalizado" },
+    { label: "Período", value: "Quando você quiser viajar" },
+    { label: "Duração", value: "Sob medida" },
+    { label: "Investimento", value: "Sob consulta" },
+  ];
+}
+
 export default async function ExperiencePage({ params }: PageProps<"/experiencias/[slug]">) {
   const { slug } = await params;
-  const experience = await getExperienceBySlug(slug);
+  const [experience, { whatsappHref }] = await Promise.all([getExperienceBySlug(slug), getSettings()]);
   if (!experience) notFound();
 
   const contactHref = `/contato?experiencia=${experience.slug}`;
+
+  // "Ideal para" só com dado real: nomes dos estilos (`subtypes`) já
+  // cadastrados pra essa experiência — nunca uma tag inventada.
+  const planningTags = experience.subtypes?.slice(0, 4).map((s) => s.name);
 
   const subnavItems = [
     experience.manifesto || (experience.howItWorks && experience.howItWorks.length > 0)
@@ -79,6 +102,16 @@ export default async function ExperiencePage({ params }: PageProps<"/experiencia
         }}
       />
       <ExperienceHero experience={experience} contactHref={contactHref} />
+
+      <TravelPlanningPanel
+        title={`${experience.name} sob medida`}
+        subtitle="Destino, hospedagem, experiências e ritmo pensados para o seu jeito de viajar."
+        tags={planningTags}
+        items={planningItems(experience)}
+        ctaLabel="Planejar esta viagem"
+        ctaHref={contactHref}
+        whatsappHref={whatsappHref}
+      />
 
       <StickySubnav items={subnavItems} ctaLabel="Planejar viagem" ctaHref={contactHref} />
 

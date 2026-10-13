@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getDestinationBySlug, getDestinationSlugs } from "@/lib/cms";
+import { getDestinationBySlug, getDestinationSlugs, getSettings } from "@/lib/cms";
 import { DestinationHero } from "@/components/destination/destination-hero";
+import { TravelPlanningPanel } from "@/components/commercial/travel-planning-panel";
 import { DestinationIntroduction } from "@/components/destination/destination-introduction";
 import { KeyInfo } from "@/components/destination/key-info";
 import { WhyCays } from "@/components/destination/why-cays";
@@ -55,10 +56,15 @@ export async function generateMetadata({
 
 export default async function DestinationPage({ params }: PageProps<"/destinos/[slug]">) {
   const { slug } = await params;
-  const destination = await getDestinationBySlug(slug);
+  const [destination, { whatsappHref }] = await Promise.all([getDestinationBySlug(slug), getSettings()]);
   if (!destination) notFound();
 
   const contactHref = `/contato?destino=${destination.slug}`;
+
+  // "Ideal para" só com dado real: os títulos de `experiences[]` já são
+  // conteúdo editorial aprovado (a mesma seção "O que viver" mais abaixo),
+  // nunca uma tag genérica inventada pro painel.
+  const planningTags = destination.experiences?.slice(0, 4).map((e) => e.title);
 
   const subnavItems = [
     destination.introduction ? { id: "visao-geral", label: "Visão geral" } : null,
@@ -98,6 +104,21 @@ export default async function DestinationPage({ params }: PageProps<"/destinos/[
       ) : null}
 
       <DestinationHero destination={destination} />
+
+      <TravelPlanningPanel
+        title={`${destination.name} sob medida`}
+        subtitle="Uma viagem desenhada de acordo com seu perfil, período e estilo."
+        tags={planningTags}
+        items={[
+          { label: "Quando viajar", value: destination.keyInfo?.bestTime ?? "Definimos a melhor época de acordo com o que você quer viver." },
+          { label: "Duração", value: "Personalizada" },
+          { label: "Hospedagem", value: "Selecionada de acordo com o perfil da viagem" },
+          { label: "Investimento", value: "Sob consulta" },
+        ]}
+        ctaLabel="Planejar esta viagem"
+        ctaHref={contactHref}
+        whatsappHref={whatsappHref}
+      />
 
       <StickySubnav items={subnavItems} ctaLabel="Planejar viagem" ctaHref={contactHref} />
 
