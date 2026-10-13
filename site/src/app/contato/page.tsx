@@ -35,11 +35,16 @@ export default async function ContatoPage({ searchParams }: PageProps<"/contato"
   const destinoSlug = first(params.destino);
   const experienciaSlug = first(params.experiencia);
   const viagemSlug = first(params.viagem);
+  const estilo = first(params.estilo);
 
   let planningLabel: string | undefined;
   let sourcePath: string | undefined;
   let travelProduct: string | undefined;
   const initialTripValues: Partial<TripStepValues> = {};
+  // Pré-preenche as observações (campo real, visível e editável) em vez de
+  // gravar algo que o cliente nunca viu/escreveu — mesmo princípio já usado
+  // pra destino/experiência pré-selecionados.
+  if (estilo) initialTripValues.observacoes = `Estilo de interesse: ${estilo}`;
 
   if (destinoSlug) {
     const destination = await getDestinationBySlug(destinoSlug);
@@ -72,6 +77,7 @@ export default async function ContatoPage({ searchParams }: PageProps<"/contato"
       <Container>
         <ContactFlow
           planningLabel={planningLabel}
+          styleLabel={estilo ? `Você selecionou: ${estilo}` : undefined}
           initialTripValues={initialTripValues}
           travelProduct={travelProduct}
           sourcePath={sourcePath}

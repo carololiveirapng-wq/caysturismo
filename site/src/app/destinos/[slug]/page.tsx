@@ -154,6 +154,7 @@ export default async function DestinationPage({ params }: PageProps<"/destinos/[
           id="o-que-viver"
           items={destination.experiences}
           heading={destination.experiencesHeading}
+          destinationSlug={destination.slug}
         />
       )}
 

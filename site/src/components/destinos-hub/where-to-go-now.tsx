@@ -1,7 +1,9 @@
+import Link from "next/link";
 import { Container } from "@/components/ui/container";
 import { EditorialHeading } from "@/components/ui/editorial-heading";
 import { ImageReveal } from "@/components/ui/image-reveal";
 import { Reveal } from "@/components/ui/reveal";
+import { destinationHref } from "@/lib/links";
 import type { DemoImage } from "@/types";
 
 const MONTH_NAMES = [
@@ -32,20 +34,26 @@ export function WhereToGoNow({ picks }: { picks: WhereToGoPick[] }) {
 
         <div className="mt-9 grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-5">
           {picks.map((pick) => (
-            <div key={pick.slug}>
-              <ImageReveal
-                src={pick.image.src}
-                alt={pick.image.alt}
-                width={480}
-                height={600}
-                sizes="(min-width: 768px) 22vw, 45vw"
-                containerClassName="aspect-[4/5]"
-              />
+            <Link
+              key={pick.slug}
+              href={destinationHref(pick.slug)}
+              className="group/tile block focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-magenta-dark"
+            >
+              <div className="relative overflow-hidden">
+                <ImageReveal
+                  src={pick.image.src}
+                  alt={pick.image.alt}
+                  width={480}
+                  height={600}
+                  sizes="(min-width: 768px) 22vw, 45vw"
+                  containerClassName="aspect-[4/5] transition-transform duration-500 ease-[var(--ease-editorial)] group-hover/tile:scale-[1.04]"
+                />
+              </div>
               <div className="mt-3 border-t border-ink/10 pt-3">
-                <h3 className="font-serif text-lg text-ink">{pick.name}</h3>
+                <h3 className="font-serif text-lg text-ink transition-colors duration-300 group-hover/tile:text-magenta-dark">{pick.name}</h3>
                 <p className="mt-1 text-xs leading-snug text-stone">{pick.note}</p>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </Container>

@@ -122,7 +122,7 @@ export default async function ExperiencePage({ params }: PageProps<"/experiencia
       )}
 
       {experience.subtypes && experience.subtypes.length > 0 && (
-        <Subtypes id="estilos" items={experience.subtypes} heading={experience.subtypesHeading} />
+        <Subtypes id="estilos" items={experience.subtypes} heading={experience.subtypesHeading} experienceSlug={experience.slug} />
       )}
 
       {experience.partnerTypes && experience.partnerTypes.length > 0 && (

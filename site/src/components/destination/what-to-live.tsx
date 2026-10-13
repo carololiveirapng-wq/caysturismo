@@ -1,7 +1,11 @@
+"use client";
+
+import Link from "next/link";
 import { Container } from "@/components/ui/container";
 import { EditorialHeading } from "@/components/ui/editorial-heading";
 import { ImageReveal } from "@/components/ui/image-reveal";
 import { Reveal } from "@/components/ui/reveal";
+import { trackTravelStyleSelected } from "@/lib/analytics";
 import type { DestinationExperienceHighlight } from "@/types";
 import { cn } from "@/lib/utils";
 
@@ -18,10 +22,13 @@ export function WhatToLive({
   id,
   items,
   heading = "O que viver",
+  destinationSlug,
 }: {
   id: string;
   items: DestinationExperienceHighlight[];
   heading?: string;
+  /** Usado pro prefill do /contato (?destino=) e pro evento de analytics. */
+  destinationSlug: string;
 }) {
   if (items.length === 0) return null;
 
@@ -44,21 +51,34 @@ export function WhatToLive({
                 TILE_SPAN[i % TILE_SPAN.length],
               )}
             >
-              <ImageReveal
-                src={item.image.src}
-                alt={item.image.alt}
-                fill
-                sizes="(min-width: 768px) 40vw, 90vw"
-                containerClassName="absolute inset-0"
-              />
-              <div
-                aria-hidden
-                className="absolute inset-0 bg-gradient-to-t from-ink/75 via-ink/5 to-transparent"
-              />
-              <div className="absolute inset-x-0 bottom-0 p-4 md:p-5">
-                <h3 className="font-serif text-lg text-ivory md:text-xl">{item.title}</h3>
-                <p className="mt-1 text-sm leading-snug text-ivory/80">{item.text}</p>
-              </div>
+              <Link
+                href={`/contato?destino=${destinationSlug}&estilo=${encodeURIComponent(item.title)}`}
+                onClick={() => trackTravelStyleSelected({ pageType: "destino", pageSlug: destinationSlug, style: item.title, destination: destinationSlug })}
+                aria-label={`${item.title} — planejar viagem com esse estilo`}
+                className="absolute inset-0 block focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-magenta-dark"
+              >
+                <ImageReveal
+                  src={item.image.src}
+                  alt={item.image.alt}
+                  fill
+                  sizes="(min-width: 768px) 40vw, 90vw"
+                  containerClassName="absolute inset-0 transition-transform duration-500 ease-[var(--ease-editorial)] group-hover/tile:scale-[1.04]"
+                />
+                <div
+                  aria-hidden
+                  className="absolute inset-0 bg-gradient-to-t from-ink/75 via-ink/5 to-transparent"
+                />
+                <div className="absolute inset-x-0 bottom-0 p-4 md:p-5">
+                  <h3 className="font-serif text-lg text-ivory md:text-xl">{item.title}</h3>
+                  <p className="mt-1 text-sm leading-snug text-ivory/80">{item.text}</p>
+                </div>
+                <span
+                  aria-hidden
+                  className="absolute top-3 right-3 flex size-7 items-center justify-center rounded-full border border-ivory/60 text-ivory opacity-0 transition-opacity duration-300 group-hover/tile:opacity-100"
+                >
+                  ↗
+                </span>
+              </Link>
             </Reveal>
           ))}
         </div>

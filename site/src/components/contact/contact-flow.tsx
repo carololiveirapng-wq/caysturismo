@@ -35,6 +35,8 @@ const MONTHS = [
 
 interface ContactFlowProps {
   planningLabel?: string;
+  /** Confirmação discreta de qual card de estilo o visitante clicou antes de chegar aqui (?estilo=). */
+  styleLabel?: string;
   initialTripValues?: Partial<TripStepValues>;
   travelProduct?: string;
   sourcePath?: string;
@@ -43,7 +45,7 @@ interface ContactFlowProps {
   reviews: GoogleReview[];
 }
 
-export function ContactFlow({ planningLabel, initialTripValues, travelProduct, sourcePath, settings, destinations, reviews }: ContactFlowProps) {
+export function ContactFlow({ planningLabel, styleLabel, initialTripValues, travelProduct, sourcePath, settings, destinations, reviews }: ContactFlowProps) {
   const router = useRouter();
   const [trip, setTrip] = useState<TripStepValues>({ ...defaultTripValues, ...initialTripValues });
   const [about, setAbout] = useState<AboutYouFormState>(defaultAboutYouValues);
@@ -115,10 +117,19 @@ export function ContactFlow({ planningLabel, initialTripValues, travelProduct, s
         </h1>
         <p className="mt-3 text-base text-stone">Conte o essencial. A partir daqui, a Cays cuida dos detalhes.</p>
 
-        {planningLabel && (
-          <p className="mt-5 inline-block border border-ink/10 bg-sand px-4 py-2 text-xs font-medium tracking-wide text-ink uppercase">
-            {planningLabel}
-          </p>
+        {(planningLabel || styleLabel) && (
+          <div className="mt-5 flex flex-wrap items-center justify-center gap-2">
+            {planningLabel && (
+              <p className="inline-block border border-ink/10 bg-sand px-4 py-2 text-xs font-medium tracking-wide text-ink uppercase">
+                {planningLabel}
+              </p>
+            )}
+            {styleLabel && (
+              <p className="inline-block border border-magenta/25 bg-magenta/5 px-4 py-2 text-xs font-medium tracking-wide text-ink uppercase">
+                {styleLabel}
+              </p>
+            )}
+          </div>
         )}
       </div>
 
