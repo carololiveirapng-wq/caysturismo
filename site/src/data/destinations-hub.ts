@@ -11,7 +11,7 @@ export interface ContinentGroup {
 export const continents: ContinentGroup[] = [
   { slug: "americas", name: "Américas", image: { src: unsplash("1483729558449-99ef09a8c325"), alt: "Vista aérea do Pão de Açúcar e da Baía de Guanabara, Rio de Janeiro" } },
   { slug: "europa", name: "Europa", image: { src: unsplash("1523906834658-6e24ef2386f9"), alt: "Gôndola sob a Ponte Rialto em Veneza" } },
-  { slug: "asia", name: "Ásia", image: { src: unsplash("1533105079780-92b9be482077"), alt: "Pagode tradicional com o Monte Fuji ao fundo" } },
+  { slug: "asia", name: "Ásia", image: { src: unsplash("1608037521277-154cd1b89191"), alt: "Grande Muralha da China serpenteando por montanhas verdes" } },
   { slug: "africa-oriente-medio", name: "África & Oriente Médio", image: { src: unsplash("1539768942893-daf53e448371"), alt: "Caravana de camelos junto às pirâmides de Gizé ao entardecer" } },
   { slug: "indico", name: "Índico", image: { src: unsplash("1540202404-a2f29016b523"), alt: "Bangalôs sobre a água em atol nas Maldivas" } },
   { slug: "oceania", name: "Oceania", image: { src: unsplash("1683606095922-cda452e83878"), alt: "Ópera de Sydney e a Harbour Bridge vistas da baía" } },
