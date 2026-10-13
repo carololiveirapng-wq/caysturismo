@@ -1,5 +1,3 @@
-import type { DemoImage } from "./content";
-
 /**
  * Modelo do buscador de curadoria (seção "Descoberta"). Os campos extras
  * (active, featured, order) não têm efeito no front-end mockado — existem
@@ -36,19 +34,4 @@ export interface DiscoveryMonth {
   status: "default" | "recommended";
   /** Mês já passado no ano corrente — não pode ser selecionado. */
   disabled?: boolean;
-}
-
-export interface MockJourney {
-  slug: string;
-  title: string;
-  destinationSlug: string;
-  destinationName: string;
-  experienceSlug: string;
-  experienceName: string;
-  /** Free-form display period, e.g. "Março a Maio" — not a real date range. */
-  period: string;
-  summary: string;
-  image: DemoImage;
-  status?: "draft" | "published";
-  featured?: boolean;
 }
