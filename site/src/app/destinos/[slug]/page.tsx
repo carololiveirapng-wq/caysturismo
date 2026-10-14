@@ -194,7 +194,7 @@ export default async function DestinationPage({ params }: PageProps<"/destinos/[
       )}
 
       <DestinationFinalCTA
-        title={destination.finalCta?.title ?? `Sua viagem para ${destination.name} começa em uma conversa.`}
+        title={destination.finalCta?.title ?? `${destination.name}: sua próxima viagem começa aqui.`}
         supporting={
           destination.finalCta?.supporting ??
           "Conte para a Cays o que você deseja viver. Nós cuidamos do caminho."

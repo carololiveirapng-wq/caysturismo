@@ -36,16 +36,16 @@ export default async function Home() {
         <Positioning slogan={settings.slogan} foundedYear={foundedYear} positioning={home.positioning} />
       )}
       {home.featuredExperiences.length > 0 && <Experiences experiences={home.featuredExperiences} />}
-      {home.process && <JourneyProcess process={home.process} />}
+      <TeamTeaser people={people} />
       {(home.featuredDestinations.length > 0 || home.destinationCollections.length > 0) && (
         <DestinationsSection destinations={home.featuredDestinations} collections={home.destinationCollections} />
       )}
-      {home.featuredArticles.length > 0 && <Journal articles={home.featuredArticles} />}
       {home.featuredTravelProducts.length > 0 && <FeaturedJourney travelProducts={home.featuredTravelProducts} />}
-      <TeamTeaser people={people} />
+      {home.process && <JourneyProcess process={home.process} />}
       <TravelerStories stories={home.travelerStories} />
       {testimonials.length > 0 && <Testimonials reviews={testimonials} />}
       {home.finalCta && <FinalCTA finalCta={home.finalCta} />}
+      {home.featuredArticles.length > 0 && <Journal articles={home.featuredArticles} />}
     </>
   );
 }

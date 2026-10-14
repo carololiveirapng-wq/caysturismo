@@ -59,14 +59,12 @@ function LatestGrid({ articles }: { articles: CuradoriaArticle[] }) {
   );
 }
 
-export function LatestSection({
-  articles,
-  categories,
-}: {
-  articles: CuradoriaArticle[];
-  categories: readonly string[];
-}) {
+export function LatestSection({ articles }: { articles: CuradoriaArticle[] }) {
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
+
+  // Abas vêm só das categorias que de fato têm artigo — nunca uma aba
+  // "demonstrativa" vazia esperando conteúdo que ainda não existe.
+  const categories = useMemo(() => Array.from(new Set(articles.map((a) => a.category))), [articles]);
   const items = ["Todos", ...categories];
 
   const filtered = useMemo(

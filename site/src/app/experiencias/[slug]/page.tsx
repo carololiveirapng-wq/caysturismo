@@ -161,7 +161,7 @@ export default async function ExperiencePage({ params }: PageProps<"/experiencia
       {experience.faq && experience.faq.length > 0 && <DestinationFaq id="faq" items={experience.faq} />}
 
       <DestinationFinalCTA
-        title={experience.finalCta?.title ?? `Pronto para planejar sua ${experience.name}?`}
+        title={experience.finalCta?.title ?? "Pronto para planejar a sua viagem?"}
         supporting={
           experience.finalCta?.supporting ??
           "Conte para a Cays o que você imagina viver. Nós cuidamos do caminho."

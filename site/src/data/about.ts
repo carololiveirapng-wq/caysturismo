@@ -29,10 +29,7 @@ export const aboutMilestones = [
 ];
 
 export const aboutPillars = [
-  { title: "Escuta", text: "Cada roteiro começa numa conversa, não num formulário." },
+  { title: "Escuta", text: "Cada roteiro começa entendendo você — não preenchendo um formulário." },
   { title: "Curadoria", text: "Cada escolha — hospedagem, experiência, ritmo — passa pelo nosso olhar." },
   { title: "Cuidado", text: "Do planejamento ao retorno, alguém acompanha cada detalhe." },
 ];
-
-/** Sem nomes/fotos reais ainda — cards de placeholder, nunca perfis inventados. */
-export const aboutTeamRoles = ["Curadoria de Viagens", "Planejamento & Logística", "Atendimento ao Cliente"];

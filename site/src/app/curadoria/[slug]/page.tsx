@@ -120,7 +120,7 @@ export default async function CuradoriaArticlePage({ params }: PageProps<"/curad
       />
 
       <DestinationFinalCTA
-        title={relatedDestination ? `Pronto para planejar sua viagem para ${relatedDestination.name}?` : "Leu, gostou, quer viver isso de perto?"}
+        title={relatedDestination ? `${relatedDestination.name}: vamos planejar sua viagem?` : "Leu, gostou, quer viver isso de perto?"}
         supporting="Conte para a Cays o que você imagina viver. Nós cuidamos do caminho."
         ctaLabel="Planejar minha viagem"
         ctaHref={contactHref}

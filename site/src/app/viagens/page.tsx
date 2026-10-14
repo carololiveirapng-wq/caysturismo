@@ -70,6 +70,21 @@ export default async function ViagensHubPage({ searchParams }: PageProps<"/viage
   const featured = getFeaturedItems(active).slice(0, 2);
   const filtered = filterTravelProducts(active, filters);
 
+  // Com um catálogo pequeno, "Em destaque" só faz sentido quando sobra algo
+  // além dele pra descobrir na grade abaixo — senão é a mesma viagem duas
+  // vezes na mesma página.
+  const showFeatured = featured.length > 0 && featured.length < active.length;
+
+  // Os dropdowns de destino/experiência só listam o que de fato tem viagem
+  // associada — selecionar qualquer outra opção sempre voltaria zero
+  // resultados, o que faz o catálogo parecer maior do que é.
+  const availableDestinationSlugs = new Set(active.flatMap((p) => p.destinations));
+  const availableExperienceSlugs = new Set(active.flatMap((p) => p.experiences));
+  const filterableDestinations = destinations
+    .filter((d) => d.active && availableDestinationSlugs.has(d.slug))
+    .map((d) => ({ slug: d.slug, name: d.name }));
+  const filterableExperiences = experiences.filter((exp) => availableExperienceSlugs.has(exp.slug));
+
   return (
     <>
       <ShortHero
@@ -79,13 +94,13 @@ export default async function ViagensHubPage({ searchParams }: PageProps<"/viage
         image={hub.hero.image}
       />
 
-      <FeaturedProducts products={featured} />
+      {showFeatured && <FeaturedProducts products={featured} />}
 
       <section className="bg-ivory py-14 md:py-20">
         <Container>
           <TravelProductFilters
-            experiences={experiences}
-            destinations={destinations.filter((d) => d.active).map((d) => ({ slug: d.slug, name: d.name }))}
+            experiences={filterableExperiences}
+            destinations={filterableDestinations}
           />
           <div className="mt-10">
             <ResultsGrid products={filtered} />

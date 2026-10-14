@@ -139,9 +139,6 @@ export function Testimonials({ reviews }: { reviews: GoogleReview[] }) {
 
               <figcaption className="mt-7 text-sm text-stone">
                 <span className="block font-medium text-ink">{activeReview.authorName}</span>
-                {activeReview.relativeTime && (
-                  <span className="mt-0.5 block">{activeReview.relativeTime}</span>
-                )}
               </figcaption>
 
               <div className="mt-5 flex items-center justify-between gap-4 border-t border-ink/10 pt-5">

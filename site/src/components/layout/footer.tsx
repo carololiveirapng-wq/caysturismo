@@ -35,8 +35,8 @@ const legalLinks = [
 
 export function Footer({ settings }: { settings: SiteSettings }) {
   const legalMeta = [
-    siteConfig.cnpj && `CNPJ ${siteConfig.cnpj}`,
-    siteConfig.cadastur && `Cadastur ${siteConfig.cadastur}`,
+    settings.cnpj && `CNPJ ${settings.cnpj}`,
+    settings.cadastur && `Cadastur ${settings.cadastur}`,
   ].filter(Boolean);
 
   return (

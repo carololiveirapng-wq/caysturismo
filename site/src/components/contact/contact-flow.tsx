@@ -284,7 +284,7 @@ export function ContactFlow({ planningLabel, styleLabel, initialTripValues, trav
                     id="whatsapp"
                     type="tel"
                     autoComplete="tel"
-                    placeholder="(11) 99999-9999"
+                    placeholder="(61) 99999-9999"
                     value={about.whatsapp}
                     onChange={(e) => setAbout1("whatsapp", e.target.value)}
                     aria-invalid={Boolean(errors.whatsapp)}

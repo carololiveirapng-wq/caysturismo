@@ -14,11 +14,11 @@ export function WhatsAppButton({ whatsappHref }: { whatsappHref?: string }) {
         href={href}
         target="_blank"
         rel="noreferrer"
-        aria-label="Planeje sua viagem pelo WhatsApp"
+        aria-label="Falar no WhatsApp"
         className="group fixed right-[max(1.25rem,env(safe-area-inset-right))] bottom-[max(1.25rem,env(safe-area-inset-bottom))] z-40 flex h-12 w-12 items-center justify-center gap-2.5 bg-ink text-ivory transition-colors duration-300 hover:bg-magenta-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-magenta-dark md:right-8 md:bottom-8 md:h-11 md:w-auto md:px-5"
       >
         <MessageCircle className="size-5 shrink-0 motion-safe:transition-transform motion-safe:duration-300 motion-safe:group-hover:-translate-y-0.5" aria-hidden />
-        <span className="hidden text-sm font-medium tracking-wide whitespace-nowrap md:inline">Planeje sua viagem</span>
+        <span className="hidden text-sm font-medium tracking-wide whitespace-nowrap md:inline">Falar no WhatsApp</span>
       </a>
     </aside>
   );

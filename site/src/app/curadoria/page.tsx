@@ -6,7 +6,6 @@ import { LatestSection } from "@/components/curadoria/latest-section";
 import { ByDestination } from "@/components/curadoria/by-destination";
 import { ByExperience } from "@/components/curadoria/by-experience";
 import { DestinationFinalCTA } from "@/components/destination/destination-final-cta";
-import { curadoriaCategories } from "@/data/curadoria";
 import { getArticles, getCuradoriaHub } from "@/lib/cms";
 import { getActiveOrderedItems, getFeaturedItems } from "@/lib/content";
 import { siteConfig } from "@/lib/site-config";
@@ -38,6 +37,8 @@ export default async function CuradoriaHubPage() {
   if (!hub) notFound();
   const active = getActiveOrderedItems(allArticles);
   const featured = getFeaturedItems(allArticles)[0] ?? active[0];
+  // "Mais recentes" não repete o artigo que já apareceu em destaque acima.
+  const latest = featured ? active.filter((article) => article.slug !== featured.slug) : active;
 
   return (
     <>
@@ -50,7 +51,7 @@ export default async function CuradoriaHubPage() {
 
       {featured && <FeaturedArticle article={featured} />}
 
-      <LatestSection articles={active} categories={curadoriaCategories} />
+      <LatestSection articles={latest} />
 
       <ByDestination destinations={hub.spotlightDestinations ?? []} />
       <ByExperience experiences={hub.spotlightExperiences ?? []} />

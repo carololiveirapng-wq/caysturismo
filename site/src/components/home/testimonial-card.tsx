@@ -67,7 +67,6 @@ export function TestimonialCard({ review, onReadMore }: TestimonialCardProps) {
       <div className="mt-7">
         <figcaption className="text-sm text-stone">
           <span className="block font-medium text-ink">{review.authorName}</span>
-          {review.relativeTime && <span className="mt-0.5 block">{review.relativeTime}</span>}
         </figcaption>
 
         <div className="mt-4 flex items-center justify-between gap-4 border-t border-ink/10 pt-4">

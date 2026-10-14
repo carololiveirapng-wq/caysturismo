@@ -81,7 +81,7 @@ export function NewLeadForm({ destinations }: { destinations: { slug: string; na
               type="text"
               required
               maxLength={30}
-              placeholder="(11) 99999-9999"
+              placeholder="(61) 99999-9999"
               defaultValue={v?.whatsapp ?? ""}
               className={fieldClass}
             />

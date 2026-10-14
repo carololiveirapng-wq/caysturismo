@@ -76,7 +76,7 @@ export interface ExperienceDetail extends BaseContent {
   articles?: ExperienceArticleRef[];
   faq?: { question: string; answer: string }[];
 
-  /** CTA final de página inteira. Sem isto, usa "Pronto para planejar sua {name}?" — nem sempre concorda em gênero/número, por isso é sobrescrevível. */
+  /** CTA final de página inteira. Sem isto, usa um texto neutro ("Pronto para planejar a sua viagem?") — de propósito sem o nome da experiência, que exigiria concordância de gênero/número variável por página. */
   finalCta?: { title?: string; supporting?: string; note?: string };
 
   seo?: { title?: string; description?: string };

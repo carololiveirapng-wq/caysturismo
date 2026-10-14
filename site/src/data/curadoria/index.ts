@@ -10,9 +10,6 @@ export const curadoriaArticles: CuradoriaArticle[] = [
   kyotoAlemDosTemplos,
 ];
 
-/** Categorias demonstrativas — algumas ainda sem artigo, o que é esperado nesta fase. */
-export const curadoriaCategories = ["Guias", "Melhor época", "Histórias", "Novidades"] as const;
-
 export function getCuradoriaArticleBySlug(slug: string): CuradoriaArticle | undefined {
   return curadoriaArticles.find((article) => article.active && article.slug === slug);
 }
