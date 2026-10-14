@@ -37,7 +37,14 @@ export function ExploraHeader() {
     >
       <div className="mx-auto grid max-w-[1400px] grid-cols-2 items-center gap-4 px-4 py-4 sm:px-6 lg:grid-cols-[1fr_auto_1fr] lg:px-8">
         <a href="#" className="shrink-0 justify-self-start">
-          <Image src="/explora-journeys/explora-logo.png" alt="Explora Journeys" width={160} height={56} className="h-10 w-auto sm:h-12" priority />
+          <Image
+            src="/explora-journeys/explora-logo.png"
+            alt="Explora Journeys"
+            width={160}
+            height={56}
+            className={cn("h-10 w-auto transition-[filter] duration-500 sm:h-12", !solid && "brightness-0 invert")}
+            priority
+          />
         </a>
 
         <nav className="hidden items-center gap-7 justify-self-center lg:flex">
