@@ -8,7 +8,7 @@ import { NumberStepper } from "./number-stepper";
 import { FormField, textInputClassName } from "./form-field";
 import { DestinationMultiSelect } from "./destination-multiselect";
 import { ContactSidebar } from "./sidebar";
-import { submitLead } from "@/app/contato/actions";
+import { submitLead } from "@/app/(site)/contato/actions";
 import { trackLeadGenerated } from "@/lib/analytics";
 import { discoveryYears } from "@/data/travel-discovery";
 import {

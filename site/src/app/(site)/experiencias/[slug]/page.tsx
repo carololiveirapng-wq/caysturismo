@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getExperienceBySlug, getExperienceSlugs, getSettings } from "@/lib/cms";
 import { ExperienceHero } from "@/components/experience/experience-hero";
@@ -159,6 +160,19 @@ export default async function ExperiencePage({ params }: PageProps<"/experiencia
       )}
 
       {experience.faq && experience.faq.length > 0 && <DestinationFaq id="faq" items={experience.faq} />}
+
+      {experience.slug === "cruzeiros" && (
+        <div className="border-t border-ink/10 bg-ivory py-6">
+          <div className="mx-auto max-w-3xl px-6 text-center">
+            <Link
+              href="/experiencias/cruzeiros/explora-journeys"
+              className="text-sm text-stone underline underline-offset-4 transition-colors hover:text-ink"
+            >
+              Explora Journeys · Grande Prêmio de Mônaco 2027 — Conhecer
+            </Link>
+          </div>
+        </div>
+      )}
 
       <DestinationFinalCTA
         title={experience.finalCta?.title ?? "Pronto para planejar a sua viagem?"}

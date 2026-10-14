@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
-import { moveLeadStatusAction, type MoveLeadStatusState } from "@/app/admin/(shell)/pipeline/actions";
+import { moveLeadStatusAction, type MoveLeadStatusState } from "@/app/(site)/admin/(shell)/pipeline/actions";
 import { LEAD_STATUSES, LEAD_STATUS_LABELS, type LeadStatus } from "@/lib/leads/types";
 
 export function LeadMoveStatusForm({ leadId, currentStatus }: { leadId: string; currentStatus: LeadStatus }) {

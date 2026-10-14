@@ -6,7 +6,7 @@ import { Footer } from "@/components/layout/footer";
 import { WhatsAppButton } from "@/components/layout/whatsapp-button";
 import { siteConfig } from "@/lib/site-config";
 import { getSettings, getHome } from "@/lib/cms";
-import "./globals.css";
+import "../globals.css";
 import { jsonLdString } from "@/lib/json-ld";
 import { organizationJsonLd } from "@/lib/seo/structured-data";
 

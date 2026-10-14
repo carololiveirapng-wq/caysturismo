@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState, useEffect, useState } from "react";
-import { deleteLeadAction, type DeleteLeadState } from "@/app/admin/(shell)/leads/actions";
+import { deleteLeadAction, type DeleteLeadState } from "@/app/(site)/admin/(shell)/leads/actions";
 
 const initialState: DeleteLeadState = {};
 

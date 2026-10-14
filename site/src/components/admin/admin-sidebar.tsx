@@ -15,7 +15,7 @@ import {
   LogOut,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { signOutAction } from "@/app/admin/(shell)/actions";
+import { signOutAction } from "@/app/(site)/admin/(shell)/actions";
 
 const STUDIO_URL = "/studio";
 

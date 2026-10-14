@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useActionState, useRef } from "react";
-import { createLeadAction, type CreateLeadState } from "@/app/admin/(shell)/leads/actions";
+import { createLeadAction, type CreateLeadState } from "@/app/(site)/admin/(shell)/leads/actions";
 import { MANUAL_LEAD_ORIGINS } from "@/lib/leads/types";
 
 const initialState: CreateLeadState = {};
