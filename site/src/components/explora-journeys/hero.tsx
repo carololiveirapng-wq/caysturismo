@@ -1,17 +1,17 @@
-import { Ship, MapPin, Calendar, Flag } from "lucide-react";
+import Image from "next/image";
 import { WhatsAppCta } from "./whatsapp-cta";
 import { displayFont } from "./tokens";
 
 const STATS = [
-  { icon: Ship, label: "EXPLORA I" },
-  { icon: MapPin, label: "PORTO HERCULE" },
-  { icon: Calendar, label: "JUN 2027" },
-  { icon: Flag, label: "FÓRMULA 1" },
+  { icon: "/explora-journeys/ship-icon.png", label: "EXPLORA I" },
+  { icon: "/explora-journeys/ports-icon.png", label: "PORTO HERCULE" },
+  { icon: "/explora-journeys/calendar-icon.png", label: "JUN 2027" },
+  { icon: "/explora-journeys/flag-icon.svg", label: "FÓRMULA 1" },
 ];
 
 export function ExploraHero() {
   return (
-    <section className="relative flex min-h-[100svh] items-end overflow-hidden bg-[#1f3851] pb-20 sm:pb-24">
+    <section className="relative flex min-h-[100svh] items-center overflow-hidden bg-[#1f3851] py-28">
       <video
         className="absolute inset-0 size-full object-cover"
         src="/explora-journeys/hero.mp4"
@@ -42,9 +42,9 @@ export function ExploraHero() {
         <p className="mt-4 max-w-md text-base font-medium text-[#fcfaf8]/90 sm:text-lg">A 150 metros do F1 Paddock Club.</p>
 
         <div className="mt-8 flex flex-wrap justify-center gap-x-8 gap-y-5 sm:gap-10">
-          {STATS.map(({ icon: Icon, label }) => (
+          {STATS.map(({ icon, label }) => (
             <div key={label} className="flex flex-col items-center gap-2 text-center">
-              <Icon className="size-6 text-[#d7b375]" strokeWidth={1.5} aria-hidden />
+              <Image src={icon} alt="" width={28} height={28} className="size-6" aria-hidden />
               <span className="text-xs font-semibold tracking-wide text-[#fcfaf8] uppercase">{label}</span>
             </div>
           ))}
