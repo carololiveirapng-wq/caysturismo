@@ -29,7 +29,7 @@ export function ExploraHero() {
         }}
       />
 
-      <div className="relative z-10 mx-auto w-full max-w-[1400px] px-4 sm:px-6 lg:px-8">
+      <div className="relative z-10 mx-auto flex w-full max-w-[1400px] flex-col items-center px-4 text-center sm:px-6 lg:px-8">
         <p className="text-xs font-medium tracking-[0.25em] text-[#d7b375] uppercase sm:text-sm">
           Explora I · 2 a 7 de junho de 2027
         </p>
@@ -41,7 +41,7 @@ export function ExploraHero() {
         </h1>
         <p className="mt-4 max-w-md text-base font-medium text-[#fcfaf8]/90 sm:text-lg">A 150 metros do F1 Paddock Club.</p>
 
-        <div className="mt-8 grid grid-cols-2 gap-x-8 gap-y-5 sm:flex sm:flex-wrap sm:gap-10">
+        <div className="mt-8 flex flex-wrap justify-center gap-x-8 gap-y-5 sm:gap-10">
           {STATS.map(({ icon: Icon, label }) => (
             <div key={label} className="flex flex-col items-center gap-2 text-center">
               <Icon className="size-6 text-[#d7b375]" strokeWidth={1.5} aria-hidden />
