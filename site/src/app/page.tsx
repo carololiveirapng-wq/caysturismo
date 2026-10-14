@@ -7,21 +7,19 @@ import { JourneyProcess } from "@/components/home/journey-process";
 import { DestinationsSection } from "@/components/home/destinations/destinations-section";
 import { Journal } from "@/components/home/journal";
 import { FeaturedJourney } from "@/components/home/featured-journey";
-import { TeamTeaser } from "@/components/home/team-teaser";
 import { TravelerStories } from "@/components/home/traveler-stories";
 import { Testimonials } from "@/components/home/testimonials";
 import { BeyondItinerary } from "@/components/home/beyond-itinerary";
 import { FinalCTA } from "@/components/home/final-cta";
-import { getHome, getSettings, getTestimonials, getDiscoveryOptions, getPeople } from "@/lib/cms";
+import { getHome, getSettings, getTestimonials, getDiscoveryOptions } from "@/lib/cms";
 import { notFound } from "next/navigation";
 
 export default async function Home() {
-  const [home, settings, testimonials, { regions, experiences: discoveryExperiences }, people] = await Promise.all([
+  const [home, settings, testimonials, { regions, experiences: discoveryExperiences }] = await Promise.all([
     getHome(),
     getSettings(),
     getTestimonials(),
     getDiscoveryOptions(),
-    getPeople(),
   ]);
 
   if (!home) notFound();
@@ -37,7 +35,6 @@ export default async function Home() {
         <Positioning slogan={settings.slogan} foundedYear={foundedYear} positioning={home.positioning} />
       )}
       {home.featuredExperiences.length > 0 && <Experiences experiences={home.featuredExperiences} />}
-      <TeamTeaser people={people} />
       {(home.featuredDestinations.length > 0 || home.destinationCollections.length > 0) && (
         <DestinationsSection destinations={home.featuredDestinations} collections={home.destinationCollections} />
       )}
