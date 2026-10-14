@@ -6,7 +6,7 @@ import type { HomeContent } from "@/types";
 
 export function Hero({ hero }: { hero: HomeContent["hero"] }) {
   return (
-    <section className="relative flex min-h-[100svh] items-end overflow-hidden bg-ink">
+    <section className="relative flex min-h-[100svh] items-center overflow-hidden bg-ink">
       <Image
         src={hero.image.src}
         alt={hero.image.alt}
@@ -24,7 +24,7 @@ export function Hero({ hero }: { hero: HomeContent["hero"] }) {
         className="absolute inset-0 bg-gradient-to-r from-ink/30 via-transparent to-transparent"
       />
 
-      <Container className="relative z-10 pb-16 text-center md:pb-24">
+      <Container className="relative z-10 py-28 text-center">
         <Reveal className="mx-auto max-w-xl">
           <h1 className="font-serif text-[clamp(2.375rem,5.6vw,5rem)] leading-[1.08] text-balance whitespace-pre-line text-ivory">
             {hero.title}
