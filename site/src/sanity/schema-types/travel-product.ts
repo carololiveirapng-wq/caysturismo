@@ -56,6 +56,7 @@ export const travelProduct = defineType({
         { title: "Últimas vagas", value: "few-spots" },
         { title: "Esgotado", value: "sold-out" },
         { title: "Encerrado", value: "expired" },
+        { title: "Consultar disponibilidade", value: "check-availability" },
       ] },
       initialValue: "active",
       validation: (r) => r.required(),
@@ -101,6 +102,7 @@ export const travelProduct = defineType({
                 { title: "Últimas vagas", value: "few-spots" },
                 { title: "Esgotado", value: "sold-out" },
                 { title: "Encerrado", value: "expired" },
+                { title: "Consultar disponibilidade", value: "check-availability" },
               ],
             },
           }),
@@ -171,6 +173,7 @@ export const travelProduct = defineType({
         "few-spots": "Últimas vagas",
         "sold-out": "Esgotado",
         expired: "Encerrado",
+        "check-availability": "Consultar disponibilidade",
       };
       const parts = [
         typeLabels[type as string] ?? type,

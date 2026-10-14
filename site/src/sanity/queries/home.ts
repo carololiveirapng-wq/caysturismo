@@ -71,6 +71,7 @@ export const HOME_QUERY = `*[_type == "home"][0]{
     clientName,
     "destinationName": destination->name
   }, []),
+  beyondItinerary{ heading, text, "items": coalesce(items, []) },
   finalCta{ title, text, ctaLabel },
   seo
 }`;

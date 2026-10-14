@@ -11,4 +11,5 @@ export const STATUS_LABEL: Record<TravelProductStatus, string> = {
   "few-spots": "Últimas vagas",
   "sold-out": "Esgotado",
   expired: "Não está mais disponível",
+  "check-availability": "Consultar disponibilidade",
 };

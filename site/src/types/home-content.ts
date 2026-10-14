@@ -44,6 +44,12 @@ export interface HomeDestinationCollection {
   destinations: HomeFeaturedDestination[];
 }
 
+export interface HomeBeyondItinerary {
+  heading?: string;
+  text?: string;
+  items: string[];
+}
+
 /**
  * Conteúdo da Home vindo do singleton `home` no Sanity (ou do fallback
  * mock montado em `src/lib/cms/home.ts` quando o CMS não está
@@ -69,6 +75,7 @@ export interface HomeContent {
   featuredTravelProducts: HomeFeaturedTravelProduct[];
   featuredArticles: HomeFeaturedArticle[];
   travelerStories: HomeTravelerStory[];
+  beyondItinerary?: HomeBeyondItinerary;
   finalCta?: { title?: string; text?: string; ctaLabel?: string };
   seo?: { title?: string; description?: string };
 }

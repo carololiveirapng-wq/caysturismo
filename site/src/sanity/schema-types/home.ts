@@ -139,6 +139,18 @@ export const home = defineType({
     }),
 
     defineField({
+      name: "beyondItinerary",
+      title: "Além do roteiro (serviços)",
+      type: "object",
+      description: "Faixa curta de serviços complementares confirmados (vistos, seguro, cruzeiros, grupos) — não listar nada que a Cays não ofereça de fato.",
+      fields: [
+        defineField({ name: "heading", title: "Título", type: "string" }),
+        defineField({ name: "text", title: "Texto curto", type: "text", rows: 2 }),
+        defineField({ name: "items", title: "Serviços", type: "array", of: [{ type: "string" }] }),
+      ],
+    }),
+
+    defineField({
       name: "finalCta",
       title: "CTA final",
       type: "object",

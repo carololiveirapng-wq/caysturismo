@@ -10,6 +10,7 @@ import { FeaturedJourney } from "@/components/home/featured-journey";
 import { TeamTeaser } from "@/components/home/team-teaser";
 import { TravelerStories } from "@/components/home/traveler-stories";
 import { Testimonials } from "@/components/home/testimonials";
+import { BeyondItinerary } from "@/components/home/beyond-itinerary";
 import { FinalCTA } from "@/components/home/final-cta";
 import { getHome, getSettings, getTestimonials, getDiscoveryOptions, getPeople } from "@/lib/cms";
 import { notFound } from "next/navigation";
@@ -44,6 +45,7 @@ export default async function Home() {
       {home.process && <JourneyProcess process={home.process} />}
       <TravelerStories stories={home.travelerStories} />
       {testimonials.length > 0 && <Testimonials reviews={testimonials} />}
+      <BeyondItinerary data={home.beyondItinerary} />
       {home.finalCta && <FinalCTA finalCta={home.finalCta} />}
       {home.featuredArticles.length > 0 && <Journal articles={home.featuredArticles} />}
     </>
