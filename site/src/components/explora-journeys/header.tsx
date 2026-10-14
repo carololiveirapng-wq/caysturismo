@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { WhatsAppCta, ChatBubbleIcon } from "./whatsapp-cta";
 import { displayFont } from "./tokens";
+import { cn } from "@/lib/utils";
 
 const NAV = [
   { label: "Três Formas", href: "#formas" },
@@ -16,31 +17,49 @@ const NAV = [
 
 export function ExploraHeader() {
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 64);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  const solid = scrolled || open;
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 bg-[#fcfaf8]/95 backdrop-blur-sm">
-      <div className="mx-auto flex max-w-[1400px] items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
-        <a href="#" className="shrink-0">
+    <header
+      className={cn(
+        "fixed inset-x-0 top-0 z-50 transition-colors duration-500",
+        solid ? "bg-[#fcfaf8]/95 backdrop-blur-sm" : "bg-transparent",
+      )}
+    >
+      <div className="mx-auto grid max-w-[1400px] grid-cols-2 items-center gap-4 px-4 py-4 sm:px-6 lg:grid-cols-[1fr_auto_1fr] lg:px-8">
+        <a href="#" className="shrink-0 justify-self-start">
           <Image src="/explora-journeys/explora-logo.png" alt="Explora Journeys" width={160} height={56} className="h-10 w-auto sm:h-12" priority />
         </a>
 
-        <nav className="hidden items-center gap-7 lg:flex">
+        <nav className="hidden items-center gap-7 justify-self-center lg:flex">
           {NAV.map((item) => (
             <a
               key={item.href}
               href={item.href}
               style={displayFont}
-              className="text-xs font-normal tracking-wide text-[#1b2232] uppercase transition-colors hover:text-[#d7b375]"
+              className={cn(
+                "text-xs font-normal tracking-wide uppercase transition-colors hover:text-[#d7b375]",
+                solid ? "text-[#1b2232]" : "text-[#fcfaf8]",
+              )}
             >
               {item.label}
             </a>
           ))}
         </nav>
 
-        <div className="hidden lg:block">
+        <div className="hidden justify-self-end lg:block">
           <WhatsAppCta
             message="Olá! Tenho interesse no Explora I no Grande Prêmio de Mônaco 2027."
-            variant="outline"
+            variant="light"
             className="!rounded-md !px-5 !py-2.5 !text-xs !uppercase !tracking-wide"
           >
             <ChatBubbleIcon className="size-3.5" />
@@ -52,7 +71,7 @@ export function ExploraHeader() {
           type="button"
           aria-label="Abrir menu"
           onClick={() => setOpen(true)}
-          className="flex size-10 items-center justify-center text-[#1b2232] lg:hidden"
+          className={cn("flex size-10 items-center justify-center justify-self-end lg:hidden", solid ? "text-[#1b2232]" : "text-[#fcfaf8]")}
         >
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" className="size-6" aria-hidden>
             <path d="M4 7h16M4 12h16M4 17h16" strokeLinecap="round" />
