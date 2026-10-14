@@ -5,6 +5,7 @@ import { FeaturedProducts } from "@/components/viagens-hub/featured-products";
 import { TravelProductFilters } from "@/components/viagens-hub/filters";
 import { ResultsGrid } from "@/components/viagens-hub/results-grid";
 import { EditorialShortcuts } from "@/components/viagens-hub/editorial-shortcuts";
+import { ExploraJourneysSpotlight } from "@/components/experience/explora-journeys-spotlight";
 import { DestinationFinalCTA } from "@/components/destination/destination-final-cta";
 import { Container } from "@/components/ui/container";
 import { getTravelProducts, getExperiences, getDestinations, getTravelHub } from "@/lib/cms";
@@ -107,6 +108,8 @@ export default async function ViagensHubPage({ searchParams }: PageProps<"/viage
           </div>
         </Container>
       </section>
+
+      <ExploraJourneysSpotlight tone="sand" />
 
       <EditorialShortcuts />
 
