@@ -24,19 +24,19 @@ export function Hero({ hero }: { hero: HomeContent["hero"] }) {
         className="absolute inset-0 bg-gradient-to-r from-ink/30 via-transparent to-transparent"
       />
 
-      <Container className="relative z-10 pb-16 md:pb-24">
-        <Reveal className="max-w-xl">
+      <Container className="relative z-10 pb-16 text-center md:pb-24">
+        <Reveal className="mx-auto max-w-xl">
           <h1 className="font-serif text-[clamp(2.375rem,5.6vw,5rem)] leading-[1.08] text-balance whitespace-pre-line text-ivory">
             {hero.title}
           </h1>
 
           {hero.text && (
-            <p className="mt-4 max-w-[26rem] border-l border-ivory/25 pl-5 text-base leading-relaxed whitespace-pre-line text-ivory/80">
+            <p className="mx-auto mt-4 max-w-[26rem] text-base leading-relaxed whitespace-pre-line text-ivory/80">
               {hero.text}
             </p>
           )}
 
-          <div className="mt-7 flex flex-wrap items-center gap-x-10 gap-y-5">
+          <div className="mt-7 flex flex-wrap items-center justify-center gap-x-10 gap-y-5">
             <Link
               href={hero.ctaHref || "/contato"}
               className="group/cta inline-flex items-center gap-4 text-sm font-medium tracking-[0.08em] text-ivory uppercase"
