@@ -15,7 +15,7 @@ import { DestinationFaq } from "@/components/destination/destination-faq";
 import { DestinationFinalCTA } from "@/components/destination/destination-final-cta";
 import { StickySubnav } from "@/components/ui/sticky-subnav";
 import { PersistentMobileCTA } from "@/components/ui/persistent-mobile-cta";
-import { ExploraJourneysSpotlight } from "@/components/experience/explora-journeys-spotlight";
+import { SpecialExperienceSpotlight } from "@/components/experience/special-experience-spotlight";
 import { siteConfig } from "@/lib/site-config";
 import { TravelerStories } from "@/components/experiencias/traveler-stories";
 import { breadcrumbJsonLd } from "@/lib/seo/structured-data";
@@ -116,7 +116,27 @@ export default async function ExperiencePage({ params }: PageProps<"/experiencia
 
       <StickySubnav items={subnavItems} ctaLabel="Planejar viagem" ctaHref={contactHref} />
 
-      {experience.slug === "cruzeiros" && <ExploraJourneysSpotlight tone="sand" />}
+      {experience.slug === "cruzeiros" && (
+        <SpecialExperienceSpotlight
+          href="/experiencias/cruzeiros/explora-journeys"
+          image="/explora-journeys/grandstand.jpg"
+          imageAlt="Navio Explora I atracado em Mônaco durante o Grande Prêmio de Fórmula 1"
+          eyebrow="Experiência especial · Em parceria com a Explora Journeys"
+          title="Grande Prêmio de Mônaco 2027"
+          description="O Explora I atracado no Porto Hercule, a 150 metros do F1 Paddock Club — o fim de semana de corrida vivido a bordo, do primeiro ao último dia."
+        />
+      )}
+
+      {experience.slug === "lua-de-mel" && (
+        <SpecialExperienceSpotlight
+          href="/experiencias/lua-de-mel/maldivas"
+          image="/maldivas-lua-de-mel/couple-close.webp"
+          imageAlt="Casal de noivos em um deck de madeira entre bangalôs sobre o mar, nas Maldivas, ao pôr do sol"
+          eyebrow="Experiência especial · Lua de mel"
+          title="Maldivas: a lua de mel mais desejada do mundo"
+          description="Bangalôs sobre o mar, água cristalina e a privacidade de um dos destinos mais exclusivos do planeta — vivido a dois."
+        />
+      )}
 
       {experience.manifesto && <ExperienceManifesto id="visao-geral" text={experience.manifesto} />}
 

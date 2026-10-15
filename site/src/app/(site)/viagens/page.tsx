@@ -5,7 +5,7 @@ import { FeaturedProducts } from "@/components/viagens-hub/featured-products";
 import { TravelProductFilters } from "@/components/viagens-hub/filters";
 import { ResultsGrid } from "@/components/viagens-hub/results-grid";
 import { EditorialShortcuts } from "@/components/viagens-hub/editorial-shortcuts";
-import { ExploraJourneysSpotlight } from "@/components/experience/explora-journeys-spotlight";
+import { SpecialExperienceSpotlight } from "@/components/experience/special-experience-spotlight";
 import { DestinationFinalCTA } from "@/components/destination/destination-final-cta";
 import { Container } from "@/components/ui/container";
 import { getTravelProducts, getExperiences, getDestinations, getTravelHub } from "@/lib/cms";
@@ -109,7 +109,15 @@ export default async function ViagensHubPage({ searchParams }: PageProps<"/viage
         </Container>
       </section>
 
-      <ExploraJourneysSpotlight tone="sand" />
+      <SpecialExperienceSpotlight
+        href="/experiencias/cruzeiros/explora-journeys"
+        image="/explora-journeys/grandstand.jpg"
+        imageAlt="Navio Explora I atracado em Mônaco durante o Grande Prêmio de Fórmula 1"
+        eyebrow="Experiência especial · Em parceria com a Explora Journeys"
+        title="Grande Prêmio de Mônaco 2027"
+        description="O Explora I atracado no Porto Hercule, a 150 metros do F1 Paddock Club — o fim de semana de corrida vivido a bordo, do primeiro ao último dia."
+        tone="sand"
+      />
 
       <EditorialShortcuts />
 
