@@ -130,7 +130,7 @@ export default async function ExperiencePage({ params }: PageProps<"/experiencia
       {experience.slug === "lua-de-mel" && (
         <SpecialExperienceSpotlight
           href="/experiencias/lua-de-mel/maldivas"
-          image="/maldivas-lua-de-mel/couple-close.webp"
+          image="/maldivas-lua-de-mel/romance-1.webp"
           imageAlt="Casal de noivos em um deck de madeira entre bangalôs sobre o mar, nas Maldivas, ao pôr do sol"
           eyebrow="Experiência especial · Lua de mel"
           title="Maldivas: a lua de mel mais desejada do mundo"
