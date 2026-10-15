@@ -32,6 +32,11 @@ export const metadata: Metadata = {
 
 const CONTACT_HREF = "/contato?destino=maldivas";
 
+/** Mensagem padrão de WhatsApp — sem número configurado em Settings, cai pro formulário de contato. */
+function whatsappHrefOr(whatsappHref: string | undefined, message: string) {
+  return whatsappHref ? `${whatsappHref}?text=${encodeURIComponent(message)}` : CONTACT_HREF;
+}
+
 const AWAITS = [
   "As águas azul-turquesa mais cristalinas do mundo.",
   "Trilhas de areia branca entre bancos de areia dignos de cinema.",
@@ -144,18 +149,29 @@ function BulletList({ items, className = "" }: { items: string[]; className?: st
   );
 }
 
-function SectionCta({ href, label }: { href: string; label: string }) {
-  return (
-    <Link
-      href={href}
-      className="group/cta inline-flex items-center gap-3 text-sm font-medium tracking-[0.08em] text-ink uppercase"
-    >
+function SectionCta({ href, label, external = false }: { href: string; label: string; external?: boolean }) {
+  const content = (
+    <>
       <span className="flex size-10 items-center justify-center rounded-full border border-ink/30 transition-colors duration-500 ease-[var(--ease-editorial)] group-hover/cta:bg-ink">
         <span aria-hidden className="text-base text-ink transition-colors duration-500 ease-[var(--ease-editorial)] group-hover/cta:text-ivory">
           ↗
         </span>
       </span>
       {label}
+    </>
+  );
+  const className = "group/cta inline-flex items-center gap-3 text-sm font-medium tracking-[0.08em] text-ink uppercase";
+
+  if (external) {
+    return (
+      <a href={href} target="_blank" rel="noreferrer" className={className}>
+        {content}
+      </a>
+    );
+  }
+  return (
+    <Link href={href} className={className}>
+      {content}
     </Link>
   );
 }
@@ -165,6 +181,11 @@ export default async function MaldivasLuaDeMelPage() {
   const foundedYear = settings.foundedDate ? new Date(settings.foundedDate).getFullYear() : undefined;
   const yearsOfExperience = foundedYear ? new Date().getFullYear() - foundedYear : undefined;
   const natalia = testimonials.find((t) => t.id === "testimonial-google-review-natalia-rezende-jordao");
+
+  const heroWaHref = whatsappHrefOr(settings.whatsappHref, "Olá! Quero conhecer as Ilhas Maldivas.");
+  const romanceWaHref = whatsappHrefOr(settings.whatsappHref, "Olá! Quero ir para as Ilhas Maldivas!");
+  const paradiseWaHref = whatsappHrefOr(settings.whatsappHref, "Olá! Quero conhecer o paraíso nas Maldivas!");
+  const finalWaHref = whatsappHrefOr(settings.whatsappHref, "Olá! Estamos prontos para viver nossa lua de mel nas Maldivas.");
 
   return (
     <>
@@ -205,8 +226,10 @@ export default async function MaldivasLuaDeMelPage() {
             </p>
 
             <div className="mt-8">
-              <Link
-                href={CONTACT_HREF}
+              <a
+                href={heroWaHref}
+                target="_blank"
+                rel="noreferrer"
                 className="group/cta inline-flex items-center gap-4 text-sm font-medium tracking-[0.08em] text-ivory uppercase"
               >
                 <span className="flex size-12 items-center justify-center rounded-full border border-ivory/70 transition-colors duration-500 ease-[var(--ease-editorial)] group-hover/cta:bg-ivory">
@@ -215,7 +238,7 @@ export default async function MaldivasLuaDeMelPage() {
                   </span>
                 </span>
                 Quero conhecer as Ilhas Maldivas
-              </Link>
+              </a>
             </div>
           </Reveal>
         </Container>
@@ -270,7 +293,7 @@ export default async function MaldivasLuaDeMelPage() {
             <SimpleImageCarousel images={ROMANCE_GALLERY} />
           </Reveal>
           <Reveal delay={0.15} className="mt-10 text-center">
-            <SectionCta href={CONTACT_HREF} label="Quero ir para as Ilhas Maldivas" />
+            <SectionCta href={romanceWaHref} label="Quero ir para as Ilhas Maldivas" external />
           </Reveal>
         </Container>
       </section>
@@ -323,7 +346,7 @@ export default async function MaldivasLuaDeMelPage() {
                 privilégio de curtir um ao outro em um dos lugares mais lindos de todo o planeta.
               </p>
               <div className="mt-6">
-                <SectionCta href={CONTACT_HREF} label="Quero conhecer o paraíso" />
+                <SectionCta href={paradiseWaHref} label="Quero conhecer o paraíso" external />
               </div>
             </Reveal>
           </div>
@@ -536,7 +559,7 @@ export default async function MaldivasLuaDeMelPage() {
         title="Prontos para viver essa lua de mel?"
         supporting="Fale com a Cays e comece a planejar a viagem que vai marcar o início de tudo."
         ctaLabel="Planejar minha lua de mel"
-        ctaHref={CONTACT_HREF}
+        ctaHref={finalWaHref}
         note="Fale com um especialista da Cays"
       />
     </>
