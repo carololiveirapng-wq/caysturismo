@@ -9,6 +9,7 @@ import { Container } from "@/components/ui/container";
 import { MobileNavigation } from "@/components/layout/mobile-navigation";
 import { experienceHref, travelProductHref } from "@/lib/links";
 import { cn } from "@/lib/utils";
+import { trackEvent } from "@/lib/analytics";
 import type { SiteSettings } from "@/lib/cms";
 
 const navLinks = [
@@ -147,6 +148,17 @@ export function Header({ settings }: { settings: SiteSettings }) {
           </nav>
 
           <div className="flex items-center gap-6">
+            <Link
+              href="/reservar-online"
+              onClick={() => trackEvent("online_booking_clicked_header")}
+              className={cn(
+                "hidden text-sm font-medium tracking-wide underline-offset-4 transition-colors duration-500 hover:underline md:inline-flex",
+                solid ? "text-ink/70 hover:text-ink" : "text-ivory/80 hover:text-ivory",
+              )}
+            >
+              Reservar online
+            </Link>
+
             <Link
               href="/contato"
               className={cn(

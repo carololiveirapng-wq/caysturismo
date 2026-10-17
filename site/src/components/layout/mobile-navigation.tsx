@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
 import { X, AtSign, ChevronDown } from "lucide-react";
+import { trackEvent } from "@/lib/analytics";
 
 interface NavLink {
   label: string;
@@ -138,7 +139,7 @@ export function MobileNavigation({ open, onClose, links, instagram, whatsappHref
           </nav>
 
           <div
-            className="flex items-center justify-between border-t border-ivory/15 px-6 py-6 text-sm"
+            className="flex flex-col gap-4 border-t border-ivory/15 px-6 py-6 text-sm sm:flex-row sm:items-center sm:justify-between"
             style={{ paddingBottom: "calc(1.5rem + env(safe-area-inset-bottom))" }}
           >
             <div className="flex items-center gap-5">
@@ -163,9 +164,21 @@ export function MobileNavigation({ open, onClose, links, instagram, whatsappHref
                 </a>
               )}
             </div>
-            <Link href="/contato" onClick={handleClose} className="text-ivory/80 hover:text-ivory">
-              Contato
-            </Link>
+            <div className="flex items-center gap-5">
+              <Link
+                href="/reservar-online"
+                onClick={() => {
+                  trackEvent("online_booking_clicked_header");
+                  handleClose();
+                }}
+                className="text-ivory/80 hover:text-ivory"
+              >
+                Reservar online
+              </Link>
+              <Link href="/contato" onClick={handleClose} className="text-ivory/80 hover:text-ivory">
+                Contato
+              </Link>
+            </div>
           </div>
         </motion.div>
       )}

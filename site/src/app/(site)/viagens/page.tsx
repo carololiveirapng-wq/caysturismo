@@ -6,6 +6,7 @@ import { TravelProductFilters } from "@/components/viagens-hub/filters";
 import { ResultsGrid } from "@/components/viagens-hub/results-grid";
 import { EditorialShortcuts } from "@/components/viagens-hub/editorial-shortcuts";
 import { SpecialExperienceSpotlight } from "@/components/experience/special-experience-spotlight";
+import { OnlineBookingBanner } from "@/components/booking/online-booking-banner";
 import { DestinationFinalCTA } from "@/components/destination/destination-final-cta";
 import { Container } from "@/components/ui/container";
 import { getTravelProducts, getExperiences, getDestinations, getTravelHub } from "@/lib/cms";
@@ -118,6 +119,8 @@ export default async function ViagensHubPage({ searchParams }: PageProps<"/viage
         description="O Explora I atracado no Porto Hercule, a 150 metros do F1 Paddock Club — o fim de semana de corrida vivido a bordo, do primeiro ao último dia."
         tone="sand"
       />
+
+      <OnlineBookingBanner />
 
       <EditorialShortcuts />
 

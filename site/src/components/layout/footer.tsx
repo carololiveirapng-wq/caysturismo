@@ -1,8 +1,11 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { Container } from "@/components/ui/container";
 import { siteConfig } from "@/lib/site-config";
 import { experienceHref } from "@/lib/links";
+import { trackEvent } from "@/lib/analytics";
 import type { SiteSettings } from "@/lib/cms";
 
 const columns = [
@@ -12,6 +15,7 @@ const columns = [
       { label: "Destinos", href: "/destinos" },
       { label: "Experiências", href: "/experiencias" },
       { label: "Viagens", href: "/viagens" },
+      { label: "Reservar online", href: "/reservar-online" },
       { label: "Curadoria", href: "/curadoria" },
       { label: "A Cays", href: "/sobre" },
     ],
@@ -70,6 +74,11 @@ export function Footer({ settings }: { settings: SiteSettings }) {
                   <li key={link.href}>
                     <Link
                       href={link.href}
+                      onClick={
+                        link.href === "/reservar-online"
+                          ? () => trackEvent("online_booking_clicked_footer")
+                          : undefined
+                      }
                       className="text-sm text-ivory/75 transition-colors hover:text-ivory"
                     >
                       {link.label}

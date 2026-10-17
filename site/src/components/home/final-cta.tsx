@@ -1,6 +1,9 @@
+"use client";
+
 import Link from "next/link";
 import { Container } from "@/components/ui/container";
 import { Reveal } from "@/components/ui/reveal";
+import { trackEvent } from "@/lib/analytics";
 import type { HomeContent } from "@/types";
 
 export function FinalCTA({ finalCta }: { finalCta: NonNullable<HomeContent["finalCta"]> }) {
@@ -30,6 +33,14 @@ export function FinalCTA({ finalCta }: { finalCta: NonNullable<HomeContent["fina
               </span>
             </span>
             {finalCta.ctaLabel || "Planejar minha viagem"}
+          </Link>
+
+          <Link
+            href="/reservar-online"
+            onClick={() => trackEvent("online_booking_clicked_home")}
+            className="mt-5 text-xs tracking-wide text-ivory/50 underline-offset-4 hover:text-ivory/80 hover:underline"
+          >
+            Prefere pesquisar e reservar online?
           </Link>
         </Reveal>
       </Container>
