@@ -20,10 +20,15 @@ import styles from "./befly-widget.module.css";
  * a maior parte desse custo nunca precisa competir com a hidratação da
  * página pra quem nem rola até a seção.
  *
- * O wrapper reserva a altura real do widget (medida em produção nos
- * breakpoints mobile/tablet/desktop) desde o primeiro paint, pra não causar
- * layout shift nem antes nem depois do carregamento — troca o esqueleto
- * pelo widget real no mesmo espaço, sem empurrar o conteúdo abaixo.
+ * O wrapper reserva a altura real do widget desde o primeiro paint, pra não
+ * causar layout shift nem antes nem depois do carregamento. As faixas não
+ * seguem os breakpoints padrão do Tailwind (sm/lg) de propósito — o layout
+ * interno deles tem os PRÓPRIOS pontos de quebra (medidos em produção
+ * variando a largura real: ~514px até 849px, ~390px de 850 a 1219px,
+ * ~260px de 1220px pra cima, já com margem de segurança sobre o valor
+ * medido). Também tem uma transição suave no min-height como rede de
+ * segurança — se a Oner mudar esses breakpoints num update futuro do
+ * widget deles, o reajuste fica suave em vez de um salto brusco.
  *
  * `strategy="afterInteractive"` (agora dentro do gate de interseção) roda o
  * script depois da hidratação — o custom element nasce vazio no HTML (igual
@@ -58,7 +63,7 @@ export function BeflyWidget() {
   return (
     <div
       ref={containerRef}
-      className={`relative min-h-[500px] sm:min-h-[460px] lg:min-h-[210px] ${styles.theme}`}
+      className={`relative min-h-[540px] min-[850px]:min-h-[390px] min-[1220px]:min-h-[260px] transition-[min-height] duration-300 ${styles.theme}`}
     >
       {!ready && (
         <div
