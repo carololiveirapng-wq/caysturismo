@@ -16,9 +16,6 @@ export const metadata: Metadata = {
 export default function ReservarOnlinePage() {
   return (
     <section className="bg-ivory pt-28 pb-16 md:pt-32 md:pb-24">
-      {/* Next.js hoists a <link> rendered aqui pro <head> — carregado só nesta rota, nunca no resto do site. */}
-      <link rel="stylesheet" href="https://static.onertravel.com/widget/search/production/styles.css" />
-
       <Container>
         <div className="max-w-xl">
           <h1 className="font-serif text-[clamp(2rem,4.2vw,3rem)] leading-[1.1] text-ink">

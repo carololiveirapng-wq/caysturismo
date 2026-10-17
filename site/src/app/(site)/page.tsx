@@ -1,5 +1,5 @@
 import { Hero } from "@/components/home/hero";
-import { TravelDiscovery } from "@/components/home/travel-discovery/travel-discovery";
+import { OnlineBooking } from "@/components/home/online-booking";
 import { Manifesto } from "@/components/home/manifesto";
 import { Positioning } from "@/components/home/positioning";
 import { Experiences } from "@/components/home/experiences";
@@ -11,15 +11,14 @@ import { TravelerStories } from "@/components/home/traveler-stories";
 import { Testimonials } from "@/components/home/testimonials";
 import { BeyondItinerary } from "@/components/home/beyond-itinerary";
 import { FinalCTA } from "@/components/home/final-cta";
-import { getHome, getSettings, getTestimonials, getDiscoveryOptions } from "@/lib/cms";
+import { getHome, getSettings, getTestimonials } from "@/lib/cms";
 import { notFound } from "next/navigation";
 
 export default async function Home() {
-  const [home, settings, testimonials, { regions, experiences: discoveryExperiences }] = await Promise.all([
+  const [home, settings, testimonials] = await Promise.all([
     getHome(),
     getSettings(),
     getTestimonials(),
-    getDiscoveryOptions(),
   ]);
 
   if (!home) notFound();
@@ -29,7 +28,7 @@ export default async function Home() {
   return (
     <>
       <Hero hero={home.hero} />
-      <TravelDiscovery content={home.travelDiscovery} regions={regions} experiences={discoveryExperiences} />
+      <OnlineBooking />
       {home.manifesto && <Manifesto manifesto={home.manifesto} />}
       {settings.slogan && (
         <Positioning slogan={settings.slogan} foundedYear={foundedYear} positioning={home.positioning} />

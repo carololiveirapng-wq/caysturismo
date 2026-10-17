@@ -1,0 +1,52 @@
+/**
+ * O stylesheet oficial da Oner define um `:root{--primary:...;--accent:...}`
+ * próprio — mesmos NOMES de variável que a Cays já usa em :root (globals.css)
+ * pro token de cor primária/acento do shadcn. Como `:root` deles carrega
+ * depois do globals.css da Cays, sem isso essa regra venceria a Cays em TODA
+ * a página (não só dentro do widget) por ordem de carregamento — qualquer
+ * botão/elemento usando `bg-primary`/`text-accent` fora do widget ficaria
+ * verde/roxo da Oner em vez de ink/magenta da Cays. `:root:root` dobra a
+ * especificidade do seletor deles (0,1,0 → 0,2,0), vencendo
+ * independentemente de ordem de carregamento — restaura os valores reais da
+ * Cays pro resto da página. Dentro do widget, a classe `.theme` abaixo
+ * sobrescreve de novo pro magenta (seletor de classe, mais específico ainda,
+ * e mais próximo na árvore — sempre vence pros elementos dentro dela).
+ */
+:root:root {
+  --primary: var(--ink);
+  --primary-foreground: var(--ivory);
+  --accent: var(--cays-magenta);
+  --accent-foreground: #ffffff;
+}
+
+/**
+ * Re-tema o widget Oner/BeFly pro magenta da Cays SEM tocar no CSS deles.
+ * O stylesheet oficial (styles.css) já consome tudo via var(--primary),
+ * var(--primary-100..900), var(--accent) e var(--accent-100..900) — definidas
+ * por eles em `:root`. Como CSS custom property resolve pelo ancestral mais
+ * próximo que a redefine, redefinir essas mesmas variáveis aqui, numa classe
+ * que envolve só o <befly-widget>, sobrescreve o valor só dentro dessa
+ * subárvore — o resto do site continua herdando o :root original (ink), sem
+ * nenhum seletor `.mat-*`/`.ow-*` deles sendo tocado.
+ */
+.theme {
+  --primary: var(--cays-magenta);
+  --primary-100: color-mix(in srgb, var(--cays-magenta) 25%, white);
+  --primary-200: color-mix(in srgb, var(--cays-magenta) 45%, white);
+  --primary-300: color-mix(in srgb, var(--cays-magenta) 65%, white);
+  --primary-400: color-mix(in srgb, var(--cays-magenta) 85%, white);
+  --primary-600: var(--cays-magenta-dark);
+  --primary-700: color-mix(in srgb, var(--cays-magenta-dark) 85%, black);
+  --primary-800: color-mix(in srgb, var(--cays-magenta-dark) 70%, black);
+  --primary-900: color-mix(in srgb, var(--cays-magenta-dark) 55%, black);
+
+  --accent: var(--cays-magenta-dark);
+  --accent-100: color-mix(in srgb, var(--cays-magenta-dark) 25%, white);
+  --accent-200: color-mix(in srgb, var(--cays-magenta-dark) 45%, white);
+  --accent-300: color-mix(in srgb, var(--cays-magenta-dark) 65%, white);
+  --accent-400: color-mix(in srgb, var(--cays-magenta-dark) 85%, white);
+  --accent-600: color-mix(in srgb, var(--cays-magenta-dark) 85%, black);
+  --accent-700: color-mix(in srgb, var(--cays-magenta-dark) 70%, black);
+  --accent-800: color-mix(in srgb, var(--cays-magenta-dark) 55%, black);
+  --accent-900: color-mix(in srgb, var(--cays-magenta-dark) 40%, black);
+}
