@@ -59,7 +59,11 @@ export interface HomeBeyondItinerary {
  */
 export interface HomeContent {
   hero: {
-    image: DemoImage;
+    mediaType: "image" | "images" | "video";
+    image?: DemoImage;
+    images?: DemoImage[];
+    video?: string;
+    videoPoster?: DemoImage;
     title: string;
     text?: string;
     ctaLabel?: string;

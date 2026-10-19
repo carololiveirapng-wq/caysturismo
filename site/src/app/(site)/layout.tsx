@@ -36,7 +36,9 @@ export async function generateMetadata(): Promise<Metadata> {
   // defina a própria (como a Home) herda esta. Reaproveita o hero real da
   // Home em vez de uma imagem OG dedicada que ainda não existe.
   const home = await getHome();
-  const ogImage = home?.hero.image.src;
+  // hero.image só existe no modo "Imagem única" — nos modos slide/vídeo,
+  // cai pra primeira imagem do slide ou pra capa do vídeo.
+  const ogImage = home?.hero.image?.src ?? home?.hero.images?.[0]?.src ?? home?.hero.videoPoster?.src;
 
   return {
     metadataBase: new URL(siteConfig.url),

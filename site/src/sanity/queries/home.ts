@@ -13,7 +13,11 @@ import { CONTINENT_LABEL_GROQ } from "./continent";
  */
 export const HOME_QUERY = `*[_type == "home"][0]{
   hero{
+    "mediaType": coalesce(mediaType, "image"),
     "image": image${imageFragment},
+    "images": coalesce(images[]${imageFragment}, []),
+    "video": video.asset->url,
+    "videoPoster": videoPoster${imageFragment},
     title,
     text,
     ctaLabel,

@@ -16,7 +16,76 @@ export const home = defineType({
       title: "Hero",
       type: "object",
       fields: [
-        defineField({ name: "image", title: "Imagem", type: "imageWithAlt", validation: (r) => r.required() }),
+        defineField({
+          name: "mediaType",
+          title: "Tipo de fundo",
+          type: "string",
+          options: {
+            list: [
+              { title: "Imagem única", value: "image" },
+              { title: "Slide de imagens (2 ou 3)", value: "images" },
+              { title: "Vídeo", value: "video" },
+            ],
+            layout: "radio",
+          },
+          initialValue: "image",
+          validation: (r) => r.required(),
+        }),
+        defineField({
+          name: "image",
+          title: "Imagem",
+          type: "imageWithAlt",
+          hidden: ({ parent }) => parent?.mediaType !== "image",
+          validation: (r) =>
+            r.custom((value, ctx) => {
+              const parent = ctx.parent as { mediaType?: string } | undefined;
+              if (parent?.mediaType === "image" && !value) return "Obrigatório quando o tipo de fundo é Imagem única";
+              return true;
+            }),
+        }),
+        defineField({
+          name: "images",
+          title: "Imagens do slide",
+          description: "2 ou 3 imagens — alternam em fade automático no fundo do hero.",
+          type: "array",
+          of: [{ type: "imageWithAlt" }],
+          hidden: ({ parent }) => parent?.mediaType !== "images",
+          validation: (r) =>
+            r.custom((value, ctx) => {
+              const parent = ctx.parent as { mediaType?: string } | undefined;
+              if (parent?.mediaType !== "images") return true;
+              const count = value?.length ?? 0;
+              if (count < 2 || count > 3) return "Use 2 ou 3 imagens pro slide";
+              return true;
+            }),
+        }),
+        defineField({
+          name: "video",
+          title: "Vídeo de fundo",
+          description: "MP4/WebM, de preferência curto (até ~15s, em loop) e já comprimido — o arquivo carrega direto no navegador, sem transcodificação.",
+          type: "file",
+          options: { accept: "video/mp4,video/webm" },
+          hidden: ({ parent }) => parent?.mediaType !== "video",
+          validation: (r) =>
+            r.custom((value, ctx) => {
+              const parent = ctx.parent as { mediaType?: string } | undefined;
+              if (parent?.mediaType === "video" && !value) return "Obrigatório quando o tipo de fundo é Vídeo";
+              return true;
+            }),
+        }),
+        defineField({
+          name: "videoPoster",
+          title: "Imagem de capa do vídeo",
+          description: "Mostrada no celular (o vídeo não toca no mobile, pra economizar dados) e como fallback antes do vídeo carregar.",
+          type: "imageWithAlt",
+          hidden: ({ parent }) => parent?.mediaType !== "video",
+          validation: (r) =>
+            r.custom((value, ctx) => {
+              const parent = ctx.parent as { mediaType?: string } | undefined;
+              if (parent?.mediaType === "video" && !value) return "Obrigatório quando o tipo de fundo é Vídeo";
+              return true;
+            }),
+        }),
         defineField({ name: "title", title: "Título", type: "string", validation: (r) => r.required() }),
         defineField({ name: "text", title: "Texto de apoio", type: "text", rows: 2 }),
         defineField({ name: "ctaLabel", title: "Texto do botão", type: "string" }),

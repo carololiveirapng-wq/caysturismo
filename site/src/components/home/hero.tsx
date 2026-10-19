@@ -2,19 +2,37 @@ import Image from "next/image";
 import Link from "next/link";
 import { Container } from "@/components/ui/container";
 import { Reveal } from "@/components/ui/reveal";
+import { HeroSlideshow } from "@/components/home/hero-slideshow";
+import { HeroVideo } from "@/components/home/hero-video";
 import type { HomeContent } from "@/types";
 
+/**
+ * Fundo do hero tem 3 modos (`hero.mediaType`, escolhido no Sanity):
+ * imagem única (padrão — sem JS extra, igual sempre foi), slide de 2-3
+ * imagens (HeroSlideshow, client component só carregado nesse modo) ou
+ * vídeo (HeroVideo, zero JS — resolve tudo via CSS/atributos nativos).
+ * Documentos existentes sem `mediaType` caem no modo imagem única (default
+ * da query), sem quebrar nada do que já estava publicado.
+ */
 export function Hero({ hero }: { hero: HomeContent["hero"] }) {
   return (
     <section className="relative flex min-h-[100svh] items-center overflow-hidden bg-ink">
-      <Image
-        src={hero.image.src}
-        alt={hero.image.alt}
-        fill
-        priority
-        sizes="100vw"
-        className="object-cover"
-      />
+      {hero.mediaType === "images" && hero.images && hero.images.length > 0 ? (
+        <HeroSlideshow images={hero.images} />
+      ) : hero.mediaType === "video" && hero.video && hero.videoPoster ? (
+        <HeroVideo src={hero.video} poster={hero.videoPoster} />
+      ) : (
+        hero.image && (
+          <Image
+            src={hero.image.src}
+            alt={hero.image.alt}
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover"
+          />
+        )
+      )}
       <div
         aria-hidden
         className="absolute inset-0 bg-gradient-to-t from-ink/80 via-ink/15 to-ink/35"

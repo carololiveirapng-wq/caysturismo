@@ -49,7 +49,7 @@ function buildMockHome(): HomeContent {
     .map((a) => ({ slug: a.slug, title: a.title, category: a.category, image: a.image, readingTime: a.readingTime, publishedAt: a.publishedAt }));
 
   return {
-    hero: { image: heroImage, title: "Viagens desenhadas em torno de você.", ctaLabel: "Planejar minha viagem", ctaHref: "/contato" },
+    hero: { mediaType: "image", image: heroImage, title: "Viagens desenhadas em torno de você.", ctaLabel: "Planejar minha viagem", ctaHref: "/contato" },
     travelDiscovery: { title: "Para onde vamos?", text: "Conte o essencial e descubra possibilidades reais." },
     manifesto: { ...mockManifesto, heading: "Não começamos por um pacote.\nComeçamos por você." },
     positioning: undefined,
