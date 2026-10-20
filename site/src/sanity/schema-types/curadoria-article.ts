@@ -37,9 +37,9 @@ export const curadoriaArticle = defineType({
     defineField({
       name: "sections",
       title: "Corpo do artigo (seções em blocos)",
+      description: "Opcional — dá pra publicar só com capa, título e resumo (post curto) e completar o corpo depois.",
       type: "array",
       of: [{ type: "articleSection" }],
-      validation: (r) => r.min(1),
     }),
 
     defineField({ name: "faq", title: "FAQ", type: "array", of: [{ type: "faqItem" }] }),
