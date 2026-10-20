@@ -19,38 +19,38 @@ const experienceProjection = `{
   },
   manifesto,
   "howItWorks": steps,
-  "featuredDestinations": destinations[]->{
+  "featuredDestinations": coalesce(destinations[]->{
     "slug": slug.current,
     name,
     "region": ${CONTINENT_LABEL_GROQ},
     "image": hero.image${imageFragment}
-  },
-  "subtypes": subtypes[]{
+  }, []),
+  "subtypes": coalesce(subtypes[]{
     "slug": name,
     name,
     text,
     "image": image${imageFragment}
-  },
-  "monthlyPicks": monthlyPicks[]{
+  }, []),
+  "monthlyPicks": coalesce(monthlyPicks[]{
     month,
     "destinationName": destination->name,
     "destinationSlug": destination->slug.current,
     note
-  },
+  }, []),
   partnerTypes,
-  "journeys": journeys[]->{
+  "journeys": coalesce(journeys[]->{
     "slug": slug.current,
     title,
     subtitle,
     "image": gallery[0]${imageFragment}
-  },
-  "articles": articles[]->{
+  }, []),
+  "articles": coalesce(articles[]->{
     "slug": slug.current,
     title,
     category,
     "image": heroImage${imageFragment}
-  },
-  faq,
+  }, []),
+  "faq": coalesce(faq, []),
   seo
 }`;
 

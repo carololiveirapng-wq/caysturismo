@@ -35,7 +35,7 @@ const destinationProjection = `{
     "image": image${imageFragment},
     "items": coalesce(items, [])
   },
-  "journeys": journeys[]->{
+  "journeys": coalesce(journeys[]->{
     "slug": slug.current,
     title,
     subtitle,
@@ -47,12 +47,12 @@ const destinationProjection = `{
       type
     ),
     "image": gallery[0]${imageFragment}
-  },
-  "experiences": experiences[]{
+  }, []),
+  "experiences": coalesce(experiences[]{
     title,
     text,
     "image": image${imageFragment}
-  },
+  }, []),
   "stays": coalesce(stays[]->{
     name,
     "region": location,
@@ -60,19 +60,19 @@ const destinationProjection = `{
     "image": image${imageFragment}
   }, []),
   months,
-  "articles": articles[]->{
+  "articles": coalesce(articles[]->{
     "slug": slug.current,
     title,
     category,
     "image": heroImage${imageFragment}
-  },
-  faq,
-  "relatedDestinations": relatedDestinations[]->{
+  }, []),
+  "faq": coalesce(faq, []),
+  "relatedDestinations": coalesce(relatedDestinations[]->{
     "slug": slug.current,
     name,
     "region": ${CONTINENT_LABEL_GROQ},
     "image": hero.image${imageFragment}
-  },
+  }, []),
   seo
 }`;
 

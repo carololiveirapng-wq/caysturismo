@@ -45,19 +45,19 @@ const travelProductProjection = `{
   cabinCategories,
   inclusions,
   exclusions,
-  "related": related[]->{
+  "related": coalesce(related[]->{
     "slug": slug.current,
     title,
     subtitle,
     "image": gallery[0]${imageFragment}
-  },
-  "articles": articles[]->{
+  }, []),
+  "articles": coalesce(articles[]->{
     "slug": slug.current,
     title,
     category,
     "image": heroImage${imageFragment}
-  },
-  faq,
+  }, []),
+  "faq": coalesce(faq, []),
   seo
 }`;
 

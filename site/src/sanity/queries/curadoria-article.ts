@@ -10,7 +10,7 @@ const bodyProjection = `{
   _type == "richTextBlock" => { "type": "richText", content },
   _type == "imageFullBlock" => { "type": "imageFull", "image": image${imageFragment}, caption },
   _type == "imageTextBlock" => { "type": "imageText", "image": image${imageFragment}, heading, text, imagePosition },
-  _type == "galleryBlock" => { "type": "gallery", "images": images[]${imageFragment} },
+  _type == "galleryBlock" => { "type": "gallery", "images": coalesce(images[]${imageFragment}, []) },
   _type == "quoteBlock" => { "type": "quote", text, author },
   _type == "expertNoteBlock" => { "type": "expertNote", text, author },
   _type == "ctaBlock" => { "type": "cta", title, supporting, ctaLabel, ctaHref },
@@ -38,8 +38,8 @@ const articleProjection = `{
   order,
   title,
   category,
-  "destinationIds": destinations[]->slug.current,
-  "experienceIds": experiences[]->slug.current,
+  "destinationIds": coalesce(destinations[]->slug.current, []),
+  "experienceIds": coalesce(experiences[]->slug.current, []),
   author,
   publishedAt,
   updatedAt,
@@ -47,15 +47,15 @@ const articleProjection = `{
   "heroImage": heroImage${imageFragment},
   excerpt,
   breadcrumb,
-  "sections": sections[]{
+  "sections": coalesce(sections[]{
     "id": _key,
     heading,
-    "blocks": body[]${bodyProjection}
-  },
-  faq,
-  "relatedTravelProducts": relatedTravelProducts[]->slug.current,
+    "blocks": coalesce(body[]${bodyProjection}, [])
+  }, []),
+  "faq": coalesce(faq, []),
+  "relatedTravelProducts": coalesce(relatedTravelProducts[]->slug.current, []),
   "relatedDestination": relatedDestination->slug.current,
-  "relatedArticles": relatedArticles[]->slug.current,
+  "relatedArticles": coalesce(relatedArticles[]->slug.current, []),
   seo
 }`;
 
