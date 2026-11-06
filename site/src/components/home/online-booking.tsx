@@ -17,7 +17,7 @@ export function OnlineBooking() {
           <EditorialHeading as="h2" size="md" className="mt-4">
             Pesquise e reserve online
           </EditorialHeading>
-          <p className="mt-3 text-base leading-relaxed text-stone">
+          <p className="mt-3 text-lg leading-relaxed text-stone">
             Consulte voos, hotéis e pacotes disponíveis agora pela nossa plataforma parceira.
           </p>
         </div>
