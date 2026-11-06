@@ -137,17 +137,17 @@ export function Testimonials({ reviews }: { reviews: GoogleReview[] }) {
                 &ldquo;{activeReview.text}&rdquo;
               </blockquote>
 
-              <figcaption className="mt-7 text-sm text-stone">
+              <figcaption className="mt-7 text-base text-stone">
                 <span className="block font-medium text-ink">{activeReview.authorName}</span>
               </figcaption>
 
               <div className="mt-5 flex items-center justify-between gap-4 border-t border-ink/10 pt-5">
-                <span className="inline-flex items-center gap-1.5 text-xs text-stone">
+                <span className="inline-flex items-center gap-1.5 text-sm text-stone">
                   <GoogleIcon className="size-3.5" />
                   Google Reviews
                 </span>
                 {activeReview.reviewUrl && (
-                  <LinkArrow href={activeReview.reviewUrl} target="_blank" rel="noopener noreferrer" className="text-xs">
+                  <LinkArrow href={activeReview.reviewUrl} target="_blank" rel="noopener noreferrer" className="text-sm">
                     Ver no Google
                   </LinkArrow>
                 )}

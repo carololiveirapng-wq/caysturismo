@@ -16,7 +16,7 @@ export function Positioning({ slogan, foundedYear, positioning }: PositioningPro
       <Container className="flex flex-col items-center text-center">
         <Reveal className="flex flex-col items-center">
           {(positioning?.heading || foundedYear) && (
-            <p className="text-xs font-medium tracking-[0.3em] text-ivory/60 uppercase">
+            <p className="text-sm font-medium tracking-[0.3em] text-ivory/60 uppercase">
               {positioning?.heading || (foundedYear && `Desde ${foundedYear}`)}
             </p>
           )}
@@ -24,7 +24,7 @@ export function Positioning({ slogan, foundedYear, positioning }: PositioningPro
             {slogan}
           </h2>
           {positioning?.heading && foundedYear && (
-            <p className="mt-2 text-xs font-medium tracking-[0.3em] text-ivory/60 uppercase">
+            <p className="mt-2 text-sm font-medium tracking-[0.3em] text-ivory/60 uppercase">
               Desde {foundedYear}
             </p>
           )}

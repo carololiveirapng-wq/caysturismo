@@ -52,12 +52,12 @@ export function TestimonialCard({ review, onReadMore }: TestimonialCardProps) {
         >
           &ldquo;{review.text}&rdquo;
         </blockquote>
-        <div className={cn("mt-2.5 h-4", !isTruncated && "invisible")}>
+        <div className={cn("mt-2.5 h-5", !isTruncated && "invisible")}>
           <button
             type="button"
             tabIndex={isTruncated ? 0 : -1}
             onClick={(e) => onReadMore(review, e.currentTarget)}
-            className="text-xs font-medium tracking-wide text-stone underline underline-offset-4 transition-colors duration-300 hover:text-ink"
+            className="text-sm font-medium tracking-wide text-stone underline underline-offset-4 transition-colors duration-300 hover:text-ink"
           >
             Ler depoimento completo
           </button>
@@ -65,17 +65,17 @@ export function TestimonialCard({ review, onReadMore }: TestimonialCardProps) {
       </div>
 
       <div className="mt-7">
-        <figcaption className="text-sm text-stone">
+        <figcaption className="text-base text-stone">
           <span className="block font-medium text-ink">{review.authorName}</span>
         </figcaption>
 
         <div className="mt-4 flex items-center justify-between gap-4 border-t border-ink/10 pt-4">
-          <span className="inline-flex items-center gap-1.5 text-xs text-stone">
+          <span className="inline-flex items-center gap-1.5 text-sm text-stone">
             <GoogleIcon className="size-3.5" />
             Google Reviews
           </span>
           {review.reviewUrl && (
-            <LinkArrow href={review.reviewUrl} target="_blank" rel="noopener noreferrer" className="text-xs">
+            <LinkArrow href={review.reviewUrl} target="_blank" rel="noopener noreferrer" className="text-sm">
               Ver no Google
             </LinkArrow>
           )}

@@ -29,7 +29,7 @@ export function FeaturedJourney({ travelProducts }: { travelProducts: HomeFeatur
           {journey.eyebrow && (
             <div className="flex items-center gap-4">
               <span aria-hidden className="h-px w-10 bg-ivory/40" />
-              <p className="text-xs font-medium tracking-[0.3em] text-ivory/70 uppercase">
+              <p className="text-sm font-medium tracking-[0.3em] text-ivory/70 uppercase">
                 {journey.eyebrow}
               </p>
             </div>

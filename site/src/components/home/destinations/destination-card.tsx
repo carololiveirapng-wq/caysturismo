@@ -43,7 +43,7 @@ export function DestinationCard({ destination }: { destination: DestinationCardD
           </span>
         </div>
         {destination.shortDescription && (
-          <p className="mt-1.5 text-sm text-stone">{destination.shortDescription}</p>
+          <p className="mt-1.5 text-base text-stone">{destination.shortDescription}</p>
         )}
       </div>
     </Link>

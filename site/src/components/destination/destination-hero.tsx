@@ -34,7 +34,7 @@ export function DestinationHero({ destination }: { destination: DestinationDetai
           )}
 
           {hero.eyebrow && (
-            <p className="text-xs font-medium tracking-[0.25em] text-ivory/75 uppercase">
+            <p className="text-sm font-medium tracking-[0.25em] text-ivory/75 uppercase">
               {hero.eyebrow}
             </p>
           )}
@@ -44,11 +44,11 @@ export function DestinationHero({ destination }: { destination: DestinationDetai
           </h1>
 
           {hero.seasonLabel && (
-            <p className="mt-3 text-xs tracking-[0.15em] text-ivory/55 uppercase">{hero.seasonLabel}</p>
+            <p className="mt-3 text-sm tracking-[0.15em] text-ivory/55 uppercase">{hero.seasonLabel}</p>
           )}
 
           {hero.subtitle && (
-            <p className="mt-5 max-w-lg border-l border-ivory/25 pl-5 text-base leading-relaxed text-ivory/80">
+            <p className="mt-5 max-w-lg border-l border-ivory/25 pl-5 text-lg leading-relaxed text-ivory/80">
               {hero.subtitle}
             </p>
           )}
@@ -56,7 +56,7 @@ export function DestinationHero({ destination }: { destination: DestinationDetai
           <div className="mt-8 flex flex-wrap items-center gap-x-10 gap-y-5">
             <Link
               href={`/contato?destino=${slug}`}
-              className="group/cta inline-flex items-center gap-4 text-sm font-medium tracking-[0.08em] text-ivory uppercase"
+              className="group/cta inline-flex items-center gap-4 text-base font-medium tracking-[0.08em] text-ivory uppercase"
             >
               <span className="flex size-12 items-center justify-center rounded-full border border-ivory/70 transition-colors duration-500 ease-[var(--ease-editorial)] group-hover/cta:bg-ivory">
                 <span

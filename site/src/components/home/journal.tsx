@@ -41,14 +41,14 @@ export function Journal({ articles }: { articles: HomeFeaturedArticle[] }) {
               containerClassName="aspect-[4/5] md:aspect-[16/11]"
             />
             <div className="mt-5 max-w-lg border-t border-ink/10 pt-5">
-              <p className="text-xs font-medium tracking-[0.15em] text-magenta-dark uppercase">
+              <p className="text-sm font-medium tracking-[0.15em] text-magenta-dark uppercase">
                 {featured.category}
               </p>
               <h3 className="mt-3 font-serif text-2xl leading-snug text-ink md:text-3xl">
                 {featured.title}
               </h3>
               {featured.readingTime && (
-                <p className="mt-3 text-xs text-stone">{featured.readingTime} min de leitura</p>
+                <p className="mt-3 text-sm text-stone">{featured.readingTime} min de leitura</p>
               )}
             </div>
           </Link>
@@ -65,12 +65,12 @@ export function Journal({ articles }: { articles: HomeFeaturedArticle[] }) {
                   containerClassName="aspect-[16/10]"
                 />
                 <div className="mt-4 border-t border-ink/10 pt-4">
-                  <p className="text-xs font-medium tracking-[0.15em] text-magenta-dark uppercase">
+                  <p className="text-sm font-medium tracking-[0.15em] text-magenta-dark uppercase">
                     {post.category}
                   </p>
                   <h3 className="mt-2 font-serif text-xl leading-snug text-ink">{post.title}</h3>
                   {post.readingTime && (
-                    <p className="mt-2 text-xs text-stone">{post.readingTime} min de leitura</p>
+                    <p className="mt-2 text-sm text-stone">{post.readingTime} min de leitura</p>
                   )}
                 </div>
               </Link>

@@ -18,7 +18,7 @@ export function JourneyProcess({ process }: { process: NonNullable<HomeContent["
               {process.heading}
             </EditorialHeading>
           )}
-          {process.intro && <p className="mt-3 text-sm leading-relaxed text-stone">{process.intro}</p>}
+          {process.intro && <p className="mt-3 text-base leading-relaxed text-stone">{process.intro}</p>}
         </Reveal>
 
         <div className="relative mt-12 md:mt-14">
@@ -42,7 +42,7 @@ export function JourneyProcess({ process }: { process: NonNullable<HomeContent["
                   {step.number}
                 </span>
                 <h3 className="mt-2 font-serif text-xl text-ink">{step.title}</h3>
-                <p className="mt-1.5 max-w-[26ch] text-sm leading-relaxed text-stone">
+                <p className="mt-1.5 max-w-[26ch] text-base leading-relaxed text-stone">
                   {step.text}
                 </p>
               </Reveal>

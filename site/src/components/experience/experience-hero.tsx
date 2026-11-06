@@ -17,13 +17,13 @@ export function ExperienceHero({ experience, contactHref }: { experience: Experi
         <Reveal className="max-w-2xl">
           {breadcrumb && breadcrumb.length > 0 && <Breadcrumb items={breadcrumb} tone="light" className="mb-6" />}
           {hero.eyebrow && (
-            <p className="text-xs font-medium tracking-[0.25em] text-ivory/75 uppercase">{hero.eyebrow}</p>
+            <p className="text-sm font-medium tracking-[0.25em] text-ivory/75 uppercase">{hero.eyebrow}</p>
           )}
           <h1 className="mt-3 font-serif text-[clamp(2.5rem,6vw,5.25rem)] leading-[1.05] text-balance text-ivory">
             {hero.title}
           </h1>
           {hero.subtitle && (
-            <p className="mt-5 max-w-lg border-l border-ivory/25 pl-5 text-base leading-relaxed text-ivory/80">
+            <p className="mt-5 max-w-lg border-l border-ivory/25 pl-5 text-lg leading-relaxed text-ivory/80">
               {hero.subtitle}
             </p>
           )}
@@ -31,7 +31,7 @@ export function ExperienceHero({ experience, contactHref }: { experience: Experi
           <div className="mt-8">
             <Link
               href={contactHref}
-              className="group/cta inline-flex items-center gap-4 text-sm font-medium tracking-[0.08em] text-ivory uppercase"
+              className="group/cta inline-flex items-center gap-4 text-base font-medium tracking-[0.08em] text-ivory uppercase"
             >
               <span className="flex size-12 items-center justify-center rounded-full border border-ivory/70 transition-colors duration-500 ease-[var(--ease-editorial)] group-hover/cta:bg-ivory">
                 <span

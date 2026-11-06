@@ -58,16 +58,16 @@ export function TravelProductHero({
             <div className="border border-ink/10 bg-ivory p-7 md:p-8 lg:sticky lg:top-28">
               <div className="flex items-start justify-between gap-3">
                 {product.eyebrow && (
-                  <p className="text-xs font-medium tracking-[0.2em] text-stone uppercase">{product.eyebrow}</p>
+                  <p className="text-sm font-medium tracking-[0.2em] text-stone uppercase">{product.eyebrow}</p>
                 )}
                 <StatusBadge status={product.status} />
               </div>
 
               <h1 className="mt-2 font-serif text-3xl leading-tight text-ink md:text-4xl">{product.title}</h1>
-              {product.subtitle && <p className="mt-3 text-sm leading-relaxed text-stone">{product.subtitle}</p>}
+              {product.subtitle && <p className="mt-3 text-base leading-relaxed text-stone">{product.subtitle}</p>}
 
               {relatedExperiences.length > 0 && (
-                <p className="mt-3 text-xs tracking-wide text-stone uppercase">
+                <p className="mt-3 text-sm tracking-wide text-stone uppercase">
                   Experiência:{" "}
                   {relatedExperiences.map((exp, i) => (
                     <span key={exp.slug}>
@@ -131,18 +131,18 @@ export function TravelProductHero({
               </dl>
 
               <div className="mt-6 flex items-baseline justify-between border-t border-ink/10 pt-5">
-                <span className="text-xs tracking-wide text-stone uppercase">A partir de</span>
+                <span className="text-sm tracking-wide text-stone uppercase">A partir de</span>
                 <span className="font-serif text-lg text-ink">{product.priceFrom ?? "Sob consulta"}</span>
               </div>
 
               {product.status === "expired" ? (
-                <p className="mt-6 border border-ink/10 bg-sand p-4 text-sm leading-relaxed text-stone">
+                <p className="mt-6 border border-ink/10 bg-sand p-4 text-base leading-relaxed text-stone">
                   Esta viagem não está mais disponível. Veja opções parecidas mais abaixo, ou fale com a gente.
                 </p>
               ) : (
                 <Link
                   href={contactHref}
-                  className="mt-6 flex items-center justify-center bg-ink px-6 py-3.5 text-sm font-medium tracking-wide text-ivory uppercase transition-colors duration-300 hover:bg-magenta-dark"
+                  className="mt-6 flex items-center justify-center bg-ink px-6 py-3.5 text-base font-medium tracking-wide text-ivory uppercase transition-colors duration-300 hover:bg-magenta-dark"
                 >
                   Planejar esta viagem
                 </Link>
@@ -153,7 +153,7 @@ export function TravelProductHero({
                   href={whatsappHref}
                   target="_blank"
                   rel="noreferrer"
-                  className="mt-3 flex items-center justify-center border border-ink/15 px-6 py-3 text-sm font-medium tracking-wide text-ink transition-colors duration-300 hover:border-ink/30"
+                  className="mt-3 flex items-center justify-center border border-ink/15 px-6 py-3 text-base font-medium tracking-wide text-ink transition-colors duration-300 hover:border-ink/30"
                 >
                   Falar no WhatsApp
                 </a>

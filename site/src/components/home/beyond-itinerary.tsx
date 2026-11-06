@@ -11,11 +11,11 @@ export function BeyondItinerary({ data }: { data?: HomeContent["beyondItinerary"
       <Container className="flex flex-col items-start gap-5 md:flex-row md:items-center md:justify-between md:gap-10">
         <div className="max-w-sm">
           <SectionLabel>{data.heading ?? "Além do roteiro"}</SectionLabel>
-          {data.text && <p className="mt-2 text-sm leading-relaxed text-stone">{data.text}</p>}
+          {data.text && <p className="mt-2 text-base leading-relaxed text-stone">{data.text}</p>}
         </div>
         <ul className="flex flex-wrap gap-x-8 gap-y-2.5">
           {data.items.map((item) => (
-            <li key={item} className="text-sm font-medium tracking-wide text-ink">
+            <li key={item} className="text-base font-medium tracking-wide text-ink">
               {item}
             </li>
           ))}

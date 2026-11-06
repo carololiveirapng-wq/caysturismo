@@ -30,7 +30,7 @@ export function DestinationFinalCTA({
           <Link
             href={ctaHref}
             {...(ctaHref.startsWith("http") ? { target: "_blank", rel: "noreferrer" } : {})}
-            className="group/cta mt-9 inline-flex items-center gap-4 text-sm font-medium tracking-[0.08em] text-ivory uppercase"
+            className="group/cta mt-9 inline-flex items-center gap-4 text-base font-medium tracking-[0.08em] text-ivory uppercase"
           >
             <span className="flex size-12 items-center justify-center rounded-full border border-ivory/70 transition-colors duration-500 ease-[var(--ease-editorial)] group-hover/cta:bg-ivory">
               <span
@@ -43,7 +43,7 @@ export function DestinationFinalCTA({
             {ctaLabel}
           </Link>
 
-          {note && <p className="mt-4 text-xs tracking-wide text-ivory/70">{note}</p>}
+          {note && <p className="mt-4 text-sm tracking-wide text-ivory/70">{note}</p>}
         </Reveal>
       </Container>
     </section>

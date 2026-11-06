@@ -24,11 +24,11 @@ export function InlineCtaStrip({
       <Container className="flex flex-wrap items-center justify-between gap-5">
         <Reveal className="max-w-lg">
           <p className="font-serif text-lg text-ink md:text-xl">{title}</p>
-          {supporting && <p className="mt-1 text-sm text-stone">{supporting}</p>}
+          {supporting && <p className="mt-1 text-base text-stone">{supporting}</p>}
         </Reveal>
         <Link
           href={ctaHref}
-          className="group/cta inline-flex shrink-0 items-center gap-2 text-sm font-medium tracking-wide text-ink transition-colors duration-300 hover:text-magenta"
+          className="group/cta inline-flex shrink-0 items-center gap-2 text-base font-medium tracking-wide text-ink transition-colors duration-300 hover:text-magenta"
         >
           {ctaLabel}
           <ArrowRight

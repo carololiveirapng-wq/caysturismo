@@ -49,7 +49,7 @@ export function Hero({ hero }: { hero: HomeContent["hero"] }) {
           </h1>
 
           {hero.text && (
-            <p className="mx-auto mt-4 max-w-[26rem] text-base leading-relaxed whitespace-pre-line text-ivory/80">
+            <p className="mx-auto mt-4 max-w-[26rem] text-lg leading-relaxed whitespace-pre-line text-ivory/80">
               {hero.text}
             </p>
           )}
@@ -57,7 +57,7 @@ export function Hero({ hero }: { hero: HomeContent["hero"] }) {
           <div className="mt-7 flex flex-wrap items-center justify-center gap-x-10 gap-y-5">
             <Link
               href={hero.ctaHref || "/contato"}
-              className="group/cta inline-flex items-center gap-4 text-sm font-medium tracking-[0.08em] text-ivory uppercase"
+              className="group/cta inline-flex items-center gap-4 text-base font-medium tracking-[0.08em] text-ivory uppercase"
             >
               <span className="flex size-12 items-center justify-center rounded-full border border-ivory/70 transition-colors duration-500 ease-[var(--ease-editorial)] group-hover/cta:bg-ivory">
                 <span
@@ -71,7 +71,7 @@ export function Hero({ hero }: { hero: HomeContent["hero"] }) {
             </Link>
             <Link
               href="/sobre"
-              className="group/link inline-flex items-center gap-2 text-sm font-medium tracking-wide text-ivory/85"
+              className="group/link inline-flex items-center gap-2 text-base font-medium tracking-wide text-ivory/85"
             >
               <span className="relative">
                 Conheça a Cays

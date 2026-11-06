@@ -28,12 +28,12 @@ export function ShortHero({
       */}
       <Container className="relative z-10 pt-28 pb-12 md:pt-36 md:pb-16">
         <Reveal className="max-w-xl">
-          <p className="text-xs font-medium tracking-[0.25em] text-ivory/75 uppercase">{eyebrow}</p>
+          <p className="text-sm font-medium tracking-[0.25em] text-ivory/75 uppercase">{eyebrow}</p>
           <h1 className="mt-3 font-serif text-[clamp(2.25rem,5vw,4rem)] leading-[1.05] text-balance text-ivory">
             {title}
           </h1>
           {subtitle && (
-            <p className="mt-4 max-w-md text-base leading-relaxed text-ivory/75">{subtitle}</p>
+            <p className="mt-4 max-w-md text-lg leading-relaxed text-ivory/75">{subtitle}</p>
           )}
         </Reveal>
       </Container>

@@ -15,7 +15,7 @@ export function LinkArrow({
   return (
     <Link
       className={cn(
-        "group/arrow inline-flex w-fit items-center gap-2 text-sm font-medium tracking-wide",
+        "group/arrow inline-flex w-fit items-center gap-2 text-base font-medium tracking-wide",
         tone === "ink" ? "text-ink" : "text-ivory",
         className,
       )}

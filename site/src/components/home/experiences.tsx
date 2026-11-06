@@ -36,7 +36,7 @@ function ExperienceCard({ experience }: { experience: HomeFeaturedExperience }) 
         <div>
           <h3 className="font-serif text-xl text-ivory md:text-2xl">{experience.name}</h3>
           {experience.shortDescription && (
-            <p className="mt-1.5 max-w-[22ch] text-sm leading-snug text-ivory/80">
+            <p className="mt-1.5 max-w-[22ch] text-base leading-snug text-ivory/80">
               {experience.shortDescription}
             </p>
           )}

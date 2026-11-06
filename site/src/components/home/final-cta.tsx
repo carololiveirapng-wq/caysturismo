@@ -22,7 +22,7 @@ export function FinalCTA({ finalCta }: { finalCta: NonNullable<HomeContent["fina
 
           <Link
             href="/contato"
-            className="group/cta mt-10 inline-flex items-center gap-4 text-sm font-medium tracking-[0.08em] text-ivory uppercase"
+            className="group/cta mt-10 inline-flex items-center gap-4 text-base font-medium tracking-[0.08em] text-ivory uppercase"
           >
             <span className="flex size-12 items-center justify-center rounded-full border border-ivory/70 transition-colors duration-500 ease-[var(--ease-editorial)] group-hover/cta:bg-ivory">
               <span
@@ -38,7 +38,7 @@ export function FinalCTA({ finalCta }: { finalCta: NonNullable<HomeContent["fina
           <Link
             href="/reservar-online"
             onClick={() => trackEvent("online_booking_clicked_home")}
-            className="mt-5 text-xs tracking-wide text-ivory/50 underline-offset-4 hover:text-ivory/80 hover:underline"
+            className="mt-5 text-sm tracking-wide text-ivory/50 underline-offset-4 hover:text-ivory/80 hover:underline"
           >
             Prefere pesquisar e reservar online?
           </Link>
