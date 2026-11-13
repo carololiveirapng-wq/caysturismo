@@ -11,13 +11,15 @@ export function FeaturedJourney({ travelProducts }: { travelProducts: HomeFeatur
   return (
     <section className="bg-graphite md:flex md:min-h-[70svh]">
       <div className="relative h-[42svh] bg-graphite md:h-auto md:w-3/5">
-        <Image
-          src={journey.image.src}
-          alt={journey.image.alt}
-          fill
-          sizes="(min-width: 768px) 60vw, 100vw"
-          className="object-cover"
-        />
+        {journey.image?.src && (
+          <Image
+            src={journey.image.src}
+            alt={journey.image.alt}
+            fill
+            sizes="(min-width: 768px) 60vw, 100vw"
+            className="object-cover"
+          />
+        )}
         <div
           aria-hidden
           className="absolute inset-0 bg-gradient-to-t from-graphite/50 via-transparent to-transparent md:bg-gradient-to-r md:from-transparent md:via-transparent md:to-graphite/30"

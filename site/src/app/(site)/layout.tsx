@@ -5,7 +5,10 @@ import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { WhatsAppButton } from "@/components/layout/whatsapp-button";
 import { siteConfig } from "@/lib/site-config";
-import { getSettings, getHome } from "@/lib/cms";
+import { getSettings, getHome, getTravelProducts } from "@/lib/cms";
+import { getOpenOffers } from "@/lib/offers";
+import { getActiveOrderedItems } from "@/lib/content";
+import { travelProductHref } from "@/lib/links";
 import "../globals.css";
 import { jsonLdString } from "@/lib/json-ld";
 import { organizationJsonLd } from "@/lib/seo/structured-data";
@@ -69,8 +72,17 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
+// O menu depende das ofertas abertas: reconstrói a cada 15 min para uma oferta vencida sair sozinha.
+export const revalidate = 900;
+
 export default async function RootLayout({ children }: LayoutProps<"/">) {
   const settings = await getSettings();
+  const produtos = await getTravelProducts();
+  const hasOffers = getOpenOffers(produtos).length > 0;
+  const trips = getActiveOrderedItems(produtos)
+    .filter((p) => p.type !== "offer")
+    .slice(0, 8)
+    .map((p) => ({ label: p.title, href: travelProductHref(p.slug) }));
 
 
   return (
@@ -87,8 +99,8 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
           dangerouslySetInnerHTML={{ __html: jsonLdString(organizationJsonLd(settings)) }}
         />
         <PublicChrome
-          header={<Header settings={settings} />}
-          footer={<Footer settings={settings} />}
+          header={<Header settings={settings} hasOffers={hasOffers} trips={trips} />}
+          footer={<Footer settings={settings} hasOffers={hasOffers} />}
           whatsappButton={<WhatsAppButton whatsappHref={settings.whatsappHref} />}
         >
           {children}

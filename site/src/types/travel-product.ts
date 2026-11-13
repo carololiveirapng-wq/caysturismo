@@ -40,7 +40,8 @@ export interface RelatedProductRef {
   slug: string;
   title: string;
   subtitle?: string;
-  image: DemoImage;
+  /** Pode faltar quando a viagem relacionada ainda não tem foto na galeria. */
+  image?: DemoImage | null;
 }
 
 /**
@@ -70,6 +71,12 @@ export interface TravelProduct extends BaseContent {
   /** Data fixa: datas de saída com status próprio. */
   departures?: TravelProductDeparture[];
   priceFrom?: string;
+  /** Só para type "offer": nome da campanha (ex.: Black Friday). */
+  offerLabel?: string;
+  /** Só para type "offer": ISO da data/hora em que a oferta acaba. Vazio = não vence. */
+  offerEndsAt?: string;
+  /** Só para type "offer": regras e restrições da oferta. */
+  offerConditions?: string;
   supplier?: string;
   ship?: string;
   embarkation?: string;

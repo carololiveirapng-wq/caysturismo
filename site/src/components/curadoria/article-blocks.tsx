@@ -136,8 +136,9 @@ function Block({ block }: { block: ArticleBlock }) {
     case "travelCard":
       return (
         <Link href={travelProductHref(block.slug)} className="group/card flex items-center gap-4 border border-ink/10 p-4 transition-colors duration-300 hover:border-magenta/40">
-          <div className="relative size-20 shrink-0 overflow-hidden">
-            <Image src={block.image.src} alt={block.image.alt} fill sizes="80px" className="object-cover" />
+          <div className="relative size-20 shrink-0 overflow-hidden bg-ink">
+            {/* viagem sem foto na galeria: quadrado escuro em vez de quebrar o artigo */}
+            {block.image?.src && <Image src={block.image.src} alt={block.image.alt} fill sizes="80px" className="object-cover" />}
           </div>
           <div>
             <p className="text-xs tracking-wide text-stone uppercase">Viagem</p>

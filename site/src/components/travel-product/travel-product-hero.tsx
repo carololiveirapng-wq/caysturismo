@@ -9,6 +9,7 @@ import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carouse
 import { CarouselCircleNav } from "@/components/ui/carousel-circle-nav";
 import { StatusBadge } from "@/components/travel-product/status-badge";
 import { TYPE_LABEL } from "@/lib/travel-product-status";
+import { formatOfferEnd, isOfferOpen } from "@/lib/offers";
 import type { TravelProduct } from "@/types";
 
 export function TravelProductHero({
@@ -65,6 +66,20 @@ export function TravelProductHero({
 
               <h1 className="mt-2 font-serif text-3xl leading-tight text-ink md:text-4xl">{product.title}</h1>
               {product.subtitle && <p className="mt-3 text-base leading-relaxed text-stone">{product.subtitle}</p>}
+
+              {product.type === "offer" && (
+                <div className="mt-4 border border-ink/10 bg-sand px-4 py-3 text-sm text-ink">
+                  {isOfferOpen(product) ? (
+                    <>
+                      {product.offerLabel && <span className="font-medium">{product.offerLabel} · </span>}
+                      {product.offerEndsAt ? `Oferta válida até ${formatOfferEnd(product.offerEndsAt)}` : "Oferta por tempo limitado"}
+                    </>
+                  ) : (
+                    <>Esta oferta foi encerrada. Fale com a Cays para saber as condições atuais.</>
+                  )}
+                  {product.offerConditions && <p className="mt-2 text-xs leading-relaxed text-stone">{product.offerConditions}</p>}
+                </div>
+              )}
 
               {relatedExperiences.length > 0 && (
                 <p className="mt-3 text-sm tracking-wide text-stone uppercase">

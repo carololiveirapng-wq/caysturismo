@@ -62,6 +62,28 @@ export const travelProduct = defineType({
       validation: (r) => r.required(),
     }),
     defineField({
+      name: "offerLabel",
+      title: "Nome da campanha",
+      type: "string",
+      description: "Ex.: Black Friday, Páscoa, Últimas vagas. Aparece como etiqueta no card em Oportunidades exclusivas.",
+      hidden: ({ document }) => document?.type !== "offer",
+    }),
+    defineField({
+      name: "offerEndsAt",
+      title: "Oferta válida até",
+      type: "datetime",
+      description: "Depois desta data e hora a oferta sai sozinha de Oportunidades exclusivas. Deixe vazio se não tiver data para acabar.",
+      hidden: ({ document }) => document?.type !== "offer",
+    }),
+    defineField({
+      name: "offerConditions",
+      title: "Condições da oferta",
+      type: "text",
+      rows: 3,
+      description: "Regras e restrições (ex.: sujeito à disponibilidade, pagamento, datas). Aparece na página da oferta.",
+      hidden: ({ document }) => document?.type !== "offer",
+    }),
+    defineField({
       name: "eyebrow",
       title: "Texto pequeno acima do título (eyebrow)",
       type: "string",

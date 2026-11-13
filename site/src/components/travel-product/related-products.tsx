@@ -21,14 +21,17 @@ export function RelatedProducts({ items }: { items: RelatedProductRef[] }) {
         <div className="mt-9 grid grid-cols-1 gap-8 sm:grid-cols-3">
           {items.map((item) => (
             <Link key={item.slug} href={travelProductHref(item.slug)} className="group/card relative block">
-              <div className="relative aspect-[8/9] overflow-hidden">
-                <ImageReveal
-                  src={item.image.src}
-                  alt={item.image.alt}
-                  fill
-                  sizes="(min-width: 640px) 30vw, 90vw"
-                  containerClassName="absolute inset-0"
-                />
+              <div className="relative aspect-[8/9] overflow-hidden bg-ink">
+                {/* viagem relacionada ainda sem foto na galeria: mostra o cartão escuro em vez de quebrar a página */}
+                {item.image?.src && (
+                  <ImageReveal
+                    src={item.image.src}
+                    alt={item.image.alt}
+                    fill
+                    sizes="(min-width: 640px) 30vw, 90vw"
+                    containerClassName="absolute inset-0"
+                  />
+                )}
                 <div
                   aria-hidden
                   className="absolute inset-0 bg-gradient-to-t from-ink/70 via-ink/0 to-transparent"

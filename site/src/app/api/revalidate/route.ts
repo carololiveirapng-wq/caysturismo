@@ -135,6 +135,14 @@ export async function POST(request: NextRequest) {
     // Home referencia destinos/experiências/viagens/curadoria em destaque.
     revalidatePath("/");
     revalidated.push("/");
+
+    // Viagem/oferta publicada muda o menu (submenu de Viagens e o link "Oportunidades", que vêm do layout)
+    // e a página /oportunidades. Revalidar o layout propaga o menu novo para o site todo.
+    if (type === "travelProduct") {
+      revalidatePath("/oportunidades");
+      revalidatePath("/", "layout");
+      revalidated.push("/oportunidades", "/ (layout)");
+    }
   }
 
   return NextResponse.json({ revalidated, type, slug: slug ?? null });

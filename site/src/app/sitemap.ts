@@ -2,7 +2,8 @@ import type { MetadataRoute } from "next";
 import { fetchFromSanity } from "@/lib/cms/sanity-fetch";
 import { siteConfig } from "@/lib/site-config";
 import { LAST_UPDATED } from "@/lib/legal/content";
-import { getDestinationSlugs, getExperienceSlugs, getTravelProductSlugs, getArticleSlugs } from "@/lib/cms";
+import { getDestinationSlugs, getExperienceSlugs, getTravelProductSlugs, getArticleSlugs, getTravelProducts } from "@/lib/cms";
+import { getOpenOffers } from "@/lib/offers";
 
 /**
  * Mesmos filtros "ativo" das consultas de slug (`*_SLUGS_QUERY`), mais a data
@@ -37,6 +38,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     dated(SITEMAP_ENTRIES.articles, getArticleSlugs),
   ]);
 
+  const temOfertas = getOpenOffers(await getTravelProducts()).length > 0;
   const base = siteConfig.url;
   const toDate = (iso?: string) => (iso ? new Date(iso) : undefined);
 
@@ -46,6 +48,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${base}/destinos`, changeFrequency: "weekly", priority: 0.8 },
     { url: `${base}/experiencias`, changeFrequency: "weekly", priority: 0.8 },
     { url: `${base}/viagens`, changeFrequency: "weekly", priority: 0.8 },
+    ...(temOfertas ? [{ url: `${base}/oportunidades`, changeFrequency: "daily" as const, priority: 0.8 }] : []),
     { url: `${base}/curadoria`, changeFrequency: "weekly", priority: 0.7 },
     { url: `${base}/contato`, changeFrequency: "monthly", priority: 0.6 },
     { url: `${base}/privacidade`, lastModified: new Date(LAST_UPDATED), changeFrequency: "yearly", priority: 0.3 },

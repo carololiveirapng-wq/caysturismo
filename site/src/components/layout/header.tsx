@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 import { trackEvent } from "@/lib/analytics";
 import type { SiteSettings } from "@/lib/cms";
 
-const navLinks = [
+const baseNavLinks = [
   { label: "Destinos", href: "/destinos" },
   {
     label: "Experiências",
@@ -48,10 +48,14 @@ const navLinks = [
 // com o cabeçalho ilegível no topo até serem encontradas uma por vez.
 // Adicionar uma rota aqui exige confirmar que ela realmente tem hero de
 // foto com fundo escuro (`bg-ink` + imagem) — não assumir.
-const DARK_HERO_PATHS = ["/", "/sobre", "/destinos", "/experiencias", "/viagens", "/curadoria"];
+const DARK_HERO_PATHS = ["/", "/sobre", "/destinos", "/experiencias", "/viagens", "/oportunidades", "/curadoria"];
 const DARK_HERO_PREFIXES = ["/destinos/", "/experiencias/"];
 
-export function Header({ settings }: { settings: SiteSettings }) {
+export function Header({ settings, hasOffers = false, trips = [] }: { settings: SiteSettings; hasOffers?: boolean; trips?: { label: string; href: string }[] }) {
+  // O submenu de Viagens vem do que está ativo no Studio (quem cadastra uma viagem nova já a vê no menu). Sem dados, mantém o menu padrão.
+  const comViagens = trips.length > 0 ? baseNavLinks.map((l) => (l.href === "/viagens" ? { ...l, submenu: trips } : l)) : baseNavLinks;
+  // "Oportunidades" só aparece no menu quando há pelo menos uma oferta aberta (senão seria uma aba vazia)
+  const navLinks = hasOffers ? [...comViagens.slice(0, 3), { label: "Oportunidades", href: "/oportunidades" }, ...comViagens.slice(3)] : comViagens;
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);

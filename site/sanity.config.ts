@@ -32,6 +32,16 @@ export default defineConfig({
 
   schema: {
     types: schemaTypes,
+    // Modelo "Nova oportunidade": já cria a viagem como tipo Oferta (usado na aba "Oportunidades exclusivas").
+    templates: (prev) => [
+      ...prev,
+      {
+        id: "oportunidade",
+        title: "Nova oportunidade exclusiva",
+        schemaType: "travelProduct",
+        value: { type: "offer", status: "active", active: true, order: 100 },
+      },
+    ],
   },
 
   // Tira os tipos singleton do botão genérico "+ Criar novo" — o único

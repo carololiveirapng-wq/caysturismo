@@ -37,7 +37,11 @@ const legalLinks = [
   { label: "Termos de Uso", href: "/termos" },
 ];
 
-export function Footer({ settings }: { settings: SiteSettings }) {
+export function Footer({ settings, hasOffers = false }: { settings: SiteSettings; hasOffers?: boolean }) {
+  // "Oportunidades exclusivas" só entra quando há oferta aberta
+  const colunas = hasOffers
+    ? columns.map((c) => (c.heading === "Explorar" ? { ...c, links: [...c.links.slice(0, 3), { label: "Oportunidades", href: "/oportunidades" }, ...c.links.slice(3)] } : c))
+    : columns;
   const legalMeta = [
     settings.cnpj && `CNPJ ${settings.cnpj}`,
     settings.cadastur && `Cadastur ${settings.cadastur}`,
@@ -64,7 +68,7 @@ export function Footer({ settings }: { settings: SiteSettings }) {
             <span aria-hidden className="block h-full w-px bg-ivory/10" />
           </div>
 
-          {columns.map((column) => (
+          {colunas.map((column) => (
             <div key={column.heading} className="md:col-span-2">
               <h3 className="text-xs font-medium tracking-[0.2em] text-ivory/70 uppercase">
                 {column.heading}

@@ -8,6 +8,7 @@ import { DoubleQuoteIcon } from "@sanity/icons/DoubleQuote";
 import { CogIcon } from "@sanity/icons/Cog";
 import { ThLargeIcon } from "@sanity/icons/ThLarge";
 import { HomeIcon } from "@sanity/icons/Home";
+import { TagIcon } from "@sanity/icons/Tag";
 
 /**
  * Menu do Studio pensado pra quem edita o site no dia a dia, não pra quem
@@ -32,7 +33,33 @@ export const structure: StructureResolver = (S) =>
       S.documentTypeListItem("curadoriaArticle").title("Blog / Curadoria").icon(DocumentTextIcon),
       S.documentTypeListItem("destination").title("Destinos").icon(EarthGlobeIcon),
       S.documentTypeListItem("experience").title("Experiências").icon(HeartIcon),
-      S.documentTypeListItem("travelProduct").title("Viagens").icon(PackageIcon),
+      S.listItem()
+        .id("viagens")
+        .title("Viagens")
+        .icon(PackageIcon)
+        .child(
+          S.documentList()
+            .id("viagens-lista")
+            .title("Viagens")
+            .schemaType("travelProduct")
+            .apiVersion("2026-01-01")
+            .filter('_type == "travelProduct" && type != "offer"'),
+        ),
+      // Ofertas ficam numa aba só delas (Black Friday, promoções de hotéis e cruzeiros...). O site mostra em "Oportunidades exclusivas" só as que estão ativas e dentro da validade.
+      S.listItem()
+        .id("oportunidades")
+        .title("Oportunidades exclusivas")
+        .icon(TagIcon)
+        .child(
+          S.documentList()
+            .id("oportunidades-lista")
+            .title("Oportunidades exclusivas")
+            .schemaType("travelProduct")
+            .apiVersion("2026-01-01")
+            .filter('_type == "travelProduct" && type == "offer"')
+            .defaultOrdering([{ field: "offerEndsAt", direction: "asc" }])
+            .initialValueTemplates([S.initialValueTemplateItem("oportunidade")]),
+        ),
       S.documentTypeListItem("person").title("Equipe").icon(UsersIcon),
       S.documentTypeListItem("testimonial").title("Depoimentos").icon(DoubleQuoteIcon),
       S.divider(),
