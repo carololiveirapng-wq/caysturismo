@@ -1,5 +1,16 @@
+import { cache } from "react";
 import { sanityClient, sanityEnabled } from "@/sanity/client";
 import { allowMockFallback } from "@/sanity/env";
+
+/**
+ * Mesma consulta (texto + parâmetros) repetida na MESMA renderização — ex.: `getHome()` no layout, na metadata e na página —
+ * vira uma única ida ao Sanity. `cache()` do React vale só durante aquela requisição, então nunca serve dado velho de uma
+ * requisição para outra (quem controla o frescor é o ISR + o webhook).
+ */
+const queryOnce = cache(async (query: string, paramsKey: string): Promise<unknown> => {
+  if (!sanityClient) return null;
+  return sanityClient.fetch(query, JSON.parse(paramsKey) as Record<string, unknown>);
+});
 
 /**
  * Busca no Sanity, devolvendo `null` quando não há resultado (CMS não
@@ -11,7 +22,7 @@ export async function fetchFromSanity<T>(query: string, params: Record<string, u
   if (!sanityEnabled || !sanityClient) return null;
 
   try {
-    return await sanityClient.fetch<T>(query, params);
+    return (await queryOnce(query, JSON.stringify(params))) as T;
   } catch (error) {
     console.error(`[content] Erro ao consultar o Sanity:\n${query}`, error);
     return null;
