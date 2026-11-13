@@ -60,7 +60,7 @@ export interface HomeBeyondItinerary {
 export interface HomeContent {
   hero: {
     mediaType: "image" | "images" | "video";
-    image?: DemoImage;
+    image?: DemoImage & { focal?: { x: number; y: number } };
     images?: DemoImage[];
     video?: string;
     videoPoster?: DemoImage;

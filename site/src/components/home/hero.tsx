@@ -31,6 +31,7 @@ export function Hero({ hero, city, foundedYear }: { hero: HomeContent["hero"]; c
             priority
             sizes="100vw"
             className="object-cover"
+            style={hero.image.focal ? { objectPosition: `${hero.image.focal.x * 100}% ${hero.image.focal.y * 100}%` } : undefined}
           />
         )
       )}
