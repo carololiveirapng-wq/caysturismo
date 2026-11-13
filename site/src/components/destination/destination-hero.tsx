@@ -2,7 +2,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { Container } from "@/components/ui/container";
 import { Breadcrumb } from "@/components/ui/breadcrumb";
-import { Reveal } from "@/components/ui/reveal";
 import type { DestinationDetail } from "@/types";
 
 export function DestinationHero({ destination }: { destination: DestinationDetail }) {
@@ -28,7 +27,7 @@ export function DestinationHero({ destination }: { destination: DestinationDetai
       />
 
       <Container className="relative z-10 pb-14 md:pb-20">
-        <Reveal className="max-w-2xl">
+        <div className="hero-rise max-w-2xl">
           {breadcrumb && breadcrumb.length > 0 && (
             <Breadcrumb items={breadcrumb} tone="light" className="mb-6" />
           )}
@@ -69,7 +68,7 @@ export function DestinationHero({ destination }: { destination: DestinationDetai
               {hero.ctaLabel ?? "Planejar viagem"}
             </Link>
           </div>
-        </Reveal>
+        </div>
       </Container>
     </section>
   );

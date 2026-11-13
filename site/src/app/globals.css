@@ -177,3 +177,28 @@
     scroll-behavior: auto !important;
   }
 }
+
+/*
+ * Entrada do texto do hero (acima da dobra). É CSS puro de propósito: o `Reveal` (motion) só mostra o conteúdo depois que
+ * o JavaScript carrega e hidrata, o que atrasava o primeiro texto da página (LCP) em ~2 s no celular. Visual idêntico.
+ */
+@keyframes heroRise {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.hero-rise {
+  animation: heroRise 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-rise {
+    animation: none;
+  }
+}

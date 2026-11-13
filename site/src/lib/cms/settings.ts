@@ -8,6 +8,7 @@ interface SanitySettings {
   email?: string;
   hours?: string;
   address?: string;
+  postalCode?: string;
   city?: string;
   state?: string;
   instagram?: string;
@@ -27,9 +28,12 @@ export interface SiteSettings {
   hours: string;
   email: string;
   address: string;
+  postalCode: string;
   city: string;
   state: string;
   instagram: string;
+  /** Perfis oficiais (Instagram + o que estiver em "Outras redes sociais"), sem repetição — usados em dados estruturados. */
+  socialUrls: string[];
   /** Vazio se não cadastrado — `Credentials` só renderiza quando real. */
   cnpj: string;
   cadastur: string;
@@ -66,11 +70,14 @@ export async function getSettings(): Promise<SiteSettings> {
     hours: fromSanity?.hours || siteConfig.hours,
     email: fromSanity?.email || siteConfig.email,
     address: fromSanity?.address || siteConfig.address,
+    postalCode: fromSanity?.postalCode || "",
     city: fromSanity?.city || "",
     state: fromSanity?.state || "",
     instagram: instagram || siteConfig.instagram,
+    socialUrls: [...new Set([instagram || siteConfig.instagram, ...(fromSanity?.socialLinks ?? []).map((l) => l.url)].filter((u): u is string => Boolean(u)))],
     cnpj: fromSanity?.cnpj || siteConfig.cnpj,
-    cadastur: fromSanity?.cadastur || siteConfig.cadastur,
+    // O número do Cadastur não é o CNPJ: se alguém colou o CNPJ no campo errado, não exibe como se fosse Cadastur.
+    cadastur: fromSanity?.cadastur && fromSanity.cadastur !== fromSanity.cnpj ? fromSanity.cadastur : siteConfig.cadastur,
     slogan: fromSanity?.slogan || "",
     foundedDate: fromSanity?.foundedDate,
     defaultCTA:

@@ -23,9 +23,11 @@ const cormorant = Cormorant_Garamond({
   display: "swap",
 });
 
-const title = `${siteConfig.name} | Curadoria de Viagens Personalizadas`;
+// Padrão do site (a Home usa o SEO do Studio quando preenchido — ver `page.tsx`). Brasília entra no título e na descrição
+// para o Google e quem busca entenderem logo: agência de viagens de Brasília, com curadoria premium.
+const title = `Agência de Viagens em Brasília | ${siteConfig.name}`;
 const description =
-  "Viagens desenhadas em torno de você. Lua de mel, viagens em família, cruzeiros, experiências e roteiros personalizados pela Cays Turismo.";
+  "Agência de viagens em Brasília desde 1997, especializada em lua de mel, destination wedding, viagens em família e roteiros sob medida.";
 
 // Vercel marca deploys de Preview com VERCEL_ENV=preview — sem isto, o
 // Google indexaria cada URL de preview junto com o site de produção.

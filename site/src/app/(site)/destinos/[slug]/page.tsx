@@ -22,6 +22,7 @@ import { PersistentMobileCTA } from "@/components/ui/persistent-mobile-cta";
 import { siteConfig } from "@/lib/site-config";
 import { jsonLdString } from "@/lib/json-ld";
 import { faqJsonLd } from "@/lib/seo/structured-data";
+import { SpecialExperienceSpotlight } from "@/components/experience/special-experience-spotlight";
 
 export async function generateStaticParams() {
   const slugs = await getDestinationSlugs();
@@ -134,6 +135,19 @@ export default async function DestinationPage({ params }: PageProps<"/destinos/[
           id="visao-geral"
           heading={destination.introduction.heading}
           text={destination.introduction.text}
+        />
+      )}
+
+      {destination.slug === "maldivas" && (
+        <SpecialExperienceSpotlight
+          href="/experiencias/lua-de-mel/maldivas"
+          image="/maldivas-lua-de-mel/romance-1.webp"
+          imageAlt="Casal de noivos em um deck de madeira entre bangalôs sobre o mar, nas Maldivas, ao pôr do sol"
+          eyebrow="Lua de mel · Maldivas"
+          title="Lua de mel nas Maldivas"
+          description="Veja como a Cays planeja a lua de mel nas Maldivas: bangalôs sobre o mar, água cristalina e privacidade, desenhados para o casal."
+          ctaLabel="Ver a lua de mel nas Maldivas"
+          tone="ivory"
         />
       )}
 

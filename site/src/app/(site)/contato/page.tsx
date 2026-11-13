@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Container } from "@/components/ui/container";
 import { ContactFlow } from "@/components/contact/contact-flow";
+import { ContactNap } from "@/components/contact/contact-nap";
 import { experienceTypeValues, type TripStepValues } from "@/lib/contact-schema";
 import { siteConfig } from "@/lib/site-config";
 import { getSettings, getDestinations, getDestinationBySlug, getExperienceBySlug, getTravelProductBySlug, getTestimonials } from "@/lib/cms";
@@ -73,6 +74,7 @@ export default async function ContatoPage({ searchParams }: PageProps<"/contato"
   }
 
   return (
+    <>
     <section className="bg-ivory pt-28 pb-16 md:pt-32 md:pb-24">
       <Container>
         <ContactFlow
@@ -87,5 +89,7 @@ export default async function ContatoPage({ searchParams }: PageProps<"/contato"
         />
       </Container>
     </section>
+    <ContactNap settings={settings} />
+    </>
   );
 }

@@ -14,7 +14,8 @@ export const metadata: Metadata = {
   description,
   alternates: { canonical: "/linkbio" },
   openGraph: { title, description, url: `${siteConfig.url}/linkbio` },
-  robots: { index: true, follow: true },
+  // Página de links para a bio do Instagram: continua acessível e compartilhável (Open Graph acima), mas não precisa competir no Google.
+  robots: { index: false, follow: true },
 };
 
 const QUICK_LINKS = [

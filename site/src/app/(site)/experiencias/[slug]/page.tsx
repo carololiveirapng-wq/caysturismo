@@ -18,7 +18,7 @@ import { PersistentMobileCTA } from "@/components/ui/persistent-mobile-cta";
 import { SpecialExperienceSpotlight } from "@/components/experience/special-experience-spotlight";
 import { siteConfig } from "@/lib/site-config";
 import { TravelerStories } from "@/components/experiencias/traveler-stories";
-import { breadcrumbJsonLd } from "@/lib/seo/structured-data";
+import { breadcrumbJsonLd, faqJsonLd } from "@/lib/seo/structured-data";
 import { jsonLdString } from "@/lib/json-ld";
 
 export async function generateStaticParams() {
@@ -102,6 +102,9 @@ export default async function ExperiencePage({ params }: PageProps<"/experiencia
           __html: jsonLdString(breadcrumbJsonLd([{ name: "Experiências", href: "/experiencias" }, { name: experience.name, href: `/experiencias/${experience.slug}` }])),
         }}
       />
+      {experience.faq && experience.faq.length > 0 && (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdString(faqJsonLd(experience.faq)) }} />
+      )}
       <ExperienceHero experience={experience} contactHref={contactHref} />
 
       <TravelPlanningPanel

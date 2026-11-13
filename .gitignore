@@ -30,3 +30,6 @@ node_modules/
 # Drop zone do usuário (só o README vai versionado)
 dados/*
 !dados/README.md
+
+# backups técnicos locais (dados de leads e conteúdo)
+_backups/

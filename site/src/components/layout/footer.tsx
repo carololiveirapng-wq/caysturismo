@@ -7,6 +7,7 @@ import { siteConfig } from "@/lib/site-config";
 import { experienceHref } from "@/lib/links";
 import { trackEvent } from "@/lib/analytics";
 import type { SiteSettings } from "@/lib/cms";
+import { getNap } from "@/lib/nap";
 
 const columns = [
   {
@@ -42,6 +43,7 @@ const legalLinks = [
 
 export function Footer({ settings }: { settings: SiteSettings }) {
   const colunas = columns;
+  const nap = getNap(settings);
   const legalMeta = [
     settings.cnpj && `CNPJ ${settings.cnpj}`,
     settings.cadastur && `Cadastur ${settings.cadastur}`,
@@ -98,10 +100,29 @@ export function Footer({ settings }: { settings: SiteSettings }) {
               Contato
             </h3>
             <ul className="mt-6 space-y-3.5 text-sm text-ivory/75">
+              <li className="text-ivory/55">
+                <span className="block text-ivory/75">{nap.tradeName}</span>
+                {nap.legalName}
+              </li>
+              {(nap.street || nap.cityLine) && (
+                <li>
+                  <address className="not-italic text-ivory/55">
+                    {nap.street && <span className="block">{nap.street}</span>}
+                    {nap.cityLine && <span className="block">{nap.cityLine}</span>}
+                  </address>
+                </li>
+              )}
+              {nap.phone && nap.phoneHref && (
+                <li>
+                  <a href={nap.phoneHref} className="hover:text-ivory">
+                    Telefone: {nap.phone}
+                  </a>
+                </li>
+              )}
               {settings.whatsappHref && (
                 <li>
                   <a href={settings.whatsappHref} target="_blank" rel="noreferrer" className="hover:text-ivory">
-                    WhatsApp
+                    WhatsApp{nap.whatsapp ? `: ${nap.whatsapp}` : ""}
                   </a>
                 </li>
               )}
@@ -112,7 +133,6 @@ export function Footer({ settings }: { settings: SiteSettings }) {
                   </a>
                 </li>
               )}
-              {settings.address && <li className="text-ivory/55">{settings.address}</li>}
               {settings.instagram && (
                 <li>
                   <a
