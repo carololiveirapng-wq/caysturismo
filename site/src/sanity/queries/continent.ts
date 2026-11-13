@@ -7,6 +7,6 @@ import { continents } from "@/data/destinations-hub";
  * Sem continente cadastrado, `select` devolve null e o card simplesmente não
  * mostra label.
  */
-export const CONTINENT_LABEL_GROQ = `select(${continents
+export const CONTINENT_LABEL_GROQ = `coalesce(continentRef->name, select(${continents
   .map((c) => `continent == "${c.slug}" => "${c.name}"`)
-  .join(", ")})`;
+  .join(", ")}))`;

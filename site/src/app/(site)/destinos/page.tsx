@@ -1,18 +1,18 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { DestinosHero } from "@/components/destinos-hub/destinos-hero";
-import { DestinosTabs } from "@/components/destinos-hub/destinos-tabs";
-import { FeaturedDestinations } from "@/components/destinos-hub/featured-destinations";
+import { DestinosExplorer } from "@/components/destinos-hub/destinos-explorer";
 import { WhereToGoNow, type WhereToGoPick } from "@/components/destinos-hub/where-to-go-now";
-import { ExperienceShortcut } from "@/components/destinos-hub/experience-shortcut";
 import { DestinationFinalCTA } from "@/components/destination/destination-final-cta";
-import { getDestinations, getDestinationHub } from "@/lib/cms";
+import { getDestinations, getDestinationHub, getContinents, getExperiences, getTravelProducts } from "@/lib/cms";
+import { continentsWithCountries, themesByDestination } from "@/lib/navigation";
+import { getActiveOrderedItems } from "@/lib/content";
 import { siteConfig } from "@/lib/site-config";
-import type { AZDestination } from "@/data/destinations-hub";
 
 const fallbackTitle = "Destinos | Cays Turismo";
 const fallbackDescription =
-  "Explore os destinos da curadoria Cays Turismo por continente ou em ordem alfabética, e descubra para onde ir em cada época do ano.";
+  "Explore os destinos da curadoria Cays Turismo por continente ou por tema, e descubra para onde ir em cada época do ano.";
 
 export async function generateMetadata(): Promise<Metadata> {
   const hub = await getDestinationHub();
@@ -44,24 +44,30 @@ function buildWhereToGoNow(destinations: Awaited<ReturnType<typeof getDestinatio
 }
 
 export default async function DestinosHubPage() {
-  const [destinations, hub] = await Promise.all([getDestinations(), getDestinationHub()]);
+  const [destinations, hub, continents, experiences, products] = await Promise.all([
+    getDestinations(),
+    getDestinationHub(),
+    getContinents(),
+    getExperiences(),
+    getTravelProducts(),
+  ]);
   if (!hub) notFound();
 
-  // `continent` é opcional no schema — um destino publicado sem esse campo
-  // ainda precisa aparecer na lista A–Z (ele só não vai surgir ao filtrar
-  // por um continente específico). Sem isso, um destino "incompleto" fica
-  // invisível no hub mesmo com a página própria funcionando normalmente.
-  const azItems: AZDestination[] = destinations.map((d) => ({
+  // `continent` é opcional no schema: um destino sem continente conhecido cai em "Outros destinos" em vez de sumir do hub.
+  const known = new Set(continents.map((c) => c.slug));
+  const themesMap = themesByDestination(destinations, products);
+  const activeExperiences = getActiveOrderedItems(experiences);
+  const explorerItems = getActiveOrderedItems(destinations).map((d) => ({
     slug: d.slug,
     name: d.name,
     image: d.hero.image,
-    continentSlug: d.continent ?? "outros",
+    continent: d.continent && known.has(d.continent) ? d.continent : "outros",
+    parent: d.parent,
+    themes: (themesMap.get(d.slug) ?? []).filter((t) => activeExperiences.some((e) => e.slug === t)),
   }));
-
-  const featuredItems = destinations
-    .filter((d) => d.featured)
-    .slice(0, 4)
-    .map((d) => ({ slug: d.slug, name: d.name, image: d.hero.image }));
+  // "Por tema": só temas que têm pelo menos um destino.
+  const usedThemes = new Set(explorerItems.flatMap((d) => d.themes));
+  const themeOptions = activeExperiences.filter((e) => usedThemes.has(e.slug)).map((e) => ({ slug: e.slug, name: e.name }));
 
   const currentMonth = new Date().getMonth() + 1;
   const whereToGoPicks = buildWhereToGoNow(destinations, currentMonth);
@@ -69,10 +75,10 @@ export default async function DestinosHubPage() {
   return (
     <>
       <DestinosHero hero={hub.hero} />
-      <DestinosTabs items={azItems} />
-      <FeaturedDestinations items={featuredItems} />
+      <Suspense fallback={<div className="h-96" aria-hidden />}>
+        <DestinosExplorer destinations={explorerItems} continents={continentsWithCountries(continents, destinations)} themes={themeOptions} />
+      </Suspense>
       <WhereToGoNow picks={whereToGoPicks} />
-      <ExperienceShortcut experiences={hub.spotlightExperiences ?? []} />
       <DestinationFinalCTA
         title="Ainda não sabe para onde ir?"
         supporting="Conte para a Cays o que você quer viver. A gente ajuda a decidir o destino."

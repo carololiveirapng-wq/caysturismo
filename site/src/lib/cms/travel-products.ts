@@ -8,14 +8,18 @@ import {
   travelProducts as mockTravelProducts,
   getTravelProductBySlug as getMockTravelProductBySlug,
 } from "@/data/travel-products";
+import { DEMO, demoGroups } from "./demo";
 import type { TravelProduct } from "@/types";
 
 export async function getTravelProductBySlug(slug: string): Promise<TravelProduct | undefined> {
-  return fetchEntityWithFallback(TRAVEL_PRODUCT_BY_SLUG_QUERY, { slug }, () => getMockTravelProductBySlug(slug));
+  const found = await fetchEntityWithFallback(TRAVEL_PRODUCT_BY_SLUG_QUERY, { slug }, () => getMockTravelProductBySlug(slug));
+  return found ?? (DEMO ? demoGroups().find((g) => g.slug === slug) : undefined);
 }
 
 export async function getTravelProducts(): Promise<TravelProduct[]> {
-  return fetchListWithFallback(TRAVEL_PRODUCTS_QUERY, () => mockTravelProducts);
+  const list = await fetchListWithFallback(TRAVEL_PRODUCTS_QUERY, () => mockTravelProducts);
+  // Modo demonstração (só local): acrescenta grupos de exemplo se ainda não houver nenhum cadastrado.
+  return DEMO && !list.some((p) => p.type === "group") ? [...list, ...demoGroups()] : list;
 }
 
 export async function getTravelProductSlugs(): Promise<string[]> {

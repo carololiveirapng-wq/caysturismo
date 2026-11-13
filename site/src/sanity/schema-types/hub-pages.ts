@@ -56,3 +56,5 @@ export const curadoriaHub = hubPageType("curadoriaHub", "Página Curadoria", [
   spotlightDestinations,
   defineField({ ...spotlightExperiences, title: "Experiências em destaque (\"Por experiência\")" }),
 ]);
+export const groupHub = hubPageType("groupHub", "Página Grupos");
+export const inspirationHub = hubPageType("inspirationHub", "Página Inspirações");

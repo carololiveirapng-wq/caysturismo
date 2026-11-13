@@ -42,6 +42,7 @@ export const travelProduct = defineType({
       options: { list: [
         { title: "Sob medida", value: "custom" },
         { title: "Data fixa", value: "fixed-date" },
+        { title: "Grupo (saída em grupo)", value: "group" },
         { title: "Oferta", value: "offer" },
       ] },
       validation: (r) => r.required(),

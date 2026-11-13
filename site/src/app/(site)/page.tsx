@@ -11,17 +11,26 @@ import { TravelerStories } from "@/components/home/traveler-stories";
 import { Testimonials } from "@/components/home/testimonials";
 import { BeyondItinerary } from "@/components/home/beyond-itinerary";
 import { FinalCTA } from "@/components/home/final-cta";
-import { getHome, getSettings, getTestimonials } from "@/lib/cms";
+import { getHome, getSettings, getTestimonials, getTravelProducts } from "@/lib/cms";
+import { getFeaturedItems } from "@/lib/content";
 import { notFound } from "next/navigation";
 
 export default async function Home() {
-  const [home, settings, testimonials] = await Promise.all([
+  const [home, settings, testimonials, products] = await Promise.all([
     getHome(),
     getSettings(),
     getTestimonials(),
+    getTravelProducts(),
   ]);
 
   if (!home) notFound();
+
+  // Slide de viagens: as que a Home escolhe + as demais marcadas "Destacar na página inicial" (só as que têm foto), até 5.
+  const chosen = new Set(home.featuredTravelProducts.map((p) => p.slug));
+  const extraJourneys = getFeaturedItems(products)
+    .filter((p) => !chosen.has(p.slug) && p.type !== "offer" && p.gallery[0]?.src)
+    .map((p) => ({ slug: p.slug, title: p.title, eyebrow: p.eyebrow, image: p.gallery[0], subtitle: p.subtitle }));
+  const journeys = [...home.featuredTravelProducts, ...extraJourneys].slice(0, 5);
 
   const foundedYear = settings.foundedDate ? new Date(settings.foundedDate).getFullYear() : undefined;
 
@@ -37,7 +46,7 @@ export default async function Home() {
       {(home.featuredDestinations.length > 0 || home.destinationCollections.length > 0) && (
         <DestinationsSection destinations={home.featuredDestinations} collections={home.destinationCollections} />
       )}
-      {home.featuredTravelProducts.length > 0 && <FeaturedJourney travelProducts={home.featuredTravelProducts} />}
+      {journeys.length > 0 && <FeaturedJourney travelProducts={journeys} />}
       {home.process && <JourneyProcess process={home.process} />}
       <TravelerStories stories={home.travelerStories} />
       {testimonials.length > 0 && <Testimonials reviews={testimonials} />}

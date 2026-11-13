@@ -15,6 +15,9 @@ const columns = [
       { label: "Destinos", href: "/destinos" },
       { label: "Experiências", href: "/experiencias" },
       { label: "Viagens", href: "/viagens" },
+      { label: "Grupos", href: "/grupos" },
+      { label: "Oportunidades", href: "/oportunidades" },
+      { label: "Inspirações", href: "/inspiracoes" },
       { label: "Reservar online", href: "/reservar-online" },
       { label: "Curadoria", href: "/curadoria" },
       { label: "A Cays", href: "/sobre" },
@@ -37,11 +40,8 @@ const legalLinks = [
   { label: "Termos de Uso", href: "/termos" },
 ];
 
-export function Footer({ settings, hasOffers = false }: { settings: SiteSettings; hasOffers?: boolean }) {
-  // "Oportunidades exclusivas" só entra quando há oferta aberta
-  const colunas = hasOffers
-    ? columns.map((c) => (c.heading === "Explorar" ? { ...c, links: [...c.links.slice(0, 3), { label: "Oportunidades", href: "/oportunidades" }, ...c.links.slice(3)] } : c))
-    : columns;
+export function Footer({ settings }: { settings: SiteSettings }) {
+  const colunas = columns;
   const legalMeta = [
     settings.cnpj && `CNPJ ${settings.cnpj}`,
     settings.cadastur && `Cadastur ${settings.cadastur}`,

@@ -1,6 +1,4 @@
-import { Container } from "@/components/ui/container";
-import { EditorialHeading } from "@/components/ui/editorial-heading";
-import { Reveal } from "@/components/ui/reveal";
+import { SplitSection } from "./split-section";
 import type { TravelProduct, TravelProductDeparture } from "@/types";
 import { STATUS_LABEL } from "@/lib/travel-product-status";
 import { cn } from "@/lib/utils";
@@ -47,37 +45,24 @@ export function ProductDates({
   if (!bestMonths && !hasDepartures) return null;
 
   return (
-    <section id={id} className="scroll-mt-28 bg-sand py-14 md:scroll-mt-32 md:py-20">
-      <Container narrow>
-        <Reveal>
-          <EditorialHeading as="h2" size="md">
-            Datas e condições
-          </EditorialHeading>
-        </Reveal>
-
-        {type === "custom" && bestMonths ? (
-          <Reveal delay={0.06} className="mt-7">
-            <p className="text-sm leading-relaxed text-stone">
-              Sem data fixa — o período ideal para esta viagem é{" "}
-              <span className="text-ink">{bestMonths.toLowerCase()}</span>, mas ajustamos junto com você conforme sua
-              agenda.
-            </p>
-          </Reveal>
-        ) : (
-          hasDepartures && (
-            <>
-              <div className="mt-7">
-                {departures!.map((departure) => (
-                  <DepartureRow key={departure.label} departure={departure} />
-                ))}
-              </div>
-              <p className="mt-6 max-w-md text-xs leading-relaxed text-stone">
-                Valores e disponibilidade sujeitos a confirmação no momento da reserva.
-              </p>
-            </>
-          )
-        )}
-      </Container>
-    </section>
+    <SplitSection id={id} title="Datas e condições" tone="sand">
+      {type === "custom" && bestMonths ? (
+        <p className="max-w-2xl text-lg leading-relaxed text-ink/80">
+          Sem data fixa. O período ideal para esta viagem é <span className="text-ink">{bestMonths.toLowerCase()}</span>, mas ajustamos junto com você conforme
+          sua agenda.
+        </p>
+      ) : (
+        hasDepartures && (
+          <>
+            <div className="border-b border-ink/10">
+              {departures!.map((departure) => (
+                <DepartureRow key={departure.label} departure={departure} />
+              ))}
+            </div>
+            <p className="mt-6 max-w-md text-xs leading-relaxed text-stone">Valores e disponibilidade sujeitos a confirmação no momento da reserva.</p>
+          </>
+        )
+      )}
+    </SplitSection>
   );
 }

@@ -1,28 +1,23 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { ShortHero } from "@/components/ui/short-hero";
 import { FeaturedProducts } from "@/components/viagens-hub/featured-products";
-import { TravelProductFilters } from "@/components/viagens-hub/filters";
-import { ResultsGrid } from "@/components/viagens-hub/results-grid";
+import { Explorer } from "@/components/viagens-hub/explorer";
+import { ViagensTabs } from "@/components/viagens-hub/viagens-tabs";
 import { EditorialShortcuts } from "@/components/viagens-hub/editorial-shortcuts";
 import { SpecialExperienceSpotlight } from "@/components/experience/special-experience-spotlight";
 import { OnlineBookingBanner } from "@/components/booking/online-booking-banner";
 import { DestinationFinalCTA } from "@/components/destination/destination-final-cta";
 import { Container } from "@/components/ui/container";
-import { getTravelProducts, getExperiences, getDestinations, getTravelHub } from "@/lib/cms";
+import { getTravelProducts, getExperiences, getDestinations, getTravelHub, getContinents } from "@/lib/cms";
 import { getActiveOrderedItems, getFeaturedItems } from "@/lib/content";
-import { filterTravelProducts, type TravelProductFilters as Filters } from "@/lib/travel-product-filters";
+import { explorerContinents, explorerDestinations } from "@/lib/navigation";
+import { getOpenOffers, isOfferOpen } from "@/lib/offers";
 import { siteConfig } from "@/lib/site-config";
-import type { TravelProductType } from "@/types";
 
 const fallbackTitle = "Viagens | Cays Turismo";
 const fallbackDescription = "Roteiros sob medida, cruzeiros e viagens com data fixa — descubra as viagens com a curadoria da Cays Turismo.";
-
-const VALID_TYPES: TravelProductType[] = ["custom", "fixed-date", "offer"];
-
-function first(value: string | string[] | undefined): string | undefined {
-  return Array.isArray(value) ? value[0] : value;
-}
 
 export async function generateMetadata({
   searchParams,
@@ -49,43 +44,27 @@ export async function generateMetadata({
   };
 }
 
-export default async function ViagensHubPage({ searchParams }: PageProps<"/viagens">) {
-  const params = await searchParams;
-  const rawTipo = first(params.tipo);
-
-  const filters: Filters = {
-    destino: first(params.destino),
-    experiencia: first(params.experiencia),
-    tipo: rawTipo && VALID_TYPES.includes(rawTipo as TravelProductType) ? (rawTipo as TravelProductType) : undefined,
-    duracao: first(params.duracao),
-    periodo: first(params.periodo),
-  };
-
-  const [allProducts, experiences, destinations, hub] = await Promise.all([
+export default async function ViagensHubPage() {
+  const [allProducts, experiences, destinations, continents, hub] = await Promise.all([
     getTravelProducts(),
     getExperiences(),
     getDestinations(),
+    getContinents(),
     getTravelHub(),
   ]);
   if (!hub) notFound();
-  const active = getActiveOrderedItems(allProducts);
+
+  // Roteiros: tudo que não é saída em grupo (tem aba própria) nem oferta vencida.
+  const active = getActiveOrderedItems(allProducts).filter((p) => p.type !== "group" && (p.type !== "offer" || isOfferOpen(p)));
   const featured = getFeaturedItems(active).slice(0, 2);
-  const filtered = filterTravelProducts(active, filters);
 
   // Com um catálogo pequeno, "Em destaque" só faz sentido quando sobra algo
   // além dele pra descobrir na grade abaixo — senão é a mesma viagem duas
   // vezes na mesma página.
   const showFeatured = featured.length > 0 && featured.length < active.length;
 
-  // Os dropdowns de destino/experiência só listam o que de fato tem viagem
-  // associada — selecionar qualquer outra opção sempre voltaria zero
-  // resultados, o que faz o catálogo parecer maior do que é.
-  const availableDestinationSlugs = new Set(active.flatMap((p) => p.destinations));
-  const availableExperienceSlugs = new Set(active.flatMap((p) => p.experiences));
-  const filterableDestinations = destinations
-    .filter((d) => d.active && availableDestinationSlugs.has(d.slug))
-    .map((d) => ({ slug: d.slug, name: d.name }));
-  const filterableExperiences = experiences.filter((exp) => availableExperienceSlugs.has(exp.slug));
+  const activeDestinations = getActiveOrderedItems(destinations);
+  const experienceOptions = getActiveOrderedItems(experiences).map((e) => ({ slug: e.slug, name: e.name }));
 
   return (
     <>
@@ -96,17 +75,20 @@ export default async function ViagensHubPage({ searchParams }: PageProps<"/viage
         image={hub.hero.image}
       />
 
+      <ViagensTabs active="roteiros" hasOffers={getOpenOffers(allProducts).length > 0} />
+
       {showFeatured && <FeaturedProducts products={featured} />}
 
       <section className="bg-ivory py-14 md:py-20">
         <Container>
-          <TravelProductFilters
-            experiences={filterableExperiences}
-            destinations={filterableDestinations}
-          />
-          <div className="mt-10">
-            <ResultsGrid products={filtered} />
-          </div>
+          <Suspense fallback={<div className="h-64" aria-hidden />}>
+            <Explorer
+              products={active}
+              destinations={explorerDestinations(continents, activeDestinations)}
+              continents={explorerContinents(continents, activeDestinations)}
+              experiences={experienceOptions}
+            />
+          </Suspense>
         </Container>
       </section>
 

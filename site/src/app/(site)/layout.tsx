@@ -5,10 +5,7 @@ import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { WhatsAppButton } from "@/components/layout/whatsapp-button";
 import { siteConfig } from "@/lib/site-config";
-import { getSettings, getHome, getTravelProducts } from "@/lib/cms";
-import { getOpenOffers } from "@/lib/offers";
-import { getActiveOrderedItems } from "@/lib/content";
-import { travelProductHref } from "@/lib/links";
+import { getSettings, getHome, getNavData } from "@/lib/cms";
 import "../globals.css";
 import { jsonLdString } from "@/lib/json-ld";
 import { organizationJsonLd } from "@/lib/seo/structured-data";
@@ -76,15 +73,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export const revalidate = 900;
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {
-  const settings = await getSettings();
-  const produtos = await getTravelProducts();
-  const hasOffers = getOpenOffers(produtos).length > 0;
-  const trips = getActiveOrderedItems(produtos)
-    .filter((p) => p.type !== "offer")
-    .slice(0, 8)
-    .map((p) => ({ label: p.title, href: travelProductHref(p.slug) }));
-
-
+  const [settings, nav] = await Promise.all([getSettings(), getNavData()]);
   return (
     <html
       lang="pt-BR"
@@ -99,8 +88,8 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
           dangerouslySetInnerHTML={{ __html: jsonLdString(organizationJsonLd(settings)) }}
         />
         <PublicChrome
-          header={<Header settings={settings} hasOffers={hasOffers} trips={trips} />}
-          footer={<Footer settings={settings} hasOffers={hasOffers} />}
+          header={<Header settings={settings} nav={nav} />}
+          footer={<Footer settings={settings} />}
           whatsappButton={<WhatsAppButton whatsappHref={settings.whatsappHref} />}
         >
           {children}

@@ -4,6 +4,8 @@ import {
   EXPERIENCE_HUB_QUERY,
   TRAVEL_HUB_QUERY,
   CURADORIA_HUB_QUERY,
+  GROUP_HUB_QUERY,
+  INSPIRATION_HUB_QUERY,
 } from "@/sanity/queries/hub-pages";
 import { allowMockFallback } from "@/sanity/env";
 import { heroImage, unsplash } from "@/data/home";
@@ -73,4 +75,34 @@ export function getCuradoriaHub() {
       { slug: "grandes-eventos", name: "Grandes Eventos", image: { src: unsplash("1580657274234-7339717f4541", 900), alt: "Taças de espumante sendo servidas em uma celebração" } },
     ],
   }));
+}
+
+/**
+ * Grupos e Inspirações são páginas novas: sem a introdução cadastrada no Studio, usam o texto/imagem padrão abaixo
+ * (nunca dão 404 por causa disso, ao contrário dos hubs antigos).
+ */
+export async function getGroupHub(): Promise<HubPageContent> {
+  const fromSanity = await fetchFromSanity<HubPageContent | null>(GROUP_HUB_QUERY);
+  if (fromSanity?.hero?.title && fromSanity.hero.image) return fromSanity;
+  return {
+    hero: {
+      eyebrow: "Grupos",
+      title: "Viaje em grupo, com a curadoria Cays.",
+      text: "Saídas em datas fixas, com roteiro fechado, vagas limitadas e acompanhamento da nossa equipe.",
+      image: { src: unsplash("1476514525535-07fb3b4ae5f1", 2400), alt: "Barco de madeira em lago alpino cercado por montanhas nas Dolomitas" },
+    },
+  };
+}
+
+export async function getInspirationHub(): Promise<HubPageContent> {
+  const fromSanity = await fetchFromSanity<HubPageContent | null>(INSPIRATION_HUB_QUERY);
+  if (fromSanity?.hero?.title && fromSanity.hero.image) return fromSanity;
+  return {
+    hero: {
+      eyebrow: "Inspirações",
+      title: "Ideias para a sua próxima viagem.",
+      text: "Cenas, lugares e momentos que podem virar um roteiro seu. Se alguma te chamar, a gente desenha com você.",
+      image: { src: unsplash("1540202404-a2f29016b523", 2400), alt: "Bangalôs sobre a água em atol nas Maldivas" },
+    },
+  };
 }

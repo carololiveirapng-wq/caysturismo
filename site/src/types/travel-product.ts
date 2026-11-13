@@ -1,6 +1,6 @@
 import type { BaseContent, DemoImage } from "./content";
 
-export type TravelProductType = "custom" | "fixed-date" | "offer";
+export type TravelProductType = "custom" | "fixed-date" | "group" | "offer";
 export type TravelProductStatus = "active" | "few-spots" | "sold-out" | "expired" | "check-availability";
 
 export interface TravelProductHighlight {

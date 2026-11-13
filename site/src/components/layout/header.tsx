@@ -1,42 +1,16 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu } from "lucide-react";
+import { Menu, Search } from "lucide-react";
 import { Container } from "@/components/ui/container";
 import { MobileNavigation } from "@/components/layout/mobile-navigation";
-import { experienceHref, travelProductHref } from "@/lib/links";
 import { cn } from "@/lib/utils";
 import { trackEvent } from "@/lib/analytics";
 import type { SiteSettings } from "@/lib/cms";
-
-const baseNavLinks = [
-  { label: "Destinos", href: "/destinos" },
-  {
-    label: "Experiências",
-    href: "/experiencias",
-    submenu: [
-      { label: "Lua de Mel", href: experienceHref("lua-de-mel") },
-      { label: "Destination Wedding", href: experienceHref("destination-wedding") },
-      { label: "Viagens em Família", href: experienceHref("familia") },
-      { label: "Cruzeiros & Expedições", href: experienceHref("cruzeiros") },
-      { label: "Grandes Eventos", href: experienceHref("grandes-eventos") },
-      { label: "Viagens Privativas", href: experienceHref("privativas") },
-    ],
-  },
-  {
-    label: "Viagens",
-    href: "/viagens",
-    submenu: [
-      { label: "Japão em Flor", href: travelProductHref("japao-em-flor") },
-      { label: "Cruzeiro pelo Mediterrâneo", href: travelProductHref("cruzeiro-mediterraneo") },
-    ],
-  },
-  { label: "Curadoria", href: "/curadoria" },
-  { label: "A Cays", href: "/sobre" },
-];
+import type { NavData, NavNode } from "@/types";
 
 // Rotas com hero de foto full-bleed e fundo escuro no topo — só nelas o
 // cabeçalho pode nascer transparente (texto ivory sobre bg-transparent).
@@ -48,17 +22,16 @@ const baseNavLinks = [
 // com o cabeçalho ilegível no topo até serem encontradas uma por vez.
 // Adicionar uma rota aqui exige confirmar que ela realmente tem hero de
 // foto com fundo escuro (`bg-ink` + imagem) — não assumir.
-const DARK_HERO_PATHS = ["/", "/sobre", "/destinos", "/experiencias", "/viagens", "/oportunidades", "/curadoria"];
-const DARK_HERO_PREFIXES = ["/destinos/", "/experiencias/"];
+const DARK_HERO_PATHS = ["/", "/sobre", "/destinos", "/experiencias", "/viagens", "/oportunidades", "/curadoria", "/grupos", "/inspiracoes"];
+const DARK_HERO_PREFIXES = ["/destinos/", "/experiencias/", "/inspiracoes/"];
 
-export function Header({ settings, hasOffers = false, trips = [] }: { settings: SiteSettings; hasOffers?: boolean; trips?: { label: string; href: string }[] }) {
-  // O submenu de Viagens vem do que está ativo no Studio (quem cadastra uma viagem nova já a vê no menu). Sem dados, mantém o menu padrão.
-  const comViagens = trips.length > 0 ? baseNavLinks.map((l) => (l.href === "/viagens" ? { ...l, submenu: trips } : l)) : baseNavLinks;
-  // "Oportunidades" só aparece no menu quando há pelo menos uma oferta aberta (senão seria uma aba vazia)
-  const navLinks = hasOffers ? [...comViagens.slice(0, 3), { label: "Oportunidades", href: "/oportunidades" }, ...comViagens.slice(3)] : comViagens;
+export function Header({ settings, nav }: { settings: SiteSettings; nav: NavData }) {
+  // O menu se monta sozinho a partir do conteúdo do Studio (destinos por continente, experiências, viagens, grupos) + os links extras que a equipe cadastrar.
+  const navLinks: NavNode[] = [{ label: "Destinos", href: "/destinos" }, ...nav.items];
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const pathname = usePathname() ?? "";
 
   useEffect(() => {
@@ -70,7 +43,17 @@ export function Header({ settings, hasOffers = false, trips = [] }: { settings: 
 
   const hasDarkHero =
     DARK_HERO_PATHS.includes(pathname) || DARK_HERO_PREFIXES.some((prefix) => pathname.startsWith(prefix));
-  const solid = scrolled || menuOpen || !hasDarkHero;
+  const solid = scrolled || menuOpen || !hasDarkHero || openSubmenu !== null;
+
+  // Fecha com um pequeno atraso: o mouse atravessa o espaço entre o link e o painel sem fechar o menu.
+  const openMenu = (key: string) => {
+    if (closeTimer.current) clearTimeout(closeTimer.current);
+    setOpenSubmenu(key);
+  };
+  const closeMenu = () => {
+    if (closeTimer.current) clearTimeout(closeTimer.current);
+    closeTimer.current = setTimeout(() => setOpenSubmenu(null), 140);
+  };
 
   return (
     <>
@@ -101,59 +84,76 @@ export function Header({ settings, hasOffers = false, trips = [] }: { settings: 
             aria-label="Navegação principal"
             className="hidden items-center gap-10 lg:flex"
           >
-            {navLinks.map((link) => (
-              <div
-                key={link.href}
-                className="relative"
-                onMouseEnter={() => "submenu" in link && setOpenSubmenu(link.href)}
-                onMouseLeave={() => setOpenSubmenu(null)}
-                onFocus={() => "submenu" in link && setOpenSubmenu(link.href)}
-                onBlur={(e) => {
-                  if (!e.currentTarget.contains(e.relatedTarget as Node)) setOpenSubmenu(null);
-                }}
-              >
-                <Link
-                  href={link.href}
-                  className={cn(
-                    "text-sm font-medium tracking-wide transition-colors duration-500",
-                    solid ? "text-ink/90 hover:text-ink" : "text-ivory/90 hover:text-ivory",
-                  )}
-                  aria-expanded={"submenu" in link ? openSubmenu === link.href : undefined}
+            {navLinks.map((link) => {
+              const hasMenu = Boolean(link.children?.length);
+              return (
+                <div
+                  key={link.href + link.label}
+                  className="relative"
+                  onMouseEnter={() => hasMenu && openMenu(link.href)}
+                  onMouseLeave={closeMenu}
+                  onFocus={() => hasMenu && openMenu(link.href)}
+                  onBlur={(e) => {
+                    if (!e.currentTarget.contains(e.relatedTarget as Node)) closeMenu();
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Escape") setOpenSubmenu(null);
+                  }}
                 >
-                  {link.label}
-                </Link>
+                  <Link
+                    href={link.href}
+                    className={cn(
+                      "text-sm font-medium tracking-wide transition-colors duration-500",
+                      solid ? "text-ink/90 hover:text-ink" : "text-ivory/90 hover:text-ivory",
+                    )}
+                    aria-expanded={hasMenu ? openSubmenu === link.href : undefined}
+                    aria-haspopup={hasMenu ? "menu" : undefined}
+                  >
+                    {link.label}
+                  </Link>
 
-                {"submenu" in link && openSubmenu === link.href && (
-                  // Wrapper sem margem, só padding-top: mantém o espaçamento visual
-                  // do card mas garante que a área "hoverável" seja contínua do
-                  // link até o menu — com margin-top no lugar de padding, o cursor
-                  // atravessava uma faixa morta e o onMouseLeave do pai disparava
-                  // antes de alcançar o submenu.
-                  <div className="absolute top-full left-1/2 w-64 -translate-x-1/2 pt-4">
-                    <div
-                      role="menu"
-                      className="border border-line bg-ivory py-3 shadow-[0_20px_40px_-20px_rgba(0,0,0,0.25)]"
-                    >
-                      {link.submenu?.map((item) => (
-                        <Link
-                          key={item.href}
-                          href={item.href}
-                          role="menuitem"
-                          className="block px-5 py-2 text-sm text-ink/80 transition-colors hover:bg-sand hover:text-ink"
-                        >
-                          {item.label}
-                        </Link>
-                      ))}
+                  {hasMenu && openSubmenu === link.href && (
+                    // Wrapper sem margem, só padding-top: a área "hoverável" é contínua do link até o menu.
+                    <div className="absolute top-full left-1/2 w-72 -translate-x-1/2 pt-4">
+                      <div
+                        role="menu"
+                        className="max-h-[70vh] overflow-y-auto border border-line bg-ivory py-3 shadow-[0_20px_40px_-20px_rgba(0,0,0,0.25)]"
+                      >
+                        {link.children?.map((item) => (
+                          <div key={item.href + item.label}>
+                            {item.divider && <div className="my-2 border-t border-line" aria-hidden />}
+                            <Link
+                              href={item.href}
+                              role="menuitem"
+                              onClick={() => setOpenSubmenu(null)}
+                              className="flex items-center justify-between gap-3 px-5 py-2 text-sm text-ink/80 transition-colors hover:bg-sand hover:text-ink"
+                            >
+                              <span>{item.label}</span>
+                              {item.badge && <span aria-label="com ofertas abertas" className="size-1.5 rounded-full bg-magenta" />}
+                            </Link>
+                          </div>
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                )}
-              </div>
-            ))}
+                  )}
+                </div>
+              );
+            })}
           </nav>
 
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-5">
+            <Link
+              href="/busca"
+              aria-label="Buscar no site"
+              title="Buscar destinos, experiências e viagens"
+              className={cn("hidden size-9 items-center justify-center transition-colors duration-500 md:flex", solid ? "text-ink/70 hover:text-ink" : "text-ivory/80 hover:text-ivory")}
+            >
+              <Search className="size-[18px]" />
+            </Link>
+
             <Link
               href="/reservar-online"
+              title="Pesquise e reserve direto, na plataforma parceira"
               onClick={() => trackEvent("online_booking_clicked_header")}
               className={cn(
                 "hidden text-sm font-medium tracking-wide underline-offset-4 transition-colors duration-500 hover:underline md:inline-flex",
@@ -163,18 +163,16 @@ export function Header({ settings, hasOffers = false, trips = [] }: { settings: 
               Reservar online
             </Link>
 
+            {/* Botão principal: falar com a Cays (o caminho mais curto para quem quer ajuda). */}
             <Link
               href="/contato"
               className={cn(
-                "group/cta hidden items-center gap-2 text-sm font-medium tracking-wide transition-colors duration-500 md:inline-flex",
-                solid ? "text-ink" : "text-ivory",
+                "group/cta hidden items-center gap-2 px-5 py-2.5 text-sm font-medium tracking-wide transition-colors duration-500 md:inline-flex",
+                solid ? "bg-ink text-ivory hover:bg-magenta" : "bg-ivory text-ink hover:bg-ivory/85",
               )}
             >
               Planeje sua viagem
-              <span
-                aria-hidden
-                className="transition-transform duration-300 group-hover/cta:translate-x-1"
-              >
+              <span aria-hidden className="transition-transform duration-300 group-hover/cta:translate-x-1">
                 →
               </span>
             </Link>
@@ -198,7 +196,7 @@ export function Header({ settings, hasOffers = false, trips = [] }: { settings: 
       <MobileNavigation
         open={menuOpen}
         onClose={() => setMenuOpen(false)}
-        links={navLinks}
+        nav={nav}
         instagram={settings.instagram}
         whatsappHref={settings.whatsappHref}
       />

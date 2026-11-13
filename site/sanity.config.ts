@@ -7,7 +7,7 @@ import { projectId, dataset, apiVersion } from "./src/sanity/env";
 import { StudioLogo } from "./src/sanity/components/logo";
 
 /** Tipos singleton — documentId fixo, sem segunda instância permitida (ver `structure.ts`). */
-const SINGLETON_TYPES = new Set(["home", "aboutPage", "destinationHub", "experienceHub", "travelHub", "curadoriaHub", "settings"]);
+const SINGLETON_TYPES = new Set(["home", "aboutPage", "destinationHub", "experienceHub", "travelHub", "curadoriaHub", "groupHub", "inspirationHub", "menuExtras", "settings"]);
 
 export default defineConfig({
   name: "cays-turismo",
@@ -40,6 +40,13 @@ export default defineConfig({
         title: "Nova oportunidade exclusiva",
         schemaType: "travelProduct",
         value: { type: "offer", status: "active", active: true, order: 100 },
+      },
+      // Modelo "Novo grupo": já cria a viagem como tipo Grupo (aba "Grupos").
+      {
+        id: "grupo",
+        title: "Novo grupo (saída em grupo)",
+        schemaType: "travelProduct",
+        value: { type: "group", status: "active", active: true, order: 100 },
       },
     ],
   },

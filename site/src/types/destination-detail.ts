@@ -95,6 +95,8 @@ export interface DestinationDetail extends BaseContent {
   parent?: string;
   /** Slug do continente (ver `src/data/destinations-hub.ts`) — usado pro filtro do hub /destinos. */
   continent?: string;
+  /** Slugs das experiências (temas) deste destino — alimenta "Destinos por temas" e o submenu do destino. */
+  themes?: string[];
   /** Trilha de navegação Home › Destinos › ... › Nome. Sem isto, cai no breadcrumb genérico Home › Destinos › Nome. */
   breadcrumb?: { label: string; href?: string }[];
 

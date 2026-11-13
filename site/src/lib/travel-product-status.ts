@@ -3,6 +3,7 @@ import type { TravelProduct, TravelProductStatus } from "@/types";
 export const TYPE_LABEL: Record<TravelProduct["type"], string> = {
   custom: "Sob medida",
   "fixed-date": "Data fixa",
+  group: "Grupo",
   offer: "Oferta",
 };
 

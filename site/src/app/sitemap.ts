@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 import { fetchFromSanity } from "@/lib/cms/sanity-fetch";
 import { siteConfig } from "@/lib/site-config";
 import { LAST_UPDATED } from "@/lib/legal/content";
-import { getDestinationSlugs, getExperienceSlugs, getTravelProductSlugs, getArticleSlugs, getTravelProducts } from "@/lib/cms";
+import { getDestinationSlugs, getExperienceSlugs, getTravelProductSlugs, getArticleSlugs, getTravelProducts, getInspirationSlugs } from "@/lib/cms";
 import { getOpenOffers } from "@/lib/offers";
 
 /**
@@ -16,6 +16,7 @@ const SITEMAP_ENTRIES = {
   experiences: `*[_type == "experience" && active == true]{ "slug": slug.current, "updatedAt": _updatedAt }`,
   travelProducts: `*[_type == "travelProduct" && active == true]{ "slug": slug.current, "updatedAt": _updatedAt }`,
   articles: `*[_type == "curadoriaArticle" && active == true]{ "slug": slug.current, "updatedAt": _updatedAt }`,
+  inspirations: `*[_type == "inspiration" && active == true]{ "slug": slug.current, "updatedAt": _updatedAt }`,
 } as const;
 
 type Entry = { slug: string; updatedAt?: string };
@@ -31,11 +32,12 @@ async function dated(query: string, fallbackSlugs: () => Promise<string[]>): Pro
  * do próprio conteúdo ou ficam sem `lastModified` quando não há uma data real.
  */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [destinations, experiences, travelProducts, articles] = await Promise.all([
+  const [destinations, experiences, travelProducts, articles, inspirations] = await Promise.all([
     dated(SITEMAP_ENTRIES.destinations, getDestinationSlugs),
     dated(SITEMAP_ENTRIES.experiences, getExperienceSlugs),
     dated(SITEMAP_ENTRIES.travelProducts, getTravelProductSlugs),
     dated(SITEMAP_ENTRIES.articles, getArticleSlugs),
+    dated(SITEMAP_ENTRIES.inspirations, getInspirationSlugs),
   ]);
 
   const temOfertas = getOpenOffers(await getTravelProducts()).length > 0;
@@ -48,6 +50,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${base}/destinos`, changeFrequency: "weekly", priority: 0.8 },
     { url: `${base}/experiencias`, changeFrequency: "weekly", priority: 0.8 },
     { url: `${base}/viagens`, changeFrequency: "weekly", priority: 0.8 },
+    { url: `${base}/grupos`, changeFrequency: "weekly", priority: 0.7 },
+    { url: `${base}/inspiracoes`, changeFrequency: "weekly", priority: 0.7 },
     ...(temOfertas ? [{ url: `${base}/oportunidades`, changeFrequency: "daily" as const, priority: 0.8 }] : []),
     { url: `${base}/curadoria`, changeFrequency: "weekly", priority: 0.7 },
     { url: `${base}/contato`, changeFrequency: "monthly", priority: 0.6 },
@@ -61,5 +65,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...experiences.map((e) => ({ url: `${base}/experiencias/${e.slug}`, lastModified: toDate(e.updatedAt), changeFrequency: "monthly" as const, priority: 0.7 })),
     ...travelProducts.map((e) => ({ url: `${base}/viagens/${e.slug}`, lastModified: toDate(e.updatedAt), changeFrequency: "weekly" as const, priority: 0.7 })),
     ...articles.map((e) => ({ url: `${base}/curadoria/${e.slug}`, lastModified: toDate(e.updatedAt), changeFrequency: "monthly" as const, priority: 0.6 })),
+    ...inspirations.map((e) => ({ url: `${base}/inspiracoes/${e.slug}`, lastModified: toDate(e.updatedAt), changeFrequency: "monthly" as const, priority: 0.6 })),
   ];
 }

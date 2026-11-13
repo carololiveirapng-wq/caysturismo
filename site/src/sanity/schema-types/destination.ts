@@ -33,10 +33,21 @@ export const destination = defineType({
       description: "Só pra cidades/regiões dentro de um país — ex.: Kyoto tem o Japão como pai. Deixe vazio pra países e continentes.",
     }),
     defineField({
+      name: "continentRef",
+      title: "Continente / região",
+      type: "reference",
+      to: [{ type: "continent" }],
+      description: "Onde este destino aparece no menu \"Destinos\" e na página /destinos. Novos continentes são criados em Conteúdo → Continentes / regiões.",
+      // Aceita o campo antigo (lista fixa) enquanto o destino não foi migrado.
+      validation: (r) =>
+        r.custom((v, ctx) => ((v as { _ref?: string } | undefined)?._ref || (ctx.document as { continent?: string } | undefined)?.continent ? true : "Escolha o continente")),
+    }),
+    defineField({
       name: "continent",
-      title: "Continente",
+      title: "Continente (campo antigo)",
       type: "string",
-      description: "Usado pra agrupar e filtrar destinos na página /destinos.",
+      description: "Campo antigo, mantido só até este destino ser ligado a um continente acima. Pode ignorar.",
+      hidden: ({ document }) => Boolean((document as { continentRef?: { _ref?: string } } | undefined)?.continentRef?._ref),
       options: {
         list: [
           { title: "Américas", value: "americas" },
@@ -47,11 +58,13 @@ export const destination = defineType({
           { title: "Oceania", value: "oceania" },
         ],
       },
-      // Sem isto, um destino publicado sem continente ainda aparece na
-      // lista A–Z do hub (fallback "outros" no front-end), mas nunca surge
-      // ao filtrar por um continente específico — exigir o campo aqui evita
-      // essa lacuna silenciosa de cara, direto no Studio.
-      validation: (r) => r.required(),
+    }),
+    defineField({
+      name: "themes",
+      title: "Temas e experiências deste destino",
+      type: "array",
+      of: [{ type: "reference", to: [{ type: "experience" }] }],
+      description: "Quais experiências a Cays desenha aqui (ex.: Gastronomia, Safari, Lua de Mel). Alimenta \"Destinos por temas\" e o submenu de cada destino.",
     }),
     defineField({ name: "breadcrumb", title: "Breadcrumb", type: "array", of: [{ type: "breadcrumbItem" }] }),
 

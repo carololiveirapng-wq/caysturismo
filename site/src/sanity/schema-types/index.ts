@@ -23,7 +23,10 @@ import { hotel } from "./hotel";
 import { settings } from "./settings";
 import { home } from "./home";
 import { aboutPage } from "./about-page";
-import { destinationHub, experienceHub, travelHub, curadoriaHub } from "./hub-pages";
+import { destinationHub, experienceHub, travelHub, curadoriaHub, groupHub, inspirationHub } from "./hub-pages";
+import { continent } from "./continent";
+import { inspiration } from "./inspiration";
+import { menuExtras } from "./menu-extras";
 import { travelerStory } from "./traveler-story";
 
 export const schemaTypes: SchemaTypeDefinition[] = [
@@ -34,6 +37,11 @@ export const schemaTypes: SchemaTypeDefinition[] = [
   experienceHub,
   travelHub,
   curadoriaHub,
+  groupHub,
+  inspirationHub,
+  menuExtras,
+  continent,
+  inspiration,
   destination,
   experience,
   travelProduct,

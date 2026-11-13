@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getDestinationBySlug, getDestinationSlugs, getSettings } from "@/lib/cms";
+import { getDestinationBySlug, getDestinationSlugs, getSettings, getExperiences, getTravelProducts } from "@/lib/cms";
+import { themesByDestination } from "@/lib/navigation";
+import { DestinationThemes } from "@/components/destination/destination-themes";
 import { DestinationHero } from "@/components/destination/destination-hero";
 import { TravelPlanningPanel } from "@/components/commercial/travel-planning-panel";
 import { DestinationIntroduction } from "@/components/destination/destination-introduction";
@@ -56,8 +58,12 @@ export async function generateMetadata({
 
 export default async function DestinationPage({ params }: PageProps<"/destinos/[slug]">) {
   const { slug } = await params;
-  const [destination, { whatsappHref }] = await Promise.all([getDestinationBySlug(slug), getSettings()]);
+  const [destination, { whatsappHref }, experiences, products] = await Promise.all([getDestinationBySlug(slug), getSettings(), getExperiences(), getTravelProducts()]);
   if (!destination) notFound();
+
+  // Temas (experiências) deste destino: os marcados no Studio + os das viagens ativas daqui.
+  const themeSlugs = themesByDestination([destination], products).get(destination.slug) ?? [];
+  const themes = themeSlugs.map((t) => experiences.find((e) => e.slug === t && e.active)).filter((e): e is NonNullable<typeof e> => Boolean(e)).map((e) => ({ slug: e.slug, name: e.name }));
 
   const contactHref = `/contato?destino=${destination.slug}`;
 
@@ -69,6 +75,7 @@ export default async function DestinationPage({ params }: PageProps<"/destinos/[
   const subnavItems = [
     destination.introduction ? { id: "visao-geral", label: "Visão geral" } : null,
     destination.journeys?.length ? { id: "viagens", label: "Viagens" } : null,
+    themes.length ? { id: "temas", label: "Por tema" } : null,
     destination.experiences?.length ? { id: "o-que-viver", label: "O que viver" } : null,
     destination.stays?.length ? { id: "onde-ficar", label: "Onde ficar" } : null,
     destination.months?.length ? { id: "quando-ir", label: "Quando ir" } : null,
@@ -142,12 +149,7 @@ export default async function DestinationPage({ params }: PageProps<"/destinos/[
         />
       )}
 
-      <InlineCtaStrip
-        title="Não encontrou exatamente o que imaginou?"
-        supporting="Criamos uma viagem sob medida para você."
-        ctaLabel="Planejar minha viagem"
-        ctaHref={contactHref}
-      />
+      <DestinationThemes id="temas" destinationName={destination.name} destinationSlug={destination.slug} themes={themes} />
 
       {destination.experiences && destination.experiences.length > 0 && (
         <WhatToLive
@@ -166,14 +168,15 @@ export default async function DestinationPage({ params }: PageProps<"/destinos/[
         <MonthGuide id="quando-ir" months={destination.months} heading={destination.monthsHeading} />
       )}
 
-      <InlineCtaStrip
-        title={destination.seasonCta?.title ?? "Sabe quando quer viajar?"}
-        supporting={
-          destination.seasonCta?.supporting ?? "Ajudamos a escolher o período ideal para a sua viagem."
-        }
-        ctaLabel="Planejar viagem"
-        ctaHref={contactHref}
-      />
+      {/* A faixa de "quando viajar" só aparece se a equipe escreveu o texto dela no Studio (evita CTA repetido a cada seção). */}
+      {destination.seasonCta && (
+        <InlineCtaStrip
+          title={destination.seasonCta.title ?? "Sabe quando quer viajar?"}
+          supporting={destination.seasonCta.supporting ?? "Ajudamos a escolher o período ideal para a sua viagem."}
+          ctaLabel="Planejar viagem"
+          ctaHref={contactHref}
+        />
+      )}
 
       {destination.articles && destination.articles.length > 0 && (
         <RelatedCuration

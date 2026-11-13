@@ -1,18 +1,9 @@
-import { Container } from "@/components/ui/container";
-import { EditorialHeading } from "@/components/ui/editorial-heading";
-import { Reveal } from "@/components/ui/reveal";
+import { SplitSection } from "./split-section";
 
 export function ProductOverview({ id, text }: { id: string; text: string }) {
   return (
-    <section id={id} className="scroll-mt-28 bg-ivory py-14 md:scroll-mt-32 md:py-20">
-      <Container narrow>
-        <Reveal>
-          <EditorialHeading as="h2" size="md">
-            Visão geral
-          </EditorialHeading>
-          <p className="mt-5 max-w-xl text-base leading-relaxed text-stone">{text}</p>
-        </Reveal>
-      </Container>
-    </section>
+    <SplitSection id={id} title="Visão geral">
+      <p className="max-w-2xl text-lg leading-relaxed text-ink/80">{text}</p>
+    </SplitSection>
   );
 }

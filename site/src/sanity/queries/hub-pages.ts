@@ -29,3 +29,11 @@ export const CURADORIA_HUB_QUERY = `*[_type == "curadoriaHub"][0]{
   ${spotlightDestinationsField},
   ${spotlightExperiencesField}
 }`;
+
+export const GROUP_HUB_QUERY = `*[_type == "groupHub"][0]{
+  ${heroAndSeoFields}
+}`;
+
+export const INSPIRATION_HUB_QUERY = `*[_type == "inspirationHub"][0]{
+  ${heroAndSeoFields}
+}`;

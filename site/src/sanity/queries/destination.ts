@@ -18,7 +18,8 @@ const destinationProjection = `{
   order,
   name,
   type,
-  continent,
+  "continent": coalesce(continentRef->slug.current, continent),
+  "themes": coalesce(themes[]->slug.current, []),
   "parent": parent->slug.current,
   breadcrumb,
   hero{
@@ -43,6 +44,7 @@ const destinationProjection = `{
     "typeLabel": select(
       type == "custom" => "Sob medida",
       type == "fixed-date" => "Data fixa",
+      type == "group" => "Grupo",
       type == "offer" => "Oferta",
       type
     ),

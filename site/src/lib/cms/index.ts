@@ -16,3 +16,5 @@ export * from "./testimonials";
 export * from "./people";
 export * from "./about";
 export * from "./hubs";
+export * from "./inspirations";
+export * from "./navigation";

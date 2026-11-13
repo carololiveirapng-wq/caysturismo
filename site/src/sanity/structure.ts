@@ -9,6 +9,9 @@ import { CogIcon } from "@sanity/icons/Cog";
 import { ThLargeIcon } from "@sanity/icons/ThLarge";
 import { HomeIcon } from "@sanity/icons/Home";
 import { TagIcon } from "@sanity/icons/Tag";
+import { ImagesIcon } from "@sanity/icons/Images";
+import { MenuIcon } from "@sanity/icons/Menu";
+import { PinIcon } from "@sanity/icons/Pin";
 
 /**
  * Menu do Studio pensado pra quem edita o site no dia a dia, não pra quem
@@ -43,7 +46,21 @@ export const structure: StructureResolver = (S) =>
             .title("Viagens")
             .schemaType("travelProduct")
             .apiVersion("2026-01-01")
-            .filter('_type == "travelProduct" && type != "offer"'),
+            .filter('_type == "travelProduct" && type != "offer" && type != "group"'),
+        ),
+      // Saídas em grupo (data fixa, com vagas): aparecem na aba "Grupos" do site.
+      S.listItem()
+        .id("grupos")
+        .title("Grupos")
+        .icon(UsersIcon)
+        .child(
+          S.documentList()
+            .id("grupos-lista")
+            .title("Grupos")
+            .schemaType("travelProduct")
+            .apiVersion("2026-01-01")
+            .filter('_type == "travelProduct" && type == "group"')
+            .initialValueTemplates([S.initialValueTemplateItem("grupo")]),
         ),
       // Ofertas ficam numa aba só delas (Black Friday, promoções de hotéis e cruzeiros...). O site mostra em "Oportunidades exclusivas" só as que estão ativas e dentro da validade.
       S.listItem()
@@ -60,6 +77,9 @@ export const structure: StructureResolver = (S) =>
             .defaultOrdering([{ field: "offerEndsAt", direction: "asc" }])
             .initialValueTemplates([S.initialValueTemplateItem("oportunidade")]),
         ),
+      S.documentTypeListItem("inspiration").title("Inspirações").icon(ImagesIcon),
+      S.documentTypeListItem("continent").title("Continentes / regiões").icon(PinIcon),
+      singletonPage(S, "menuExtras", "Menu do site (links extras)", "menuExtras").icon(MenuIcon),
       S.documentTypeListItem("person").title("Equipe").icon(UsersIcon),
       S.documentTypeListItem("testimonial").title("Depoimentos").icon(DoubleQuoteIcon),
       S.divider(),
@@ -78,6 +98,8 @@ export const structure: StructureResolver = (S) =>
               singletonPage(S, "destinationHub", "Introdução — Destinos", "destinationHub"),
               singletonPage(S, "experienceHub", "Introdução — Experiências", "experienceHub"),
               singletonPage(S, "travelHub", "Introdução — Viagens", "travelHub"),
+              singletonPage(S, "groupHub", "Introdução — Grupos", "groupHub"),
+              singletonPage(S, "inspirationHub", "Introdução — Inspirações", "inspirationHub"),
               singletonPage(S, "curadoriaHub", "Introdução — Blog / Curadoria", "curadoriaHub"),
               S.divider(),
               S.documentTypeListItem("hotel").title("Hotéis").icon(HomeIcon),

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ShortHero } from "@/components/ui/short-hero";
+import { ViagensTabs } from "@/components/viagens-hub/viagens-tabs";
 import { Container } from "@/components/ui/container";
 import { ImageReveal } from "@/components/ui/image-reveal";
 import { LinkArrow } from "@/components/ui/link-arrow";
@@ -81,6 +82,7 @@ export default async function OportunidadesPage() {
         subtitle="Condições especiais por tempo limitado, em hotéis, cruzeiros e roteiros. Quando uma oferta termina, ela sai desta página."
         image={ofertas[0]?.gallery[0]}
       />
+      <ViagensTabs active="oportunidades" hasOffers={ofertas.length > 0} />
 
       <section className="bg-ivory py-14 md:py-20">
         <Container>

@@ -25,6 +25,10 @@ export function ImageReveal({
   ...imageProps
 }: ImageRevealProps) {
   const shouldReduceMotion = useReducedMotion();
+  // Sem foto cadastrada (ainda): painel escuro em vez do ícone de imagem quebrada.
+  if (!imageProps.src) {
+    return <div role="img" aria-label={alt} className={cn("relative overflow-hidden bg-graphite", containerClassName)} />;
+  }
   const revealed = { clipPath: "inset(0% 0% 0% 0%)", opacity: 1 };
 
   return (
