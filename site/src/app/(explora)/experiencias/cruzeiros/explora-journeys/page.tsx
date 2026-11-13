@@ -22,7 +22,7 @@ const path = "/experiencias/cruzeiros/explora-journeys";
 export const metadata: Metadata = {
   title,
   description,
-  alternates: { canonical: path },
+  alternates: { canonical: `${siteConfig.url}${path}` },
   openGraph: {
     type: "website",
     title,

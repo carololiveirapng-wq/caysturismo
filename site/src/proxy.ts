@@ -3,6 +3,14 @@ import type { NextRequest } from "next/server";
 import { ATTRIBUTION_COOKIE } from "@/lib/leads/attribution";
 import { updateSupabaseSession } from "@/lib/supabase/middleware";
 
+/**
+ * URLs do WordPress antigo que o Google ainda conhece e que não existem mais: posts datados (/AAAA/MM/DD/título/),
+ * a "loja" falsa (/shops/…) e rotas de spam do site comprometido. As que têm equivalente real já foram redirecionadas
+ * (301) em `next.config.ts` — redirects rodam antes deste arquivo —, então o que chega aqui não tem para onde ir:
+ * 410 ("removido de vez") faz o Google esquecer a URL mais rápido do que um 404.
+ */
+const GONE_PATTERNS = [/^\/20\d\d\/\d\d\/\d\d\//, /^\/shops\//, /^\/mbr\//, /^\/tpc\//, /^\/category\//, /^\/tag\//];
+
 const UTM_KEYS = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"] as const;
 const COOKIE_MAX_AGE = 60 * 60 * 24 * 30; // 30 dias
 
@@ -19,6 +27,13 @@ const COOKIE_MAX_AGE = 60 * 60 * 24 * 30; // 30 dias
  */
 export async function proxy(request: NextRequest) {
   const { searchParams, pathname } = request.nextUrl;
+
+  if (GONE_PATTERNS.some((pattern) => pattern.test(pathname))) {
+    return new NextResponse("Esta página foi removida.", {
+      status: 410,
+      headers: { "content-type": "text/plain; charset=utf-8", "x-robots-tag": "noindex" },
+    });
+  }
 
   if (pathname.startsWith("/admin") && pathname !== "/admin/login") {
     const { response, user } = await updateSupabaseSession(request);

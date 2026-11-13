@@ -12,7 +12,10 @@ export const sanityClient: SanityClient | null = sanityEnabled
       projectId: projectId!,
       dataset,
       apiVersion,
-      useCdn: process.env.NODE_ENV === "production",
+      // Sem CDN de dados: as páginas já ficam em cache do próprio Next (ISR) e o webhook as regenera segundos depois de
+      // cada publicação. Com `useCdn: true`, essa regeneração podia ler a CDN do Sanity ainda DESATUALIZADA e a página
+      // ficava com o conteúdo antigo até o próximo ciclo de 15 min (foi o que fez a imagem "não atualizar" no site).
+      useCdn: false,
       token: process.env.SANITY_API_READ_TOKEN,
       perspective: "published",
     })

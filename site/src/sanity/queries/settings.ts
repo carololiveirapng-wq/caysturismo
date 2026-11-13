@@ -5,6 +5,7 @@ export const SETTINGS_QUERY = `*[_type == "settings"][0]{
   email,
   hours,
   address,
+  postalCode,
   city,
   state,
   instagram,

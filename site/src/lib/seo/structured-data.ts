@@ -50,15 +50,21 @@ function toE164(raw: string | undefined) {
 
 export function organizationJsonLd(settings: SiteSettings) {
   const telephone = toE164(settings.phone) ?? toE164(settings.whatsapp);
-  const sameAs = [settings.instagram].filter((url): url is string => Boolean(url));
+  const sameAs = settings.socialUrls;
   const address = settings.address
     ? {
         "@type": "PostalAddress",
         streetAddress: settings.address,
         addressLocality: settings.city || undefined,
         addressRegion: settings.state || undefined,
+        ...(settings.postalCode && { postalCode: settings.postalCode }),
         addressCountry: "BR",
       }
+    : undefined;
+  // WhatsApp como ponto de contato próprio (o telefone fixo segue em `telephone`).
+  const whatsappPhone = toE164(settings.whatsapp);
+  const contactPoint = whatsappPhone
+    ? [{ "@type": "ContactPoint", contactType: "customer service", telephone: whatsappPhone, availableLanguage: "pt-BR" }]
     : undefined;
 
   return {
@@ -69,7 +75,9 @@ export function organizationJsonLd(settings: SiteSettings) {
     url: siteConfig.url,
     logo: `${siteConfig.url}/icon.png`,
     ...(telephone && { telephone }),
+    ...(settings.email && { email: settings.email }),
     ...(address && { address }),
+    ...(contactPoint && { contactPoint }),
     ...(settings.cnpj && { taxID: settings.cnpj }),
     ...(settings.foundedDate && { foundingDate: settings.foundedDate }),
     ...(sameAs.length > 0 && { sameAs }),

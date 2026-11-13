@@ -2,7 +2,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { Container } from "@/components/ui/container";
 import { Breadcrumb } from "@/components/ui/breadcrumb";
-import { Reveal } from "@/components/ui/reveal";
 import type { ExperienceDetail } from "@/types";
 
 export function ExperienceHero({ experience, contactHref }: { experience: ExperienceDetail; contactHref: string }) {
@@ -14,7 +13,7 @@ export function ExperienceHero({ experience, contactHref }: { experience: Experi
       <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-ink/85 via-ink/20 to-ink/40" />
 
       <Container className="relative z-10 pb-14 md:pb-20">
-        <Reveal className="max-w-2xl">
+        <div className="hero-rise max-w-2xl">
           {breadcrumb && breadcrumb.length > 0 && <Breadcrumb items={breadcrumb} tone="light" className="mb-6" />}
           {hero.eyebrow && (
             <p className="text-sm font-medium tracking-[0.25em] text-ivory/75 uppercase">{hero.eyebrow}</p>
@@ -44,7 +43,7 @@ export function ExperienceHero({ experience, contactHref }: { experience: Experi
               Planejar {name}
             </Link>
           </div>
-        </Reveal>
+        </div>
       </Container>
     </section>
   );

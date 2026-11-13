@@ -531,8 +531,10 @@ export default async function MaldivasLuaDeMelPage() {
               transparente, com base na confiança e na atenção ao relacionamento com cada cliente — para sermos,
               além de agência, grandes amigos.
             </p>
-            <div className="mt-6">
+            <div className="mt-6 flex flex-wrap items-center justify-center gap-x-8 gap-y-3">
               <SectionCta href="/sobre" label="Conhecer a Cays" />
+              <SectionCta href="/destinos/maldivas" label="Conhecer o destino Maldivas" />
+              <SectionCta href="/experiencias/lua-de-mel" label="Ver lua de mel com a Cays" />
             </div>
           </Reveal>
         </Container>

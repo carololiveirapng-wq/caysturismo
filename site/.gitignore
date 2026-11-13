@@ -47,3 +47,6 @@ next-env.d.ts
 
 # rascunhos internos de conteúdo (dados de clientes — nunca versionar)
 .content-drafts/
+
+# backups locais (conteúdo e dados de leads: nunca no repositório)
+/_backups-sanity/

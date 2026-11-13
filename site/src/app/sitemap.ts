@@ -50,6 +50,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${base}/viagens`, changeFrequency: "weekly", priority: 0.8 },
     ...(temOfertas ? [{ url: `${base}/oportunidades`, changeFrequency: "daily" as const, priority: 0.8 }] : []),
     { url: `${base}/curadoria`, changeFrequency: "weekly", priority: 0.7 },
+    // Landing da especialidade (principal URL de lua de mel em destino específico) e página especial da Explora Journeys.
+    { url: `${base}/experiencias/lua-de-mel/maldivas`, changeFrequency: "monthly", priority: 0.7 },
+    { url: `${base}/experiencias/cruzeiros/explora-journeys`, changeFrequency: "monthly", priority: 0.6 },
     { url: `${base}/contato`, changeFrequency: "monthly", priority: 0.6 },
     { url: `${base}/privacidade`, lastModified: new Date(LAST_UPDATED), changeFrequency: "yearly", priority: 0.3 },
     { url: `${base}/termos`, lastModified: new Date(LAST_UPDATED), changeFrequency: "yearly", priority: 0.3 },

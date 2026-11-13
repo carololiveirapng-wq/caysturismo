@@ -30,6 +30,14 @@ const nextConfig: NextConfig = {
       ["/category/post", "/curadoria"],
       ["/2019/04/03/o-casamento-de-ana-paula-e-giancarlo-em-punta-cana", "/experiencias/destination-wedding"],
       ["/2019/06/27/a-experiencia-do-casal-patricia-e-fabio-pelos-emirados-arabes", "/experiencias/lua-de-mel"],
+      // Rodada de SEO (nov/2026): só onde a intenção é realmente equivalente. O mapa completo (301 aplicados, 301 sugeridos
+      // e o que fica sem redirecionamento) está em dados/site-antigo/mapa-redirects.csv.
+      ["/orcamento", "/contato"],
+      ["/2012/02/29/10-destinos-mais-procurados-para-lua-de-mel", "/experiencias/lua-de-mel"],
+      ["/2011/03/04/5-dicas-para-uma-lua-de-mel-perfeita", "/experiencias/lua-de-mel"],
+      ["/2012/10/05/lua-de-mel-em-maldivas", "/experiencias/lua-de-mel/maldivas"],
+      ["/2015/07/14/pacote-lua-de-mel-maldivas", "/experiencias/lua-de-mel/maldivas"],
+      ["/2016/06/24/pacote-lua-de-mel-em-maldivas", "/experiencias/lua-de-mel/maldivas"],
     ];
     return legacy
       .filter(([from, to]) => from !== to)

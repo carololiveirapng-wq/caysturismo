@@ -13,6 +13,37 @@ import { BeyondItinerary } from "@/components/home/beyond-itinerary";
 import { FinalCTA } from "@/components/home/final-cta";
 import { getHome, getSettings, getTestimonials } from "@/lib/cms";
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
+import { siteConfig } from "@/lib/site-config";
+
+/** SEO da Home: usa o que está no Studio (Páginas > Home > SEO) e, se vazio, cai no padrão do layout. */
+export async function generateMetadata(): Promise<Metadata> {
+  const home = await getHome();
+  const title = home?.seo?.title?.trim();
+  const description = home?.seo?.description?.trim();
+  if (!title && !description) return {};
+  const ogImage = home?.hero.image?.src ?? home?.hero.images?.[0]?.src ?? home?.hero.videoPoster?.src;
+  return {
+    ...(title && { title: { absolute: title } }),
+    ...(description && { description }),
+    alternates: { canonical: "/" },
+    openGraph: {
+      ...(title && { title }),
+      ...(description && { description }),
+      url: siteConfig.url,
+      siteName: siteConfig.name,
+      locale: "pt_BR",
+      type: "website",
+      ...(ogImage && { images: [{ url: ogImage }] }),
+    },
+    twitter: {
+      card: "summary_large_image",
+      ...(title && { title }),
+      ...(description && { description }),
+      ...(ogImage && { images: [ogImage] }),
+    },
+  };
+}
 
 export default async function Home() {
   const [home, settings, testimonials] = await Promise.all([
@@ -27,7 +58,7 @@ export default async function Home() {
 
   return (
     <>
-      <Hero hero={home.hero} />
+      <Hero hero={home.hero} city={settings.city} foundedYear={foundedYear} />
       <OnlineBooking />
       {home.manifesto && <Manifesto manifesto={home.manifesto} />}
       {settings.slogan && (

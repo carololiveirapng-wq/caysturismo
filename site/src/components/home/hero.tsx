@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Container } from "@/components/ui/container";
-import { Reveal } from "@/components/ui/reveal";
 import { HeroSlideshow } from "@/components/home/hero-slideshow";
 import { HeroVideo } from "@/components/home/hero-video";
 import type { HomeContent } from "@/types";
@@ -14,7 +13,9 @@ import type { HomeContent } from "@/types";
  * Documentos existentes sem `mediaType` caem no modo imagem única (default
  * da query), sem quebrar nada do que já estava publicado.
  */
-export function Hero({ hero }: { hero: HomeContent["hero"] }) {
+export function Hero({ hero, city, foundedYear }: { hero: HomeContent["hero"]; city?: string; foundedYear?: number }) {
+  // Linha de contexto local, em texto de verdade (rastreável): quem é a Cays e de onde ela atende. Só aparece com dados reais do Studio.
+  const localLine = city && foundedYear ? `Desde ${foundedYear}, a Cays Turismo cria viagens sob medida a partir de ${city}.` : undefined;
   return (
     <section className="relative flex min-h-[100svh] items-center overflow-hidden bg-ink">
       {hero.mediaType === "images" && hero.images && hero.images.length > 0 ? (
@@ -43,7 +44,7 @@ export function Hero({ hero }: { hero: HomeContent["hero"] }) {
       />
 
       <Container className="relative z-10 py-28 text-center">
-        <Reveal className="mx-auto max-w-xl">
+        <div className="hero-rise mx-auto max-w-xl">
           <h1 className="font-serif text-[clamp(2.375rem,5.6vw,5rem)] leading-[1.08] text-balance whitespace-pre-line text-ivory">
             {hero.title}
           </h1>
@@ -52,6 +53,10 @@ export function Hero({ hero }: { hero: HomeContent["hero"] }) {
             <p className="mx-auto mt-4 max-w-[26rem] text-xl leading-relaxed whitespace-pre-line text-ivory/80">
               {hero.text}
             </p>
+          )}
+
+          {localLine && (
+            <p className="mx-auto mt-5 max-w-[26rem] text-sm leading-relaxed tracking-wide text-ivory/70">{localLine}</p>
           )}
 
           <div className="mt-7 flex flex-wrap items-center justify-center gap-x-10 gap-y-5">
@@ -82,7 +87,7 @@ export function Hero({ hero }: { hero: HomeContent["hero"] }) {
               </span>
             </Link>
           </div>
-        </Reveal>
+        </div>
       </Container>
 
       <div

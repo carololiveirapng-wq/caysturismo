@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Scripts avulsos de manutenção do Sanity (rodam com `sanity exec`, não fazem parte do site).
+    "_scripts/**",
   ]),
 ]);
 
